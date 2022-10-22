@@ -1,3 +1,0 @@
-User-agent: *
-Allow: /
-Sitemap: https://inputusername.github.io/zola-hook/sitemap.xml
