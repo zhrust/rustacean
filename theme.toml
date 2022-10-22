@@ -1,10 +1,10 @@
-name = "zola.386"
-description = "Zola port of the BOOTSTRA.386 theme."
+name = "Hook"
+description = "Clean and simple personal site/blog theme"
 license = "MIT"
-homepage = "https://github.com/lopes/zola.386"
-min_version = "0.10.1"
-demo = "https://zola386.netlify.com"
+homepage = "https://github.com/InputUsername/zola-hook"
+min_version = "0.15.2"
+demo = "https://inputusername.github.io/zola-hook/"
 
 [author]
-name = "José Lopes"
-homepage = "https://github.com/lopes"
+name = "Koen Bolhuis"
+homepage = "https://koen.bolhu.is"
