@@ -23,6 +23,10 @@ date = 2022-10-23
 - 就追加 utteranc.es 完成评注, 其它的不折腾...
 
 
+唯一技巧:
+
+- 要在 Environments 中合理配置 TOKEN
+
 ### refer.
 
 - SSG:[Static Site Generators - Top Open Source SSGs | Jamstack](https://jamstack.org/generators/)
