@@ -1,16 +1,52 @@
-# The URL the site will be built for
-base_url = "https://example.com"
+base_url = "https://zola386.netlify.app"
+# theme = "zola.386"
 
-# Whether to automatically compile all Sass files in the sass directory
+default_language = "en"
+title = "rust.101.so"
+description = "记录如何成为一名合格 Rustaceans ..."
+
+highlight_code = true
 compile_sass = true
-
-# Whether to build a search index to be used later on by a JavaScript library
+generate_rss = true
 build_search_index = true
 
-[markdown]
-# Whether to do syntax highlighting
-# Theme can be customised by setting the `highlight_theme` variable to a theme supported by Zola
-highlight_code = true
+taxonomies = [
+    { name = "categories", rss = true },
+    { name = "tags", rss = true },
+]
+
 
 [extra]
-# Put all your custom variables here
+author = "Zoom Quiet"
+year = "2022"
+
+keywords = "rust, learning, coding, zola"
+theme_color = "#000084"
+zola386_menu = [
+    { path = "", name = "Home" },
+    { path = "categories", name = "Categories" },
+    { path = "tags", name = "Tags" },
+    { path = "about", name = "About" },
+]
+
+### THIRD PARTY
+# google_analytics = "UA-012345-67"
+# disqus = "disqus-user"
+
+### SOCIAL MEDIA
+image = "https://raw.githubusercontent.com/lopes/zola.386/master/screenshot.png"
+twitter_user = "zoomq"
+linkedin_user = "zoomquiet"
+github_user = "zoomquiet"
+gitlab_user = "zoomquiet"
+
+### I18N WORDS
+label_tags = "Tags"
+label_tag = "Tag"
+label_categories = "Categories"
+label_category = "Category"
+label_author = "Author"
+label_date = "Date"
+label_taxonomy = "Taxonomy"
+label_reading = "Reading time"
+label_read_more = "Read more"
