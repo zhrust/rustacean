@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="用Zola+hook 快速发布静态网站">
+    <title>rust.101.so | zola with hook</title>
+    
+    <link rel="stylesheet" href="https://inputusername.github.io/zola-hook/style.css?h=a56f213afcf5d255b64918e7a9e0f468ef1d0ac2954b49f36003998666482371">
+    
+</head>
+
+<body>
+    
+<header class="space">
+  <a href="https:&#x2F;&#x2F;inputusername.github.io&#x2F;zola-hook&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+  <h1>zola with hook</h1>
+  
+  <p class="secondary">23 October, 2022</p>
+  
+  <div class="space"></div>
+  <h2 id="ti-yan-zola">体验 ZOla</h2>
+<blockquote>
+<p>叕一个 SSG 引擎</p>
+</blockquote>
+<h3 id="background">background</h3>
+<p>开始折腾 Rust, 第一要着就是可以每天都开始使用...</p>
+<h3 id="goal">goal</h3>
+<p>用 rust 组织一个新笔记网站, 开始记录关键折腾</p>
+<h3 id="trace">trace</h3>
+<ul>
+<li>快速明确 Zola 最流行 SSG 发布 blog</li>
+<li>先尝试 <a href="https://www.getzola.org/themes/zola-386/">zola.386 | Zola</a> 很 COOL 但是, 每次都有奇怪的编译失败</li>
+<li>回到 <a href="https://www.getzola.org/themes/hook/">Hook | Zola</a> 简洁的 hook</li>
+<li>就追加 utteranc.es 完成评注, 其它的不折腾...</li>
+</ul>
+<h3 id="refer">refer.</h3>
+<ul>
+<li>SSG:<a href="https://jamstack.org/generators/">Static Site Generators - Top Open Source SSGs | Jamstack</a>
+<ul>
+<li><a href="https://jamstack.org/generators/mdbook/">mdBook | Jamstack</a>
+<ul>
+<li><a href="https://github.com/rust-lang/mdBook">rust-lang/mdBook: Create book from markdown files. Like Gitbook but implemented in Rust</a></li>
+<li><a href="https://rust-lang.github.io/mdBook/guide/creating.html#anatomy-of-a-book">Creating a Book - mdBook Documentation</a></li>
+</ul>
+</li>
+<li><a href="https://jamstack.org/generators/zola/">Zola | Jamstack</a>
+<ul>
+<li><a href="https://www.getzola.org/">Zola</a></li>
+<li><a href="https://www.getzola.org/themes/anatole-zola/">Themes | Zola</a>
+<ul>
+<li><a href="https://www.getzola.org/themes/zola-386/">zola.386 | Zola</a></li>
+<li><a href="https://github.com/InputUsername/zola-hook/network/members">InputUsername/zola-hook: A clean and simple personal site/blog theme for the Zola static site generator</a></li>
+<li><a href="https://www.getzola.org/themes/apollo/">apollo | Zola</a></li>
+<li>...</li>
+</ul>
+</li>
+<li><a href="https://hakoirioyaji.com/blog/rust-ssg-zola/">Rust製の静的サイトジェネレーターZolaを試す – ハコイリオヤジ</a></li>
+<li><a href="https://dev.to/davidedelpapa">Zola Tutorial: How to use Zola the Rust based static site generator for your next small project, and deploy it on Netlify - DEV Community 👩‍💻👨‍💻</a></li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>...</li>
+</ul>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://inputusername.github.io/zola-hook/dark_mode.svg" width="24"
+                height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://inputusername.github.io/zola-hook/light_mode.svg" width="24"
+                height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.body.classList;
+        const getSessionTheme = sessionStorage.getItem("theme");
+        if (getSessionTheme === "dark") {
+            cls.toggle("dark-mode", true);
+        } else if (getSessionTheme === "light") {
+            cls.toggle("dark-mode", false);
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            cls.toggle("dark-mode", true);
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function (e) {
+            cls.toggle("dark-mode", true);
+            sessionStorage.setItem("theme", "dark");
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function (e) {
+            cls.toggle("dark-mode", false);
+            sessionStorage.setItem("theme", "light");
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+
+    <hr />
+    <script src="https://utteranc.es/client.js" repo="101-so/comments" issue-term="url" theme="github-light"
+        crossorigin="anonymous" async>
+        </script>
+</body>
+
+</html>
