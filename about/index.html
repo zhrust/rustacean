@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="记录如何成为一名合格 Rustaceans ...">
+    <title>rust.101.so | About</title>
+    
+    <link rel="stylesheet" href="https://inputusername.github.io/zola-hook/style.css?h=a56f213afcf5d255b64918e7a9e0f468ef1d0ac2954b49f36003998666482371">
+    
+</head>
+
+<body>
+    
+<header class="space">
+  <a href="https:&#x2F;&#x2F;inputusername.github.io&#x2F;zola-hook&#x2F;">&LeftArrow; Home</a>
+</header>
+
+    
+<main>
+  <h1>About</h1>
+  
+  <div class="space"></div>
+  <h1 id="dama">DAMA</h1>
+<blockquote>
+<p>as Zoom.Quiet</p>
+</blockquote>
+<h2 id="main-index">main index</h2>
+<p><a href="https://zoomquiet.io/">mapping -&gt; ZoomQuiet.io {by gen4dot2htm.py vv.190718 at:190911 18:07:32,877571}</a></p>
+<h2 id="location">location</h2>
+<h2 id="actions">actions</h2>
+<p>...</p>
+
+</main>
+
+    <div class="dark-mode-buttons">
+        <button class="dark-mode-button" id="dark-mode-on"><img src="https://inputusername.github.io/zola-hook/dark_mode.svg" width="24"
+                height="24" alt="Dark mode" aria-label="dark mode toggle" title="Dark mode"></button>
+        <button class="dark-mode-button" id="dark-mode-off"><img src="https://inputusername.github.io/zola-hook/light_mode.svg" width="24"
+                height="24" alt="Light mode" aria-label="light mode toggle" title="Light mode"></button>
+    </div>
+    <script>
+        const cls = document.body.classList;
+        const getSessionTheme = sessionStorage.getItem("theme");
+        if (getSessionTheme === "dark") {
+            cls.toggle("dark-mode", true);
+        } else if (getSessionTheme === "light") {
+            cls.toggle("dark-mode", false);
+        } else if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+            cls.toggle("dark-mode", true);
+        }
+
+        document.getElementById("dark-mode-on").addEventListener("click", function (e) {
+            cls.toggle("dark-mode", true);
+            sessionStorage.setItem("theme", "dark");
+        });
+        document.getElementById("dark-mode-off").addEventListener("click", function (e) {
+            cls.toggle("dark-mode", false);
+            sessionStorage.setItem("theme", "light");
+        });
+    </script>
+    <noscript>
+        <style>
+            .dark-mode-buttons {
+                display: none;
+            }
+        </style>
+    </noscript>
+
+    <hr />
+    <script src="https://utteranc.es/client.js" repo="101-so/comments" issue-term="url" theme="github-light"
+        crossorigin="anonymous" async>
+        </script>
+</body>
+
+</html>
