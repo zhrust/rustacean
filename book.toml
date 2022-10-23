@@ -1,0 +1,12 @@
+[book]
+authors = ["ZoomQuiet"]
+language = "en"
+multilingual = false
+src = "src"
+title = "be Rustaceans"
+
+# Enables the `mdbook-template` preprocessor
+#[preprocessor.template]
+
+[build]
+build-dir = "docs"
