@@ -28,8 +28,11 @@
 - [Deploy a Zola site · Cloudflare Pages docs](https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/#learn-more)
     - [从 jekyll 切换到 zola](https://blog.biofan.org/2019/08/replace-jekyll-with-zola/)
     - [CLI usage | Zola](https://www.getzola.org/documentation/getting-started/cli-usage/)
+    - ..可惜,不是纯净的 md 文本,要手工追加各种头部 meta 元素...
 - [Static Site Generators - Top Open Source SSGs | Jamstack](https://jamstack.org/generators/)
     - [Introduction - mdBook Documentation](https://rust-lang.github.io/mdBook/guide/installation.html)
+        - [build - mdBook Documentation](https://rust-lang.github.io/mdBook/cli/build.html#--open)
+    - ...还是社区中最常用的手册构建工具好用,就象 Python 中的 [MkDocs](https://www.mkdocs.org/)
 - ...
 
 ## logging
