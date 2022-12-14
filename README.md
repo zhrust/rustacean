@@ -16,8 +16,8 @@
 
 ## usage
 
-- $ zola build
-
+- $ mdbook build
+    
 
 ## refer.
 
@@ -28,6 +28,8 @@
 - [Deploy a Zola site · Cloudflare Pages docs](https://developers.cloudflare.com/pages/framework-guides/deploy-a-zola-site/#learn-more)
     - [从 jekyll 切换到 zola](https://blog.biofan.org/2019/08/replace-jekyll-with-zola/)
     - [CLI usage | Zola](https://www.getzola.org/documentation/getting-started/cli-usage/)
+- [Static Site Generators - Top Open Source SSGs | Jamstack](https://jamstack.org/generators/)
+    - [Introduction - mdBook Documentation](https://rust-lang.github.io/mdBook/guide/installation.html)
 - ...
 
 ## logging
