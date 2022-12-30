@@ -37,4 +37,6 @@
 
 ## logging
 
+- 221230 ZQ move into https://github.com/zhrust/rustacean
+    - publish as cn.rust
 - 221022 ZQ init.

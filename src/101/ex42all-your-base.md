@@ -7,13 +7,6 @@
 
 [All Your Base in Rust on Exercism](https://exercism.org/docs/tracks/rust)
 
-## trace
-> 具体推进
-
-![rust](https://ipic.zoomquiet.top/2022-12-14-zshot%202022-12-14%2021.31.48.jpg)
-
-不过最终是乱序来的
-
 
 ## logging
 > 记要
