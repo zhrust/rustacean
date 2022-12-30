@@ -39,3 +39,4 @@ rust 相关中文社区比当年 Python 的多不少,
 
 - ..
 - 221230 ZQ init.
+    - 迁移 utterances 🔮 评注到 https://github.com/zhrust/comments
