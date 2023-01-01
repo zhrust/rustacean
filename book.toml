@@ -4,7 +4,7 @@ language = "en"
 multilingual = false
 src = "src"
 title = "be Rustaceans"
-base_url = "rust.101.so"
+base_url = "rs.101.so"
 
 # Enables the `mdbook-template` preprocessor
 #[preprocessor.template]
