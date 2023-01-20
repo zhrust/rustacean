@@ -11,6 +11,7 @@
 
 ## trace
 
+- 221111 re-base mdbook
 - 221022 base zola + zola.386
 - 221001 make sure
 
@@ -38,5 +39,5 @@
 ## logging
 
 - 221230 ZQ move into https://github.com/zhrust/rustacean
-    - publish as cn.rust
+    - plan publish as cn.rust
 - 221022 ZQ init.

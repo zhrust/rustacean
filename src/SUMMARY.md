@@ -5,6 +5,7 @@
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
 - [笔记](./log/README.md)
+    + [希望一早知道的关键概念](./log/concepts-i-wish-i-learned-earlier.md)
 - [有关](./abt/README.md)
     + [gh-pages](./abt/gh-pages.md)
     + [zhrust](./abt/zhrust.md)
