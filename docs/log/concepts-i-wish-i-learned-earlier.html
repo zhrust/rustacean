@@ -153,8 +153,16 @@
                     <h1 id="希望一早知道的关键概念"><a class="header" href="#希望一早知道的关键概念">希望一早知道的关键概念</a></h1>
 <p>原文: <a href="https://rauljordan.com/rust-concepts-i-wish-i-learned-earlier/">rauljordan::blog</a></p>
 <h2 id="快译"><a class="header" href="#快译">快译</a></h2>
-<p>This past month, I have been enthralled by the Rust programming language given its unique edge for writing memory-safe, modern programs. Over the years, several languages have emerged as the most preferred by engineers to write resilient, backend software. The tides have shifted from Java/C++ into Go and Rust, which combine decades of programming language theory to build tools that are effective in our current age.</p>
-<p>Rust’s numbers speak for themselves. As the number 1 most loved language in the famous stack overflow survey for seven years in a row, it has also recently been released as part of Linux kernel - a feat no language other than C has been able to accomplish. What’s exciting about the language, to me, is that it provides something truly new in the art of how software is built.</p>
+<p>过去一个月里, 我被 Rust 语言彻底迷住了,
+因为,她在编写内存安全的现代程序方面具有独特的优势.
+多年以来, 有几种语言已经成为工程师编写弹性后端软件的首选语言.
+潮流已经从 JAVA/C++ 转向 Go 和 Rust,
+她们结合了数十年编程语言理论来构建我们这个时代最需要的工具.</p>
+<p>Rust 的地位不言则明.
+作为最受一欢迎的语言, 连续7年度在著名 <code>stack overflow</code> 调查中排名第一!
+最近还作为 Linux 内核的一部分发布 -- 这是除 C 之外任何语言之前都无法作到的壮举.
+对我而言, 这门语言令人兴奋的地方在于,
+她在软件构建艺术方面提供了一些真正新颖的东西.</p>
 <pre><pre class="playground"><code class="language-rust">use std::thread;
 use std::time::Duration;
 use std::{collections::VecDeque, sync::Condvar, sync::Mutex};
@@ -180,13 +188,27 @@ fn main() {
     })
 }
 </code></pre></pre>
-<p>Rust, having picked up incredible usage in systems programming at large, also has a reputation for being notoriously difficult to learn. Notwithstanding, there is a lot of excellent Rust content catering to beginners and advanced programmers alike. However, so many of them focus on the explaining the core mechanics of the language and the concept of ownership rather than architecting applications.</p>
-<p>As a Go developer writing highly concurrent programs and focusing on systems programming, I hit a lot of bumps along the road in learning how to build real programs in Rust. That is, if I were to port what I am currently working on into Rust, how effective would all those tutorials be?</p>
-<p>This blog post is meant to cover my experience going down the Rust rabbit hole and tips I wish some learning resources could have taught better. Personally, I cannot learn a new language from simply watching youtube videos, but rather through seeking out solutions for myself, making mistakes, and feeling humbled by the process.</p>
-<h3 id="on-references"><a class="header" href="#on-references">On references</a></h3>
-<p>There are two kinds of references in Rust, a shared reference (also known as a borrow), and a mutable reference (also known as an exclusive reference). Typically, these are seen as &amp;x and &amp;mut x on a variable x. The difference between these two made a lot more sense once I started calling the latter an “exclusive reference”.</p>
-<p>Rust’s reference model is fairly simple. Borrowers can have as many shared reference to something as they need, but there can only be a single exclusive reference at a time. Otherwise, you could have many callers trying to modify a value at the same time. If many borrowers could also hold exclusive references, you risk undefined behavior, which safe Rust makes impossible.</p>
-<p>Calling &amp;mut “exclusive” references would have saved me some time while learning Rust.</p>
+<p>Rust 在整个系统编程中获得了令人难以置信的使用, 
+也因难以学习而闻名. 尽管如此, 还是有很多优秀的 Rust 内容可以满足初学者和高级程序员的需求.
+然而, 他们中太多人专注解释语言的核心机制和所有权概念, 而不是构建应用程序.</p>
+<p>作为一名编写高并发程序并专注在系统编程的 Go 开发者, 
+我在学习如何使用 Rust 构建真实程序的过程中遇到了很多障碍. 
+也就是交织, 如果我将当前正在从事的工作移植到 Rust 中, 那么所有这些教程的效果如何呢?</p>
+<p>此篇文章旨在介绍我进入 Rust 兔子洞的经历, 
+以及我希望一些学习资源可以更好阐述的内容. 
+对个人而言, 我无法通过简单的观看 youtube 视频来学习一门新语言, 
+而是必须通过为自己寻找解决方案,犯错以及对过程感受谦卑来积累．</p>
+<h3 id="关于参考"><a class="header" href="#关于参考">关于参考</a></h3>
+<p>Rust 中有两种引用, 共享引用(也称为 <code>借用</code>)和可变引用(也称为<code>独占引用</code>).
+通常这些被视为变量 x 上的 &amp;x 以及 &amp;mut x . 
+一旦我开始将后者称为&quot;独家参考&quot;, 这两白间的区别就更有意义了.</p>
+<p>Rust 的参考模型相当简单. 借款人可以根据需要拥有对某对象的尽可能多的共享引用, 
+但是, 一次只能有一个独占引用. 
+否则, 你可能会有很多调用者同时尝试对同一个值进行修改的囧境;
+如果很多借用者也可以持有独占袭用, 
+你将面临未定义行为风险, 
+而安全的 Rust 则不允许这么折腾.</p>
+<p>在学习 Rust 时, 都用 &amp;mut 独家参考可以节省很多时间:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub struct Foo {
@@ -211,9 +233,18 @@ println!(&quot;{}&quot;, foo.total()) // WORKS.
 foo.increase() // ERROR: Foo not declared as mut
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="bidirectional-references-are-possible"><a class="header" href="#bidirectional-references-are-possible">Bidirectional references are possible</a></h3>
-<p>In other languages with garbage collection, it’s easy to define graph data structures or other types that contain references to some children, and those references could contain a reference to their parent. In Rust, this is hard to do without fully understanding the borrowing rules. However, it is still possible with methods provided by the standard library.</p>
-<p>Let’s say we have a struct called Node which contains a set of references to child nodes, and also a reference to a parent node. Normally, Rust would complain, but we can satisfy the borrow checker by wrapping the parent reference in something called a Weak pointer. This type tells Rust that a node going away, or its children going away, shouldn’t mean that its parent should also be dropped.</p>
+<h3 id="双向引用是可以的"><a class="header" href="#双向引用是可以的">双向引用是可以的</a></h3>
+<blockquote>
+<p>Bidirectional references are possible</p>
+</blockquote>
+<p>在其它具有垃圾收集功能的语言中, 很容易定义图形数据结构或其它包含对某些子项引用的类型, 
+并且这些引用可以包含对其父项的引用;
+在 Rust 中, 如果不完全理解借用规则, 这是很难作到的;
+但是, 仍然可以使用标准库提供的正法.</p>
+<p>假设我们有一个名为 Node 的结构, 
+包含一组对子节点的引用, 以及一个对父节点的引用; 
+通常, Rust 会抱怨, 但是, 我们可以通过将父引用包装在称为 <code>弱指针</code> 的东西中来满足借用检查器的要求;
+这种类型告诉 Rust 一个节点消失, 或者其子节点消失, 不应该意味着父节点也应该被删除;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::cell::RefCell;
@@ -226,7 +257,10 @@ struct Node {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>This gives us handy primitives in building bidirectional references. However, I soon found out that building graph data structures in Rust is really hard unless you know what you’re doing, given the amount of book-keeping one needs to do around modeling data effectively to satisfy the compiler.</p>
+<p>这为我们提供了构建双向引用的便利原语; 
+然而, 我很快发现在 Rust 中构建图形数据真的很难, 
+除非你真的知道自己在作什么, 考虑到一个人需要围绕有效建模数据来作大量的 <code>book-keeping</code> 工作以满足编译器.</p>
+<p>(是也乎: 编译器作为 Rust 生态中最大的 BOSS 必须优先满足.)</p>
 <h3 id="implement-deref-to-make-your-code-cleaner"><a class="header" href="#implement-deref-to-make-your-code-cleaner">Implement Deref to make your code cleaner</a></h3>
 <p>Sometimes, we want to treat wrapper types as the things they contain. This is true for common data structures such as vec, smart pointers such as Box or even the reference counted types such as Rc and Arc. The standard lib contains traits called Deref and DerefMut which will help you tell Rust how a type should be dereferenced.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
