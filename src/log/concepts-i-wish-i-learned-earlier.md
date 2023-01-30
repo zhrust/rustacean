@@ -126,8 +126,14 @@ struct Node {
 (是也乎: 编译器作为 Rust 生态中最大的 BOSS 必须优先满足.)
 
 
-### Implement Deref to make your code cleaner
-Sometimes, we want to treat wrapper types as the things they contain. This is true for common data structures such as vec, smart pointers such as Box or even the reference counted types such as Rc and Arc. The standard lib contains traits called Deref and DerefMut which will help you tell Rust how a type should be dereferenced.
+### 实施 Deref 令代码更清晰
+> Implement Deref to make your code cleaner
+
+
+有时我们希望将包装器类型视之为其包含的内容;
+对于常见的数据结构(比如 vec),智能指针(例如 Box) 甚至引用计数类型(类似 Rc 和 Arc) 都是如此;
+标准库包含称为 Deref 和 DerefMut 的特征, 
+她们将报时你告诉 Rust 应该如何取消引用一个类型;
 
 ```rust
 use std::ops::{Deref, DerefMut};
@@ -155,8 +161,11 @@ let mut x = Example { value: 'a' };
 assert_eq!('b', x.value);
 ```
 
+上述示例代码中, 我们可以将 `*x` 视为其基础值 `"a"`, 
+甚至可以改变它, 因为, 我们定义了应该如何在借用或可变引用中取消引用的规则;
+这很强大, 也是你无需担心在 Box 等智能指针中包装类型的原因;
 
-In the example above, we can treat *x as if it were its underlying value of “a”, and even mutate it because we defined rules for how it should dereference in either borrows or mutable references. This is powerful and the reason why you don’t need to worry about wrapping types in smart pointers such as Box. The fact that a value is boxed is an implementation detail which can be abstracted through these traits.
+值被装箱的事实是一个实现细节, 可以通过这些特征抽象出来;
 
 ```rust
 struct Foo {
@@ -172,7 +181,17 @@ let mut foo = Box::new(Foo { value: 10 });
 assert_eq!(20, foo.value);
 ```
 
-### Be careful with methods on types that implement Deref
+### 小心实现 Deref 类型方法
+> Be careful with methods on types that implement Deref
+
+有没有想过, 为什么像 `Arc::clone` 这类方法的存在, 
+而我们只能对 Arc 值执行 `.clone()`?
+原因和类型如何实现 Deref 有关, 
+这是开发者应该警惕的事儿;
+
+考虑以下示例, 我们正在尝试从标准库中实现我们自己版本的
+多生产者/单一消费者(mpsc)通道:
+
 Ever wonder why methods such as Arc::clone exist when we could just do .clone() on an Arc value? The reason has to do with how types implement Deref and is something developers should be wary of. Consider the following example, where we are trying to implement our own version of multi-producer/single-consumer (mpsc) channels from the standard library:
 
 ```rust
@@ -208,7 +227,13 @@ impl<T: Clone> Clone for Inner<T> {
 }
 ```
 
-In the example above, we have a Sender type we want to implement the Clone trait on. This struct has a field called inner which is of type Arc<Inner<T>>. Recall that Arc implements Clone already and also Deref. On top of that, our Inner also implements Clone. With the code above, Rust does not know whether we want to clone Arc or the actual inner value, so the code above will fail. In this case, we can use the actual method provided by Arc from the sync crate.
+上述示例中, 我们有一个要在其上实现 Clone 特征的 Sender 类型;
+该结构有一个名为 inner 的字段, 其类型为 `Arc<Inner<T>>` ;
+回想一下 Arc 已经实现了 Clone 和 Deref ;
+最重要的是, 我们的 Inner 还现实了 Clone ;
+对于上面的代码, Rust 并不知道我们是要克隆 Arc 还是实际的内部值,
+所以, 上面代码会失败;
+在这种情况下, 我们可以使用 Arc 从 sync 包中提供的实际方法;
 
 ```rust
 impl<T: Clone> Clone for Sender<T> {
@@ -222,10 +247,23 @@ impl<T: Clone> Clone for Sender<T> {
 }
 ```
 
-### Understand when and when not to use interior mutability
-Sometimes, you will need to use structures such as Rc or Arc in your code, or implement structs that wrap some data and then want to mutate the data that is being wrapped. Soon, you will hit a wall with the compiler telling you that interior mutability is disallowed, which seems intractable at first sight. However, there are ways of allowing interior mutability in Rust that are even provided by the standard library.
+### 理解何时以及何时不用内部可变性
+> Understand when and when not to use interior mutability
 
-One of the simplest is Cell, which gives you interior mutability of data. That is, you could mutate the data within an Rc as long as the data is cheap to copy. You can achieve this by wrapping your data within a Rc<Cell<T>>. It provides get and set methods, which do not even need to be mut, because they copy data underneath the hood:
+
+有时, 你需要在代码中使用 Rc 或是 Arc 等结构, 
+又或者实现包装一些数据结构, 然后, 又想要改变被包装的数据;
+很快, 编译器就会告诉你, 内部可变性是不允许的, 乍看起来这很棘手;
+然而, 有一些方法允许 Rust 中的内部可变性, 
+甚至是由标准库提供的;
+
+最简单的一种是 Cell, 她为你提供数据的内可变性;
+也就是说, 嘦数据复制成本低, 
+你就可以在 Rc 中改变数据;
+你可以通过将数据包装在 `Rc<Cell<T>>` 中来实现这一点;
+她提供了 get 和 set 方法,
+甚至不需要被 mut , 因为, 她们是在底层复制数据的:
+
 
 ```rust
 // impl<T: Copy> Cell<T>
@@ -235,9 +273,26 @@ pub fn get(&self) -> T
 pub fn set(&self, val: T)
 ```
 
-Other types, such as RefCell help with moving certain borrow checks to runtime and skipping some of the compiler’s tough filters. However, this is risky, as it will panic at runtime if borrow checks are not fulfilled. Treat the compiler as a friend and you shall be rewarded. By skipping its checks or by pushing them to runtime, you are telling the compiler “trust me - what I am doing is sound”
+其它类型, 比如 RefCell 有助于将某些借用检查移至运行时, 并跳过一些编译器的严格过滤;
+然而, 这是有风险的, 因为, 如果没有完成借用检查, 就可能在运行时触发 panic ;
+将编译器当成朋友, 你会获得回报;
+通过跳过编译器检查, 或是将她们推迟到运行时, 
+等于告诉编译器"相信我 --- 我作的都是正确的";
 
-The std::cell package even warns us about this with a helpful passage:
+而 std::cell 包甚至通过一个很有帮助的消息警告我们:
+
+```
+
+更常见的继承可变性, 其中必须具有唯一访问权限才能改变值,
+这一语言元素是令 Rust 能强力推理指针别名, 静态防止崩溃错误的关键;
+因此, 继续可变性是首选, 内部可变性是最后的手段;
+由于 Cell 类型可以在不允许突变的地方启用突变, 
+因此, 在某些情况中, 内部可变性也许是合适的, 甚至必须使用, 例如:
+
+- 在不可变事物的"内部"引入可变性
+- 逻辑不可变方法的实现细节
+- 克隆的变异实现
+
 
 The more common inherited mutability, where one must have unique access to mutate a value, is one of the key language elements that enables Rust to reason strongly about pointer aliasing, statically preventing crash bugs. Because of that, inherited mutability is preferred, and interior mutability is something of a last resort. Since cell types enable mutation where it would otherwise be disallowed though, there are occasions when interior mutability might be appropriate, or even must be used, e.g.
 
@@ -245,9 +300,18 @@ The more common inherited mutability, where one must have unique access to mutat
 - Implementation details of logically-immutable methods.
 - Mutating implementations of Clone.
 
+```
 
-### Get and get mut methods are a thing
-Many types, including vec implement both get and get_mut methods, letting you borrow and mutate elements in the structure (the former only possible if you have a mutable reference to the collection). It took me a while to know these options are available for many data structures and they helped make my life easier by writing clean code a lot easier!
+### get 和 get mut 方法是一回事儿
+> Get and get mut methods are a thing
+
+
+很多类型, 包含 vec 都实现了 get 与 get_mut 方法,
+让你可以借用和改变结构中的元素
+(前者只有在你有一个对集会的可变引用时才可能);
+我花了一段时间, 才知道这些选项可用于许多数据结构,
+她们通过更轻松的编写干净的代码, 帮助我的生活更轻松!
+
 
 ```rust
 let x = &mut [0, 1, 2];
@@ -259,7 +323,22 @@ assert_eq!(x, &[0, 42, 2]);
 ```
 
 
-### Embrace unsafe but sound code
+### 拥抱不安全但合理的代码
+> Embrace unsafe but sound code
+
+
+作为一名 Go 开发者, "unsafe" 包总是感觉很不靠谱,
+而且我很少接触;
+然而, Rust 中 “unsafe” 的概念是完全不同的;
+事实上, 很多标准库都使用 `“unsafe”` 来取得巨大成功!
+
+这怎么可能? 尽管 Rust 使未定义的行为成为不可能,
+但是, 这不适用于标记为 “unsafe” 的代码块;
+相反, 编写 “unsafe” Rust 的开发者嘦保证其使用合理,
+即可获得所有好处;
+
+
+
 As a Go developer, the “unsafe” package felt sacrilegeous and something I seldom touched. However, the notion of unsafety in Rust is very different. In fact, a lot of the standard library uses “unsafe” to great success! How is this possible? Although Rust’s makes undefined behavior impossible, this does not apply to code blocks that are marked as “unsafe”. Instead, a developer writing “unsafe” Rust simply needs to guarantee its usage is sound to reap all the benefits.
 
 Take the example below, where we have a function that returns the item at a specified index in an array. To optimize this lookup, there is an unsafe function in Rust called get_unchecked which is available on the array type. This will panic and lead to undefined behavior if we attempt to get an index out of bounds. However, our function correctly asserts the unsafe call will only happen if the index is less than the array length. This means the code below is sound despite using an unsafe block.

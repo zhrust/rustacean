@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>43:Allergies - be Rustaceans</title>
+    <title>运算符重载六件趣事 - be Rustaceans</title>
 
 
     <!-- Custom HTML head -->
@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">1.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">1.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">1.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html" class="active"><strong aria-hidden="true">1.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">2.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">2.1.</strong> 希望一早知道的关键概念</a></li><li class="chapter-item expanded "><a href="../log/fun-rust-operators.html"><strong aria-hidden="true">2.2.</strong> 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">3.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">3.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">3.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">4.</strong> 开发</a></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">5.</strong> 技巧</a></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">1.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">1.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">1.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">1.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">2.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">2.1.</strong> 希望一早知道的关键概念</a></li><li class="chapter-item expanded "><a href="../log/fun-rust-operators.html" class="active"><strong aria-hidden="true">2.2.</strong> 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">3.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">3.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">3.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">4.</strong> 开发</a></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">5.</strong> 技巧</a></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -150,46 +150,95 @@
 
             <div id="content" class="content">
                 <main>
-                    <h1 id="ex43allergies"><a class="header" href="#ex43allergies">ex43Allergies</a></h1>
-<blockquote>
-<p>过敏源</p>
-</blockquote>
-<h2 id="background"><a class="header" href="#background">background</a></h2>
-<blockquote>
-<p>具体背景</p>
-</blockquote>
-<p><a href="https://exercism.org/tracks/rust/exercises/allergies">Allergies in Rust on Exercism</a></p>
-<h2 id="logging"><a class="header" href="#logging">logging</a></h2>
-<blockquote>
-<p>记要</p>
-</blockquote>
-<h3 id=""><a class="header" href="#">&amp;</a></h3>
-<blockquote>
-<p>现实世界的 与计算</p>
-</blockquote>
+                    <h1 id="rust-运算符重载六件趣事"><a class="header" href="#rust-运算符重载六件趣事">Rust 运算符重载六件趣事</a></h1>
+<p>原文: <a href="https://wishawa.github.io/posts/fun-rust-operators/">Six fun things to do with Rust operator overloading | Wisha Wanichwecharungruang</a></p>
+<p><img src="https://wishawa.github.io/posts/fun-rust-operators/dot-product-pooh.jpg" alt="dot-product-pooh" /></p>
+<h2 id="快译"><a class="header" href="#快译">快译</a></h2>
+<p>C++ Input/Output
+Instead of</p>
+<p>stdin().read_line(&amp;mut buffer).unwrap();
+println!(&quot;Hello I am {name}!!!&quot;);
+we can overload the shift operators on cin and cout to allow</p>
+<p>cin &gt;&gt; &amp;mut buffer;
+cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt;&lt; endl;
+Variadic Functions
+Instead of</p>
+<p>std::cmp::max(x, y);
+[w, x, y, z].into_iter().max();
+we can make</p>
+<p>// max+ is like std::cmp::max but better
+// it supports &gt;2 arguments
+max+(x, y);
+max+(w, x, y, z);
+More Concise Builders
+Here's a more serious one. Builder pattern sometimes involve a lot of repeated method calls. Take for example this usage of the warp web framework.</p>
+<p>let hi = warp::path(&quot;hello&quot;)
+.and(warp::path::param())
+.and(warp::header(&quot;user-agent&quot;))
+.map(|param: String, agent: String| {
+format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+});
+What if the API look like this instead?</p>
+<p>let hi = warp::path(&quot;hello&quot;)
++	warp::path::param()
++	warp::header(&quot;user-agent&quot;)
+&gt;&gt;	|param: String, agent: String| {
+format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+};
+Infix Functions
+Instead of</p>
+<p>x.pow(y);
+dot_product(a, b);
+a.cross(b.cross(c).cross(d))
+we can make</p>
+<p>x ^pow^ y;
+a <em>dot</em> b;
+a <em>cross</em> (b <em>cross</em> c <em>cross</em> d);
+Lots of people wanted this!</p>
+<p>Doublefish
+std::mem provides these functions</p>
+<p>size_of::<T>();
+size_of_val(&amp;value);
+Turbofish enthusiasts would enjoy size_of but not so much size_of_val, so let's make our own improved version of size_of_val that's more turbofishy</p>
+<p>size_of::<T>();
+size_of_val&lt;&lt;&amp;value&gt;&gt;();
+Join and Race
+Futures combinators can have short-circuiting behaviors</p>
+<p>// quit if any of the 3 errors
+(fut1, fut2, fut3).try_join().await;</p>
+<p>// quit if any of the 3 succeeds
+(fut4, fut5, fut6).race_ok().await;
+let's communicate this through &amp; and |</p>
+<p>(TryJoin &gt;&gt; fut1 &amp; fut2 &amp; fut3).await;
+(RaceOk &gt;&gt; fut4 | fut5 | fut6).await;
+Useful Links
+Discuss this on Reddit
+Playground containing the implementations behind some of the code shown here
+std::ops docs
+Rust operators precedence table</p>
 <h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
 <blockquote>
-<p>各种参考</p>
+<p>关键参考</p>
+</blockquote>
+<h2 id="logging"><a class="header" href="#logging">logging</a></h2>
+<blockquote>
+<p>版本记要</p>
 </blockquote>
 <ul>
-<li><a href="https://hltj.me/lang/2016/11/07/10m-letters.html">由“千万字母表问题”看多范式编程语言 | 灰蓝时光</a>
-<ul>
-<li><a href="http://www.nct9.ne.jp/m_hiroi/linux/rust14.html">Linux Programming / お気楽 Rust プログラミング超入門</a></li>
-</ul>
-</li>
-<li>...</li>
+<li>..</li>
+<li>230125 ZQ init.</li>
 </ul>
 
                 </main>
 
                 <nav class="nav-wrapper" aria-label="Page navigation">
                     <!-- Mobile navigation buttons -->
-                    <a rel="prev" href="../101/ex42all-your-base.html" class="mobile-nav-chapters previous"
+                    <a rel="prev" href="../log/concepts-i-wish-i-learned-earlier.html" class="mobile-nav-chapters previous"
                         title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../log/index.html" class="mobile-nav-chapters next"
+                    <a rel="next" href="../abt/index.html" class="mobile-nav-chapters next"
                         title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -200,12 +249,12 @@
         </div>
 
         <nav class="nav-wide-wrapper" aria-label="Page navigation">
-            <a rel="prev" href="../101/ex42all-your-base.html" class="nav-chapters previous" title="Previous chapter"
+            <a rel="prev" href="../log/concepts-i-wish-i-learned-earlier.html" class="nav-chapters previous" title="Previous chapter"
                 aria-label="Previous chapter" aria-keyshortcuts="Left">
                 <i class="fa fa-angle-left"></i>
             </a>
 
-            <a rel="next" href="../log/index.html" class="nav-chapters next" title="Next chapter"
+            <a rel="next" href="../abt/index.html" class="nav-chapters next" title="Next chapter"
                 aria-label="Next chapter" aria-keyshortcuts="Right">
                 <i class="fa fa-angle-right"></i>
             </a>

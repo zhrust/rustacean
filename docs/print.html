@@ -84,7 +84,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="101/index.html"><strong aria-hidden="true">1.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="101/exercism.html"><strong aria-hidden="true">1.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="101/ex42all-your-base.html"><strong aria-hidden="true">1.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="101/ex43Allergies.html"><strong aria-hidden="true">1.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="log/index.html"><strong aria-hidden="true">2.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">2.1.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="abt/index.html"><strong aria-hidden="true">3.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="abt/gh-pages.html"><strong aria-hidden="true">3.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="abt/zhrust.html"><strong aria-hidden="true">3.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="dev/index.html"><strong aria-hidden="true">4.</strong> 开发</a></li><li class="chapter-item expanded "><a href="tip/index.html"><strong aria-hidden="true">5.</strong> 技巧</a></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="101/index.html"><strong aria-hidden="true">1.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="101/exercism.html"><strong aria-hidden="true">1.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="101/ex42all-your-base.html"><strong aria-hidden="true">1.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="101/ex43Allergies.html"><strong aria-hidden="true">1.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="log/index.html"><strong aria-hidden="true">2.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">2.1.</strong> 希望一早知道的关键概念</a></li><li class="chapter-item expanded "><a href="log/fun-rust-operators.html"><strong aria-hidden="true">2.2.</strong> 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><a href="abt/index.html"><strong aria-hidden="true">3.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="abt/gh-pages.html"><strong aria-hidden="true">3.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="abt/zhrust.html"><strong aria-hidden="true">3.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="dev/index.html"><strong aria-hidden="true">4.</strong> 开发</a></li><li class="chapter-item expanded "><a href="tip/index.html"><strong aria-hidden="true">5.</strong> 技巧</a></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -451,8 +451,14 @@ struct Node {
 然而, 我很快发现在 Rust 中构建图形数据真的很难, 
 除非你真的知道自己在作什么, 考虑到一个人需要围绕有效建模数据来作大量的 <code>book-keeping</code> 工作以满足编译器.</p>
 <p>(是也乎: 编译器作为 Rust 生态中最大的 BOSS 必须优先满足.)</p>
-<h3 id="implement-deref-to-make-your-code-cleaner"><a class="header" href="#implement-deref-to-make-your-code-cleaner">Implement Deref to make your code cleaner</a></h3>
-<p>Sometimes, we want to treat wrapper types as the things they contain. This is true for common data structures such as vec, smart pointers such as Box or even the reference counted types such as Rc and Arc. The standard lib contains traits called Deref and DerefMut which will help you tell Rust how a type should be dereferenced.</p>
+<h3 id="实施-deref-令代码更清晰"><a class="header" href="#实施-deref-令代码更清晰">实施 Deref 令代码更清晰</a></h3>
+<blockquote>
+<p>Implement Deref to make your code cleaner</p>
+</blockquote>
+<p>有时我们希望将包装器类型视之为其包含的内容;
+对于常见的数据结构(比如 vec),智能指针(例如 Box) 甚至引用计数类型(类似 Rc 和 Arc) 都是如此;
+标准库包含称为 Deref 和 DerefMut 的特征, 
+她们将报时你告诉 Rust 应该如何取消引用一个类型;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::ops::{Deref, DerefMut};
@@ -480,7 +486,10 @@ let mut x = Example { value: 'a' };
 assert_eq!('b', x.value);
 <span class="boring">}
 </span></code></pre></pre>
-<p>In the example above, we can treat *x as if it were its underlying value of “a”, and even mutate it because we defined rules for how it should dereference in either borrows or mutable references. This is powerful and the reason why you don’t need to worry about wrapping types in smart pointers such as Box. The fact that a value is boxed is an implementation detail which can be abstracted through these traits.</p>
+<p>上述示例代码中, 我们可以将 <code>*x</code> 视为其基础值 <code>&quot;a&quot;</code>, 
+甚至可以改变它, 因为, 我们定义了应该如何在借用或可变引用中取消引用的规则;
+这很强大, 也是你无需担心在 Box 等智能指针中包装类型的原因;</p>
+<p>值被装箱的事实是一个实现细节, 可以通过这些特征抽象出来;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>struct Foo {
@@ -496,7 +505,16 @@ let mut foo = Box::new(Foo { value: 10 });
 assert_eq!(20, foo.value);
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="be-careful-with-methods-on-types-that-implement-deref"><a class="header" href="#be-careful-with-methods-on-types-that-implement-deref">Be careful with methods on types that implement Deref</a></h3>
+<h3 id="小心实现-deref-类型方法"><a class="header" href="#小心实现-deref-类型方法">小心实现 Deref 类型方法</a></h3>
+<blockquote>
+<p>Be careful with methods on types that implement Deref</p>
+</blockquote>
+<p>有没有想过, 为什么像 <code>Arc::clone</code> 这类方法的存在, 
+而我们只能对 Arc 值执行 <code>.clone()</code>?
+原因和类型如何实现 Deref 有关, 
+这是开发者应该警惕的事儿;</p>
+<p>考虑以下示例, 我们正在尝试从标准库中实现我们自己版本的
+多生产者/单一消费者(mpsc)通道:</p>
 <p>Ever wonder why methods such as Arc::clone exist when we could just do .clone() on an Arc value? The reason has to do with how types implement Deref and is something developers should be wary of. Consider the following example, where we are trying to implement our own version of multi-producer/single-consumer (mpsc) channels from the standard library:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -532,7 +550,13 @@ impl&lt;T: Clone&gt; Clone for Inner&lt;T&gt; {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>In the example above, we have a Sender type we want to implement the Clone trait on. This struct has a field called inner which is of type Arc&lt;Inner<T>&gt;. Recall that Arc implements Clone already and also Deref. On top of that, our Inner also implements Clone. With the code above, Rust does not know whether we want to clone Arc or the actual inner value, so the code above will fail. In this case, we can use the actual method provided by Arc from the sync crate.</p>
+<p>上述示例中, 我们有一个要在其上实现 Clone 特征的 Sender 类型;
+该结构有一个名为 inner 的字段, 其类型为 <code>Arc&lt;Inner&lt;T&gt;&gt;</code> ;
+回想一下 Arc 已经实现了 Clone 和 Deref ;
+最重要的是, 我们的 Inner 还现实了 Clone ;
+对于上面的代码, Rust 并不知道我们是要克隆 Arc 还是实际的内部值,
+所以, 上面代码会失败;
+在这种情况下, 我们可以使用 Arc 从 sync 包中提供的实际方法;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>impl&lt;T: Clone&gt; Clone for Sender&lt;T&gt; {
@@ -546,9 +570,21 @@ impl&lt;T: Clone&gt; Clone for Inner&lt;T&gt; {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="understand-when-and-when-not-to-use-interior-mutability"><a class="header" href="#understand-when-and-when-not-to-use-interior-mutability">Understand when and when not to use interior mutability</a></h3>
-<p>Sometimes, you will need to use structures such as Rc or Arc in your code, or implement structs that wrap some data and then want to mutate the data that is being wrapped. Soon, you will hit a wall with the compiler telling you that interior mutability is disallowed, which seems intractable at first sight. However, there are ways of allowing interior mutability in Rust that are even provided by the standard library.</p>
-<p>One of the simplest is Cell, which gives you interior mutability of data. That is, you could mutate the data within an Rc as long as the data is cheap to copy. You can achieve this by wrapping your data within a Rc&lt;Cell<T>&gt;. It provides get and set methods, which do not even need to be mut, because they copy data underneath the hood:</p>
+<h3 id="理解何时以及何时不用内部可变性"><a class="header" href="#理解何时以及何时不用内部可变性">理解何时以及何时不用内部可变性</a></h3>
+<blockquote>
+<p>Understand when and when not to use interior mutability</p>
+</blockquote>
+<p>有时, 你需要在代码中使用 Rc 或是 Arc 等结构, 
+又或者实现包装一些数据结构, 然后, 又想要改变被包装的数据;
+很快, 编译器就会告诉你, 内部可变性是不允许的, 乍看起来这很棘手;
+然而, 有一些方法允许 Rust 中的内部可变性, 
+甚至是由标准库提供的;</p>
+<p>最简单的一种是 Cell, 她为你提供数据的内可变性;
+也就是说, 嘦数据复制成本低, 
+你就可以在 Rc 中改变数据;
+你可以通过将数据包装在 <code>Rc&lt;Cell&lt;T&gt;&gt;</code> 中来实现这一点;
+她提供了 get 和 set 方法,
+甚至不需要被 mut , 因为, 她们是在底层复制数据的:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// impl&lt;T: Copy&gt; Cell&lt;T&gt;
@@ -558,16 +594,40 @@ pub fn get(&amp;self) -&gt; T
 pub fn set(&amp;self, val: T)
 <span class="boring">}
 </span></code></pre></pre>
-<p>Other types, such as RefCell help with moving certain borrow checks to runtime and skipping some of the compiler’s tough filters. However, this is risky, as it will panic at runtime if borrow checks are not fulfilled. Treat the compiler as a friend and you shall be rewarded. By skipping its checks or by pushing them to runtime, you are telling the compiler “trust me - what I am doing is sound”</p>
-<p>The std::cell package even warns us about this with a helpful passage:</p>
-<p>The more common inherited mutability, where one must have unique access to mutate a value, is one of the key language elements that enables Rust to reason strongly about pointer aliasing, statically preventing crash bugs. Because of that, inherited mutability is preferred, and interior mutability is something of a last resort. Since cell types enable mutation where it would otherwise be disallowed though, there are occasions when interior mutability might be appropriate, or even must be used, e.g.</p>
-<ul>
-<li>Introducing mutability ‘inside’ of something immutable</li>
-<li>Implementation details of logically-immutable methods.</li>
-<li>Mutating implementations of Clone.</li>
-</ul>
-<h3 id="get-and-get-mut-methods-are-a-thing"><a class="header" href="#get-and-get-mut-methods-are-a-thing">Get and get mut methods are a thing</a></h3>
-<p>Many types, including vec implement both get and get_mut methods, letting you borrow and mutate elements in the structure (the former only possible if you have a mutable reference to the collection). It took me a while to know these options are available for many data structures and they helped make my life easier by writing clean code a lot easier!</p>
+<p>其它类型, 比如 RefCell 有助于将某些借用检查移至运行时, 并跳过一些编译器的严格过滤;
+然而, 这是有风险的, 因为, 如果没有完成借用检查, 就可能在运行时触发 panic ;
+将编译器当成朋友, 你会获得回报;
+通过跳过编译器检查, 或是将她们推迟到运行时, 
+等于告诉编译器&quot;相信我 --- 我作的都是正确的&quot;;</p>
+<p>而 std::cell 包甚至通过一个很有帮助的消息警告我们:</p>
+<pre><code>
+更常见的继承可变性, 其中必须具有唯一访问权限才能改变值,
+这一语言元素是令 Rust 能强力推理指针别名, 静态防止崩溃错误的关键;
+因此, 继续可变性是首选, 内部可变性是最后的手段;
+由于 Cell 类型可以在不允许突变的地方启用突变, 
+因此, 在某些情况中, 内部可变性也许是合适的, 甚至必须使用, 例如:
+
+- 在不可变事物的&quot;内部&quot;引入可变性
+- 逻辑不可变方法的实现细节
+- 克隆的变异实现
+
+
+The more common inherited mutability, where one must have unique access to mutate a value, is one of the key language elements that enables Rust to reason strongly about pointer aliasing, statically preventing crash bugs. Because of that, inherited mutability is preferred, and interior mutability is something of a last resort. Since cell types enable mutation where it would otherwise be disallowed though, there are occasions when interior mutability might be appropriate, or even must be used, e.g.
+
+- Introducing mutability ‘inside’ of something immutable
+- Implementation details of logically-immutable methods.
+- Mutating implementations of Clone.
+
+</code></pre>
+<h3 id="get-和-get-mut-方法是一回事儿"><a class="header" href="#get-和-get-mut-方法是一回事儿">get 和 get mut 方法是一回事儿</a></h3>
+<blockquote>
+<p>Get and get mut methods are a thing</p>
+</blockquote>
+<p>很多类型, 包含 vec 都实现了 get 与 get_mut 方法,
+让你可以借用和改变结构中的元素
+(前者只有在你有一个对集会的可变引用时才可能);
+我花了一段时间, 才知道这些选项可用于许多数据结构,
+她们通过更轻松的编写干净的代码, 帮助我的生活更轻松!</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>let x = &amp;mut [0, 1, 2];
@@ -578,7 +638,18 @@ if let Some(elem) = x.get_mut(1) {
 assert_eq!(x, &amp;[0, 42, 2]);
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="embrace-unsafe-but-sound-code"><a class="header" href="#embrace-unsafe-but-sound-code">Embrace unsafe but sound code</a></h3>
+<h3 id="拥抱不安全但合理的代码"><a class="header" href="#拥抱不安全但合理的代码">拥抱不安全但合理的代码</a></h3>
+<blockquote>
+<p>Embrace unsafe but sound code</p>
+</blockquote>
+<p>作为一名 Go 开发者, &quot;unsafe&quot; 包总是感觉很不靠谱,
+而且我很少接触;
+然而, Rust 中 “unsafe” 的概念是完全不同的;
+事实上, 很多标准库都使用 <code>“unsafe”</code> 来取得巨大成功!</p>
+<p>这怎么可能? 尽管 Rust 使未定义的行为成为不可能,
+但是, 这不适用于标记为 “unsafe” 的代码块;
+相反, 编写 “unsafe” Rust 的开发者嘦保证其使用合理,
+即可获得所有好处;</p>
 <p>As a Go developer, the “unsafe” package felt sacrilegeous and something I seldom touched. However, the notion of unsafety in Rust is very different. In fact, a lot of the standard library uses “unsafe” to great success! How is this possible? Although Rust’s makes undefined behavior impossible, this does not apply to code blocks that are marked as “unsafe”. Instead, a developer writing “unsafe” Rust simply needs to guarantee its usage is sound to reap all the benefits.</p>
 <p>Take the example below, where we have a function that returns the item at a specified index in an array. To optimize this lookup, there is an unsafe function in Rust called get_unchecked which is available on the array type. This will panic and lead to undefined behavior if we attempt to get an index out of bounds. However, our function correctly asserts the unsafe call will only happen if the index is less than the array length. This means the code below is sound despite using an unsafe block.</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -1064,6 +1135,84 @@ harness = false
 <li>..</li>
 <li>230120 ZQ init.</li>
 </ul>
+<div style="break-before: page; page-break-before: always;"></div><h1 id="rust-运算符重载六件趣事"><a class="header" href="#rust-运算符重载六件趣事">Rust 运算符重载六件趣事</a></h1>
+<p>原文: <a href="https://wishawa.github.io/posts/fun-rust-operators/">Six fun things to do with Rust operator overloading | Wisha Wanichwecharungruang</a></p>
+<p><img src="https://wishawa.github.io/posts/fun-rust-operators/dot-product-pooh.jpg" alt="dot-product-pooh" /></p>
+<h2 id="快译-1"><a class="header" href="#快译-1">快译</a></h2>
+<p>C++ Input/Output
+Instead of</p>
+<p>stdin().read_line(&amp;mut buffer).unwrap();
+println!(&quot;Hello I am {name}!!!&quot;);
+we can overload the shift operators on cin and cout to allow</p>
+<p>cin &gt;&gt; &amp;mut buffer;
+cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt;&lt; endl;
+Variadic Functions
+Instead of</p>
+<p>std::cmp::max(x, y);
+[w, x, y, z].into_iter().max();
+we can make</p>
+<p>// max+ is like std::cmp::max but better
+// it supports &gt;2 arguments
+max+(x, y);
+max+(w, x, y, z);
+More Concise Builders
+Here's a more serious one. Builder pattern sometimes involve a lot of repeated method calls. Take for example this usage of the warp web framework.</p>
+<p>let hi = warp::path(&quot;hello&quot;)
+.and(warp::path::param())
+.and(warp::header(&quot;user-agent&quot;))
+.map(|param: String, agent: String| {
+format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+});
+What if the API look like this instead?</p>
+<p>let hi = warp::path(&quot;hello&quot;)
++	warp::path::param()
++	warp::header(&quot;user-agent&quot;)
+&gt;&gt;	|param: String, agent: String| {
+format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+};
+Infix Functions
+Instead of</p>
+<p>x.pow(y);
+dot_product(a, b);
+a.cross(b.cross(c).cross(d))
+we can make</p>
+<p>x ^pow^ y;
+a <em>dot</em> b;
+a <em>cross</em> (b <em>cross</em> c <em>cross</em> d);
+Lots of people wanted this!</p>
+<p>Doublefish
+std::mem provides these functions</p>
+<p>size_of::<T>();
+size_of_val(&amp;value);
+Turbofish enthusiasts would enjoy size_of but not so much size_of_val, so let's make our own improved version of size_of_val that's more turbofishy</p>
+<p>size_of::<T>();
+size_of_val&lt;&lt;&amp;value&gt;&gt;();
+Join and Race
+Futures combinators can have short-circuiting behaviors</p>
+<p>// quit if any of the 3 errors
+(fut1, fut2, fut3).try_join().await;</p>
+<p>// quit if any of the 3 succeeds
+(fut4, fut5, fut6).race_ok().await;
+let's communicate this through &amp; and |</p>
+<p>(TryJoin &gt;&gt; fut1 &amp; fut2 &amp; fut3).await;
+(RaceOk &gt;&gt; fut4 | fut5 | fut6).await;
+Useful Links
+Discuss this on Reddit
+Playground containing the implementations behind some of the code shown here
+std::ops docs
+Rust operators precedence table</p>
+<h2 id="refer-6"><a class="header" href="#refer-6">refer.</a></h2>
+<blockquote>
+<p>关键参考</p>
+</blockquote>
+<h2 id="logging-6"><a class="header" href="#logging-6">logging</a></h2>
+<blockquote>
+<p>版本记要</p>
+</blockquote>
+<ul>
+<li>..</li>
+<li>230125 ZQ init.</li>
+</ul>
 <div style="break-before: page; page-break-before: always;"></div><h1 id="有关"><a class="header" href="#有关">有关</a></h1>
 <blockquote>
 <p>as Zoom.Quiet</p>
@@ -1096,14 +1245,14 @@ harness = false
 <blockquote>
 <p>具体推进</p>
 </blockquote>
-<h2 id="refer-6"><a class="header" href="#refer-6">refer.</a></h2>
+<h2 id="refer-7"><a class="header" href="#refer-7">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
 </blockquote>
 <ul>
 <li><a href="https://docs.github.com/cn/pages/configuring-a-custom-domain-for-your-github-pages-site/troubleshooting-custom-domains-and-github-pages">验证 GitHub Pages 的自定义域 - GitHub Docs</a></li>
 </ul>
-<h2 id="logging-6"><a class="header" href="#logging-6">logging</a></h2>
+<h2 id="logging-7"><a class="header" href="#logging-7">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
@@ -1154,11 +1303,11 @@ rust 相关中文社区比当年 Python 的多不少,
 </ul>
 </li>
 </ul>
-<h2 id="refer-7"><a class="header" href="#refer-7">refer.</a></h2>
+<h2 id="refer-8"><a class="header" href="#refer-8">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
 </blockquote>
-<h2 id="logging-7"><a class="header" href="#logging-7">logging</a></h2>
+<h2 id="logging-8"><a class="header" href="#logging-8">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
@@ -1190,11 +1339,11 @@ rust 相关中文社区比当年 Python 的多不少,
 <p>具体推进</p>
 </blockquote>
 <p>???</p>
-<h2 id="refer-8"><a class="header" href="#refer-8">refer.</a></h2>
+<h2 id="refer-9"><a class="header" href="#refer-9">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
 </blockquote>
-<h2 id="logging-8"><a class="header" href="#logging-8">logging</a></h2>
+<h2 id="logging-9"><a class="header" href="#logging-9">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
@@ -1222,11 +1371,11 @@ rust 相关中文社区比当年 Python 的多不少,
 <p>具体推进</p>
 </blockquote>
 <p>???</p>
-<h2 id="refer-9"><a class="header" href="#refer-9">refer.</a></h2>
+<h2 id="refer-10"><a class="header" href="#refer-10">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
 </blockquote>
-<h2 id="logging-9"><a class="header" href="#logging-9">logging</a></h2>
+<h2 id="logging-10"><a class="header" href="#logging-10">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
