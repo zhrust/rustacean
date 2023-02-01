@@ -1,58 +1,196 @@
 # 20年来作为软件工程师学到的10件事
 原文: [20 Things I've Learned in my 20 Years as a Software Engineer - Simple Thread](https://www.simplethread.com/20-things-ive-learned-in-my-20-years-as-a-software-engineer/)
 
-## Important, Read This First
-You’re about to read a blog post with a lot of advice. Learning from those who came before us is instrumental to success, but we often forget an important caveat. Almost all advice is contextual, yet it is rarely delivered with any context.
+## 注意:请先阅读此内容
 
-“You just need to charge more!” says the company who has been in business for 20 years and spent years charging “too little” to gain customers and become successful.
+即将展现的是一篇包含大量建议的 blog ;
+向前人学习对成功至关重要,但是,我们常常忘记另外一个重要警告:
+几乎所有的建议都是上下文相关的, 但是,很少对上下文提供细节;
 
-“You need to build everything as microservices!” says the company who built a quick monolith, gained thousands of customers, and then pivoted into microservices as they started running into scaling issues.
+"你需要收取更多费用!" 这经营了20年的公司说, 多年以来收费"太低",无法赢得客户并取得成功;
 
-Without understanding the context, the advice is meaningless, or even worse, harmful. If those folks had followed their own advice early on, they themselves would likely have suffered from it. It is hard to escape this trap. We may be the culmination of our experiences, but we view them through the lens of the present.
+"你需要将一切构建为微服务!" 该公司表示, 构建了一个快速的整体,获得了数千客户,然后,在开始遇到问题时, 全面转向了微服务;
 
-So to give you a little context on where my advice comes from, I spent the first half of my career as a software engineer working for various small businesses and startups, then I went into consulting and worked in a number of really large businesses. Then I started Simple Thread and we grew from a team of 2 to a team of 25. 10 years ago we worked with mostly small/medium businesses, and now we work with a mix of big and small businesses.
 
-My advice is from someone who…
+如果不了解上下文, 建议就毫无意义,甚至更糟糕,有害;
+如果那些人早点听从他们自己的建议,他们自己可能会因此受苦;
+对于任何建议很难逃脱这个陷阱;
+我们可能是我们经历的终点,但是,我们却是通过现在的镜头来观察;
 
-has almost always been on small, lean teams where we have to do a lot with very little.
-values working software over specific tools.
-is starting new projects all the time, but also has to maintain a number of systems.
-values engineer productivity over most other considerations
-My experiences over the last 20 years have shaped how I view software, and have led me to some beliefs which I’ve tried to whittle down to a manageable list that I hope you find valuable.
 
-## On with the list
-### 1. I still don’t know very much
-“How can you not know what BGP is?” “You’ve never heard of Rust?” Most of us have heard these kinds of statements, probably too often. The reason many of us love software is because we are lifelong learners, and in software no matter which direction you look, there are wide vistas of knowledge going off in every direction and expanding by the day. This means that you can spend decades in your career, and still have a huge knowledge gap compared to someone who has also spent decades in a seemingly similar role. The sooner you realize this, the sooner you can start to shed your imposter syndrome and instead delight in learning from and teaching others.
+因此,为了让你了解一下这些建议的来源,特此说明:
+我在职业生涯的前半段担当软件工程师,为各种小型企业和初创公司工作,
+然后,我进入咨询行业并在许多非常太的企业工作;
+最后, 我开创了 `Simple Thread`,
+我们从一个2人团队成长为一个25人的团队;
+10年前, 我们主要和中小型企业合作,现在我们和大型和小型企业合作;
 
-### 2. The hardest part of software is building the right thing
-I know this is cliche at this point, but the reason most software engineers don’t believe it is because they think it devalues their work. Personally I think that is nonsense. Instead it highlights the complexity and irrationality of the environments in which we have to work, which compounds our challenges. You can design the most technically impressive thing in the world, and then have nobody want to use it. Happens all the time. Designing software is mostly a listening activity, and we often have to be part software engineer, part psychic, and part anthropologist. Investing in this design process, whether through dedicated UX team members or by simply educating yourself, will deliver enormous dividends. Because how do you really calculate the cost of building the wrong software? It amounts to a lot more than just lost engineering time.
+我的所有建议来自于:
 
-### 3. The best software engineers think like designers
-Great software engineers think deeply about the user experience of their code. They might not think about it in those terms, but whether it is an external API, programmatic API, user interface, protocol, or any other interface; great engineers consider who will be using it, why it will be used, how it will be used, and what is important to those users. Keeping the user’s needs in mind is really the heart of good user experience.
+- 几乎总是在小而精干的团队中,我们必须用很少的资源作很多事情
+- 重视工作软件而不是特定工具
+- 一直在开始新项目,同时还要维护一些系统
+- 重视工程师的生产力,超过其它大多数考虑因素
+- ...
 
-### 4. The best code is no code, or code you don’t have to maintain
-All I have to say is “coders gonna code.” You ask someone in any profession how to solve a problem, and they are going to err on the side of what they are good at. It is just human nature. Most software engineers are always going to err on the side of writing code, especially when a non-technical solution isn’t obvious. The same goes for code you don’t have to maintain. Engineering teams are apt to want to reinvent the wheel, when lots of wheels already exist. This is a balancing act, there are lots of reasons to grow your own, but beware of toxic “Not Invented Here” syndrome.
+我过去20年的经历塑造了对软件的偏见,
+并使我形成了一些信念;
+我试图将这些信念压缩为一个易于使用的列表,
+希望你能发现她们的价值;
 
-### 5. Software is a means to an end
-The primary job of any software engineer is delivering value. Very few software developers understand this, even fewer internalize it. Truly internalizing this leads to a different way of solving problems, and a different way of viewing your tools. If you really believe that software is subservient to the outcome, you’ll be ready to really find “the right tool for the job” which might not be software at all.
 
-### 6. Sometimes you have to stop sharpening the saw, and just start cutting shit
-Some people tend to jump into problems and just start writing code. Other people tend to want to research and research and get caught in analysis paralysis. In those cases, set a deadline for yourself and just start exploring solutions. You’ll quickly learn more as you start solving the problem, and that will lead you to iterate into a better solution.
+## 建议清单:
+### 1. 我仍然懂的不是太多
 
-### 7. If you don’t have a good grasp of the universe of what’s possible, you can’t design a good system
-This is something I struggle with a lot as my responsibilities take me further and further from the day to day of software engineering. Keeping up with the developer ecosystem is a huge amount of work, but it is critical to understand what is possible. If you don’t understand what is possible and what is available in a given ecosystem then you’ll find it impossible to design a reasonable solution to all but the most simple of problems. To summarize, be wary of people designing systems who haven’t written any code in a long time.
+"你怎么不知道 BGP ?"
 
-### 8. Every system eventually sucks, get over it
-Bjarne Stroustrup has a quote that goes “There are only two kinds of languages: the ones people complain about and the ones nobody uses”. This can be extended to large systems as well. There is no “right” architecture, you’ll never pay down all of your technical debt, you’ll never design the perfect interface, your tests will always be too slow. This isn’t an excuse to never make things better, but instead a way to give you perspective. Worry less about elegance and perfection; instead strive for continuous improvement and creating a livable system that your team enjoys working in and sustainably delivers value.
+"你从来没听说过 Rust?"
 
-### 9. Nobody asks “why” enough
-Take any opportunity to question assumptions and approaches that are “the way things have always been done”. Have a new team member coming on board? Pay attention to where they get confused and what questions they ask. Have a new feature request that doesn’t make sense? Make sure you understand the goal and what is driving the desire for this functionality. If you don’t get a clear answer, keep asking why until you understand.
+我们大多数人都被人这么说过,
+而且可能听的太频繁了;
+我们中许多人喜欢软件的原因就是因为我们是终身学习者, 在软件领域,
+无论你从哪个方向看, 都有广阔的知识前景向各个方向发展,
+而且每天都在扩展;
+这意味着即便你在职业生涯中度过数十年,
+但是, 和同样在看似相似的角色中度过数十年的人相比,
+仍然存在巨大的知识差距;
+越早意识到这点, 就能越早开始摆脱 "顶替者综合症" ,
+转而乐于向他人学习和教导他人;
 
-### 10. We should be far more focused on avoiding 0.1x programmers than finding 10x programmers
-The 10x programmer is a silly myth. The idea that someone can produce in 1 day what another competent, hard working, similarly experienced programmer can produce in 2 weeks is silly. I’ve seen programmers that sling 10x the amount of code, and then you have to fix it 10x the amount of times. The only way someone can be a 10x programmer is if you compare them to 0.1x programmers. Someone who wastes time, doesn’t ask for feedback, doesn’t test their code, doesn’t consider edge cases, etc… We should be far more concerned with keeping 0.1x programmers off our teams than finding the mythical 10x programmer.
 
-### 11. One of the biggest differences between a senior engineer and a junior engineer is that they’ve formed opinions about the way things should be
-Nothing worries me more than a senior engineer that has no opinion of their tools or how to approach building software. I’d rather someone give me opinions that I violently disagree with than for them to have no opinions at all. If you are using your tools, and you don’t love or hate them in a myriad of ways, you need to experience more. You need to explore other languages, libraries, and paradigms. There are few ways of leveling up your skills faster than actively seeking out how others accomplish tasks with different tools and techniques than you do.
+
+### 2. 软件最难的部分是构建正确的东西
+
+我知道在这点上算陈词滥调,
+但是, 大多数软件工程师并不相信的原因是, 他们认为这在贬低他们的工作;
+我个人认为这是无稽之谈；
+相反,这突出了我们必须工作的环境本身复杂性和不合理性,
+这故居了我们的挑战;
+你可以设计出世界上技术上最令人印象深刻的东西,
+然后, 却无人愿意使用;
+这种事儿一直在发生;
+设计软件主要是一种倾听活动,
+我们经常不得不成为竕软件工程师, 部分通灵师, 以及部分人类学家;
+投资在这个设计过程, 无论是通过专门的 UX 团队, 还是通过简单的自我教育,
+都将带来巨大的回报;
+因为, 你如何计算构建错误软件的真正成本?
+这不仅仅是损失工程时间...
+
+### 3. 最好的软件工程师像设计师一样思考
+
+伟大的软件工程师会思考他们代码的用户体验;
+他们可能不会用各种术语来考虑,
+而是考虑应该是外部API/编程API/用户界面/协议还是其它任何界面;
+伟大的工程师会考虑谁将使用, 为什么要使用,如何使用,
+以及这些对用户来说什么是最重要的;
+牢记用户的需求, 确认是良好用户体验的核心;
+
+
+
+### 4. 最好的代码是没有代码,或是你不必维护的
+
+我只想说: "码农只能编码";
+你问任何行业的人如何解决问题, 
+他们都会在他们擅长的领域犯错误;
+叫只是人性;
+大多数软件工程师总是会在编写代码时出错,
+尤其是当非技术解决方案不明朗时;
+你不必维护的代码也是如此;
+当很多轮子已经存在时,
+工程团队很容易想要重新发明轮子;
+这是一种平衡行为, 
+有很多理由让你自己再来一遍,
+但是, 要提防这种 "没在此现实"(“Not Invented Here”) 综合症;
+
+
+### 5. 软件是达到目的的手段
+
+任何软件工程师的主要工作是交付价值;
+
+很少有软件开发者理解这一点, 将其内化的就更少了;
+真正将其内化后, 能导致解决问题的不同方式,
+以及观察工具的不同方式;
+如果真真的相信软件是从属于结果的,
+你就会准备好找到真正"适合的工具",
+有时可能根本不是软件;
+
+
+
+
+### 6. 有时你必须停止磨锯,直接开始砍屎
+
+有些人倾向于跳入问题, 并立即开始编写代码;
+其它人往往想要研究和陷入硬件分析进而瘫痪;
+在这些情况中,为自己设定一个截止日期,
+然后, 开始探索解决方案;
+当你开始解决问题时,你很快能学习到更多,
+这也将引导你迭代到更好的解决方案;
+
+### 7. 如果你不能很好的理解所有可能性, 就无法设计出好的系统
+
+这是我一直在努力解决的问题,
+因为, 我的职责使我在软件工程的日常工作中越来越远;
+峎上开发者生态是一项巨大的工作,
+但是,了解什么是可能的至关重要;
+如果你不了解给定生态中有什么是可能的,以及什么是可用的,
+那么你将发现除了最简单的问题之外,
+不可能设计出一个合理的解决方案来解决所有问题;
+总而言之, 要警惕那些很长时间没有编写任何代码的架构专家;
+
+
+
+### 8. 每个的了了的都很糟粕,克服丫的
+
+Bjarne Stroustrup 有句名言:
+"只有两种语言: 人们抱怨的语言, 和没人使用的语言";
+
+这也可以拓展到大型系统;
+没有"正确"的架构, 你永远无法偿还所有技术债务,
+你永远无法设计出完美的界面,
+你的测试总是太慢;
+这不是永不让事情变得更好的借口,
+而是一种给你观点的方式;
+少担心优雅和完美;
+相反, 努力持续改进并创建一个你的团队喜欢在其中工作,
+并可以持续创造价值的宜人系统;
+
+
+
+### 9. 无人问足"为什么"
+
+抓住任何机会质疑"作事方式"的假设和方法;
+有新人加入嘛?
+注意他们在哪里感到困惑以及他们在问什么问题;
+有没有无意义新功能请求?
+确保你了解目标以及是什么推动了对这一功能的渴望;
+如果你没有得到明确的答案,
+请继续问为什么, 直到你明白为止;
+
+
+### 10. 我们应该更专注于避免0.1x 程序员,而不是寻找 10x 程序员
+
+10倍速程序员是一个愚蠢的神话;
+某人可以在1天里生产出另外一位有能力/勤奋/有类似经验的程序员需要在2周以内生产代码的想法是愚蠢的;
+我见过程序员编写10倍的代码,
+然后, 你必须修复它10倍以上的次数;
+某珍爱可以成为10倍程序员的唯一方法,
+是将他们和 0.1 倍速程序员进行比较;
+有人浪费时间, 不寻求反馈, 不测试代码,
+不考虑边缘情况等等...
+
+我们应该关心让 0.1 倍速程序员远离我们的团队,
+而不是寻找神话般的 10 倍速程序员;
+
+### 11. 高级工程师和下级工程师间最大的区别之一是他们已经形成了对事情应该如何发展的偏见
+
+没有什么比对他们的工具或是如何构建软件没有有意见的高级工程师更让我担心的事儿了;
+
+我宁愿有人给有强烈的反对意见, 也不愿他们完全没有意见;
+如果你正在使用你的工具,而且你还没有更多喜欢或是讨厌的情绪,
+那么, 你需要更多体验;
+你需要探索其它语言/库/范例;
+没有什么比积极寻找其它人如何使用和你不同的工具和技术来完成任务更快提高技能的方法了;
+
 
 ### 12. People don’t really want innovation
 People talk about innovation a whole lot, but what they are usually looking for is cheap wins and novelty. If you truly innovate, and change the way that people have to do things, expect mostly negative feedback. If you believe in what you’re doing, and know it will really improve things, then brace yourself for a long battle.
