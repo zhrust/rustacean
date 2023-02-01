@@ -5,6 +5,7 @@
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
 - [笔记](./log/README.md)
+    + [20年来作为软件工程师学到的10件事](./log/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
     + [希望一早知道的关键概念](./log/concepts-i-wish-i-learned-earlier.md)
     + [运算符重载六件趣事](./log/fun-rust-operators.md)
 - [有关](./abt/README.md)
