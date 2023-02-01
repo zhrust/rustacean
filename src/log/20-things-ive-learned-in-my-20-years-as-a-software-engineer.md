@@ -1,4 +1,4 @@
-# 20年来作为软件工程师学到的10件事
+# 20年来作为软件工程师学到的20件事
 原文: [20 Things I've Learned in my 20 Years as a Software Engineer - Simple Thread](https://www.simplethread.com/20-things-ive-learned-in-my-20-years-as-a-software-engineer/)
 
 ## 注意:请先阅读此内容
