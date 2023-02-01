@@ -192,42 +192,127 @@ Bjarne Stroustrup 有句名言:
 没有什么比积极寻找其它人如何使用和你不同的工具和技术来完成任务更快提高技能的方法了;
 
 
-### 12. People don’t really want innovation
-People talk about innovation a whole lot, but what they are usually looking for is cheap wins and novelty. If you truly innovate, and change the way that people have to do things, expect mostly negative feedback. If you believe in what you’re doing, and know it will really improve things, then brace yourself for a long battle.
+### 12. 人们并不是真想创新
 
-### 13. Your data is the most important part of your system
-I’ve seen a lot of systems where hope was the primary mechanism of data integrity. In systems like this, anything that happens off the golden path creates partial or dirty data. Dealing with this data in the future can become a nightmare. Just remember, your data will likely long outlive your codebase. Spend energy keeping it orderly and clean, it’ll pay off well in the long run.
+人们经常谈论创新,
+但是, 他们通常寻找的是廉价的胜利和新奇;
+如果你在真正的创新, 并想改变人们作事的方式,
+那么大多数情况下都会收到负面反馈;
+如果你相信自己在作的事儿,
+并知道确实会改善事情,
+那么为自己的长期战斗作好准备;
 
-### 14. Look for technological sharks
-Old technologies that have stuck around are sharks, not dinosaurs. They solve problems so well that they have survived the rapid changes that occur constantly in the technology world. Don’t bet against these technologies, and replace them only if you have a very good reason. These tools won’t be flashy, and they won’t be exciting, but they will get the job done without a lot of sleepless nights.
 
-### 15. Don’t mistake humility for ignorance
-There are a lot of software engineers out there who won’t express opinions unless asked. Never assume that just because someone isn’t throwing their opinions in your face that they don’t have anything to add. Sometimes the noisiest people are the ones we want to listen to the least. Talk to the people around you, seek their feedback and advice. You’ll be glad you did.
+### 13. 数据是你系统中最重要的部分
 
-### 16. Software engineers should write regularly
-Software engineers should regularly blog, journal, write documentation and in general do anything that requires them to keep their written communication skills sharp. Writing helps you think about your problems, and helps you communicate those more effectively with your team and your future self. Good written communication is one of the most important skills for any software engineer to master.
+我见过很多系统, 其中希望数据完备性是系统主要机制;
+在这种系统中,
+任何在黄金路径之外发生的事情,都会心产生部分脏数据;
+将来处理这些数据将是一场噩梦;
+请记住, 你的数据可能会比你的代码要长寿;
+花精力保持数据秩序和清洁,从长远看会有好的回报;
 
-### 17. Keep your processes as lean as possible
-Everyone wants to be agile these days, but being “agile” is about building things in small chunks, learning, and then iterating. If someone is trying to shoehorn much more into it than that, then they’re probably selling something. It isn’t to say that people don’t need accountability or help to work this way, but how many times have you heard someone from your favorite tech company or large open source project brag about how great their Scrum process is? Stay lean on process until you know you need more. Trust your team and they will deliver.
 
-### 18. Software engineers, like all humans, need to feel ownership
-If you divorce someone from the output of their work, they will care less about their work. I see this almost as a tautology. This is the primary reason why cross-functional teams work so well, and why DevOps has become so popular. It isn’t all about handoffs and inefficiencies, it is about owning the whole process from start to finish, and being directly responsible for delivering value. Give a group of passionate people complete ownership over designing, building, and delivering a piece of software (or anything really) and amazing things will happen.
+### 14. 寻找技术鲨鱼
 
-### 19. Interviews are almost worthless for telling how good of a team member someone will be
-Interviews are far better spent trying to understand who someone is, and how interested they are in a given field of expertise. Trying to suss out how good of a team member they will be is a fruitless endeavor. And believe me, how smart or knowledgable someone is is also not a good indicator that they will be a great team member. No one is going to tell you in an interview that they are going to be unreliable, abusive, pompous, or never show up to meetings on time. People might claim they have “signals” for these things… “if they ask about time off in the first interview then they are never going to be there!” But these are all bullshit. If you’re using signals like these you’re just guessing and turning away good candidates.
+仍然存在的旧技术是鲨鱼而不是恐龙;
+他们解决问题能力如此之强,以至在技术世界不断发生的快速变化中幸存下来;
+不要和这些技术打赌,
+只有在有充分理由的情况下才负担它们;
+这些工具不会华而不实,
+也不会令人兴奋,
+得是不是, 它们能在没有很多不眠之夜的情况下完成工作;
 
-### 20. Always strive to build a smaller system
-There are a lot of forces that will push you to build the bigger system up-front. Budget allocation, the inability to decide which features should be cut, the desire to deliver the “best version” of a system. All of these things push us very forcefully towards building too much. You should fight this. You learn so much as you’re building a system that you will end up iterating into a much better system than you ever could have designed in the first place. This is surprisingly a hard sell to most people.
 
-## What is your story?
-So there you have it, 20 years of software distilled down into 20 pithy pieces of wisdom. I’d love to hear it if something resonated with you. I’d also love to hear if you have a piece of wisdom that you’ve picked up over your career that you’d like to share. Feel free to leave it down in the comments.
+### 15. 还要把谦逊误认为无知
+
+有很多软件工程师除非被直接问到,
+否则不会发表意见;
+永远不要认为仅仅因为有人没有将意见扔到你面前,
+他们就没有什么可以补充的;
+有时, 最吵闹的人是我们最不想听的;
+和周围人交谈, 寻求他们的反馈和建议;
+你会庆幸你这么作了;
+
+
+### 16. 软件工程师应该定期写作
+
+软件工程师应该定期写 blog/日记/文档,
+通常作需要他们保持书面沟通技巧的事儿;
+写作可以帮助你思考问题,
+并帮助你能更有效的和团队以及未来的自己沟通;
+良好的书面沟通是任何软件工程师都必须掌握的最重要技能之一;
+
+
+### 17. 尽可能保持流程简洁
+
+现在每个人想想变得敏捷,
+但是,"敏捷"就是以小块的方法构建事物/学习/然后迭代;
+如果有人试图在其中塞入更多东西,
+那么,他们可能只是在卖东西;
+这并不是说人们不需要问责或是帮助以便用这种方式协作,
+但是, 你有多少次听到你最喜欢的科技公司或是大型开源项目成员有吹嘘他们的 Scrum 流程有多NB?
+保持精益过程,
+直到你知道你需要更多;
+相信你的团队,他们能交付成果;
+
+### 18. 软件工程师和所有人一样,需要有主人翁精神
+
+如果你将某人从他们的工作成果小分离出来,
+他们就会更彡关心他们的工作;
+我认为这几乎是必然的;
+这是跨职能团队作的如此出色,
+以及 DevOps 变得如此流行的主要原因;
+这不仅仅是关于交接和效率低下,
+而是关于从头到尾拥有整个过程, 并且是直接的负责交付价值;
+让一群充满激情的人完全拥有设计/构建和交付软件(或任何东西)的权利,
+惊人的事情就会发生;
+
+(译注: 当然, 得是有意义的事务, 为领导一些幻想去努力很难有什么主人翁精神能触发)
+
+### 19. 面试对于告诉某人将成为团队成员有多赞,几乎毫无价值
+
+面试最好花在了解某人是谁,
+以及他们对特定专业领域的兴趣程度上;
+试图推测他们将成为多么优秀的团队成员是徒劳的;
+相信我,
+一个人有多聪明或是多博学也不能很好的证明他们将成为一名优秀的团队成员;
+没有人会在面试中告诉你他们不可靠/爱辱骂/自负或是从不准时参加会议;
+人们可能会声称他们对这些事情有"信号"...
+"如果他们在第一面试时询问请假,那么他们永远不会去请假!"
+但是, 这些都是废话;
+如果你使用这种信号, 只是在猜测并拒绝优秀的候选人;
+
+
+
+### 20. 始终努力构建一个更小的系统
+
+有很多力量促使你预先构建更大的系统;
+预算分配, 无法测定应该精减哪些功能,
+希望提供系统的"最佳版本";
+所有,这些事情都非常有力的推动我们构建更多;
+你应该阻止这个;
+你在构建一个系统时学到了很多东西,
+你最终将迭代到一个比你最初设计的系统更好的版本;
+令人惊讶的必须,
+这对太多数人来说是难以接受的;
+
+
+## 你的故事呢?
+
+这是全部了, 20年的软件生涯提炼出来的的20条精辟断言;
+
+如果有什么能引发你的共鸣,
+我很很听听;
+我也很想知道你在职业生源中积累的智慧并愿意分享出来;
+请在评论中留言吧;
 
 ## refer.
 > 关键参考
 
 很有人不同意所有观点: [January 25, 2023 at 7:25 pm](https://www.simplethread.com/20-things-ive-learned-in-my-20-years-as-a-software-engineer/#comment-142472)
 
-Hard disagree with most of the 20 items.
+### Hard disagree with most of the 20 items.
 
 1. Writing software is difficult, tedious and needs real work. No silver bullet libraries, no methodology, no framework, no IOT, no amount of unit tests will get the work done faster.
 
