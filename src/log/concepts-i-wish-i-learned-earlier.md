@@ -192,8 +192,6 @@ assert_eq!(20, foo.value);
 考虑以下示例, 我们正在尝试从标准库中实现我们自己版本的
 多生产者/单一消费者(mpsc)通道:
 
-Ever wonder why methods such as Arc::clone exist when we could just do .clone() on an Arc value? The reason has to do with how types implement Deref and is something developers should be wary of. Consider the following example, where we are trying to implement our own version of multi-producer/single-consumer (mpsc) channels from the standard library:
-
 ```rust
 use std::sync::{Arc, Mutex, Condvar};
 
@@ -293,13 +291,6 @@ pub fn set(&self, val: T)
 - 逻辑不可变方法的实现细节
 - 克隆的变异实现
 
-
-The more common inherited mutability, where one must have unique access to mutate a value, is one of the key language elements that enables Rust to reason strongly about pointer aliasing, statically preventing crash bugs. Because of that, inherited mutability is preferred, and interior mutability is something of a last resort. Since cell types enable mutation where it would otherwise be disallowed though, there are occasions when interior mutability might be appropriate, or even must be used, e.g.
-
-- Introducing mutability ‘inside’ of something immutable
-- Implementation details of logically-immutable methods.
-- Mutating implementations of Clone.
-
 ```
 
 ### get 和 get mut 方法是一回事儿
@@ -338,11 +329,6 @@ assert_eq!(x, &[0, 42, 2]);
 即可获得所有好处;
 
 
-
-As a Go developer, the “unsafe” package felt sacrilegeous and something I seldom touched. However, the notion of unsafety in Rust is very different. In fact, a lot of the standard library uses “unsafe” to great success! How is this possible? Although Rust’s makes undefined behavior impossible, this does not apply to code blocks that are marked as “unsafe”. Instead, a developer writing “unsafe” Rust simply needs to guarantee its usage is sound to reap all the benefits.
-
-Take the example below, where we have a function that returns the item at a specified index in an array. To optimize this lookup, there is an unsafe function in Rust called get_unchecked which is available on the array type. This will panic and lead to undefined behavior if we attempt to get an index out of bounds. However, our function correctly asserts the unsafe call will only happen if the index is less than the array length. This means the code below is sound despite using an unsafe block.
-
 ```rust
 /// Example taken from the Rustonomicon
 fn item_at_index(idx: usize, arr: &[u8]) -> Option<u8> {
@@ -356,13 +342,27 @@ fn item_at_index(idx: usize, arr: &[u8]) -> Option<u8> {
 }
 ```
 
-Embrace unsafe as long as you can prove the soundness of your API, but avoid exposing functions that are directly unsafe to your consumers unless it is truly warranted. For this reason, having tightly-controlled internals of your packages where you can prove unsafe blocks are sound is a normal practice in Rust.
+嘦你能证明你的 API 是可靠的,
+就接受 unsafe, 但是, 要避免逈你的消费者暴露 unsafe 函数,
+除非是真正有保证的;
+出于这个原因, 在 Rust 中,对你的包内部进行严格控制,
+可以证明 unsafe 代码块是合理的了;
 
-Typically, unsafe is used where performance is of absolute importance, or when you know of an easy way to solve a problem using unsafe blocks and you can prove the soundness of your code.
+通常在性能绝对重要的情况下, 才使用 unsafe,
+或者当你知道使用 unsafe 代码块是解决问题的简单方法,
+并且可以证明代码的可靠性时;
 
-### Use impl types as arguments rather than generic constraints when you can
+(`是也乎:`
 
-Coming from Golang, I thought that traits could simply be provided as function parameters all the time. For example:
+安全和可靠分离, 那么, 什么是可靠呢?
+
+)
+
+
+### 尽可能用 impl 类型作为参数而不是通用约束
+
+这点来自 Golang, 我认为特征可以一直简单的作为函数参数来提供;
+比如:
 
 ```rust
 trait Meower {
@@ -384,7 +384,12 @@ fn do_the_meow(meower: Meower) {
 }
 ```
 
-…but the above fails, as trait objects do not have a size at compile time which Rust needs in order to get the job done. We could get around it by adding &dyn Meower and telling the compiler this is dynamically sized, but I soon learned this is not the “rusty” solution. Instead, developers tend to pass in generic parameters constrained by a trait. For example:
+...但是,上述代码失败了,
+因为, trait 对象在编译时没有 Rust 完成工作需要的内存尺寸;
+我们可以通过添加 `&dyn Meower` 来告诉编译器这是动态调整大小来绕过,
+但是, 很快我了解到这不是 `rusty`/锈范儿 解决方案;
+相反,开发者倾向于衖受特征约束的通用参数,
+例如:
 
 ```rust
 fn do_the_meow<M: Meower>(meower: M) {
@@ -392,7 +397,14 @@ fn do_the_meow<M: Meower>(meower: M) {
 }
 ```
 
-…which compiles and passes. However, as functions get more complex, we might have a very hard-to-read function signature if we also include other generic parameters. In this example, we don’t really need a generic type if all we want is to meow once. We don’t even care about the results of the meow, so we can instead rewrite as
+...现在能通过编译了;
+然而,随着函数越来越复杂, 如果我们还包括其它通用参数,
+就可能会有一个非常难以阅读的函数声明;
+在此示例中,如果我们只想用一次 meow,
+那么, 实际上并不需要动用泛型;
+我们甚至于并不关心 meow 的结果,
+所以, 可以改写为这样:
+
 
 ```rust
 fn do_the_meow(meower: &impl Meower) {
@@ -400,10 +412,14 @@ fn do_the_meow(meower: &impl Meower) {
 }
 ```
 
-which tells the compiler “I just want something that implements Meow”. This pattern is a lot cleaner when this is all you need, and there is no need for a generic return type of your function in the first place.
+这样告诉编译器:"我只想要实现 Meow 的东西";
+当然,这正是我们需要的,
+并且,首先不需要函数的通用返回类型时,
+此模式会更加清晰;
 
-### iter() when you need to borrow, iter mut() for exclusive refs, and into iter() when you need to own
-Many tutorials immediately jump to iterating over vectors using the into_iter method below:
+### 用 iter() 过程中想借用时, iter mut() 用以独占 refs,而 into iter() 支持拥有
+
+很多教程立即跳转到使用下面的 into_iter 方法来迭代 vectors/向量:
 
 ```rust
 let items = vec![1, 2, 3, 4, 5];
@@ -412,7 +428,9 @@ for item in items.into_iter() {
 }
 ```
 
-However, many beginners (myself included) hit a wall when we start using this iterator method within structs, such as:
+然而,当我们刚刚开始在结构中使用这个迭代器方法时,
+很多初学者(包括作者自己)都碰壁了,例如:
+
 
 ```rust
 struct Foo {
@@ -427,7 +445,8 @@ impl Foo {
 }
 ```
 
-and immediately hit:
+并立即提示:
+
 ```
     error[E0507]: cannot move out of `self.bar` which is behind a shared reference
        --> src/main.rs:9:9
@@ -439,12 +458,24 @@ and immediately hit:
         |         type `Vec<u32>`, which does not implement the `Copy` trait
 
 ```
-After trying all kinds of approaches as a noob, I realized that .into_iter() takes ownership of the collection, which is not what I needed for my purposes. Instead, there are two other useful methods on iterators that I wish I had learned about earlier. The first is .iter(), which borrows the collection, letting you assert things about its values but not own or mutate them, and also .iter_mut() which helps you mutate internal values of the collection as long as you have the only exclusive reference.
 
-In summary, use .iter() when you just need to borrow, .into_iter() when you want take ownership, and .iter_mut() when you need to mutate elements of an iterator.
+作为菜鸟尝试了很多办法后, 才意识到 `.into_ter()` 取得了集合的所有权,
+这不是我的目标所需要的;
+相反, 在迭代器上还有另外两种有用的方法, 真希望当时能早点知道丫们;
 
-### Phantom data is more than just for working with raw pointers to types
-Phantom data seems weird when you first encounter it, but it soon makes sense as a way of telling the compiler one “owns” a certain value despite just having a raw pointer to it. For example:
+第一个是 `.iter()` ,借用集合, 让你断言关于其值的东西,但是, 不拥有或是改变她们;
+再有就是 `iter_mut()` 帮助你改变集合内部值,嘦你是唯一的exclusive reference/独占参考;
+
+总之, 当你只需要借用时用 `.iter()`,
+当你想要获得所有权时用 `.into_iter()`,
+当你需要改变迭代对象的元素时用 `.iter_mut()`;
+
+### Phantom 数据不仅仅用以处理指向类型的原始指针
+
+当你第一次遇到 Phantom data/幻数据时,
+一定感觉很奇怪,但是, 很快就会成为一种告诉编译器"拥有"某个值的好方式,
+尽管只有一个指向她的原始指针;
+例如:
 
 ```rust
 use std::marker;
@@ -455,19 +486,28 @@ struct Foo<'a, T: 'a> {
 }
 ```
 
-Tells the compiler that Foo owns T, despite only having a raw pointer to it. This is helpful for applications that need to deal with raw pointers and use unsafe Rust.
+这儿告诉编译器 Foo 拥有 T,
+尽管只有一个指向她的原始指针;
+这对于需要处理原始指针和使用 unsafe Rust 的应用程序很有帮助;
 
-However, they can also be a way to tell the compiler that your type does not implement the Send or Sync traits! You can wrap the following types with PhantomData and use them in your structs as a way to tell the compiler that your struct is neither Send nor Sync.
+但是, 也可以是一种告诉编译器你的类型还没实现 Send 或是 Sync 特征的方法!
+你可以使用 PhantomData 包装以下类型,并在你的结构中使用她们,
+来作为一种方式告诉编译器你的结构即不是 Send 也不是 Sync;
+
 
 ```rust
 pub type PhantomUnsync = PhantomData<Cell<()>>;
 pub type PhantomUnsend = PhantomData<MutexGuard<'static, ()>>;
 ```
 
-### Use rayon for incremental parallelism
-Sometimes, you want to parallelize work when iterating through collections, but hit a brick wall when dealing with threading and making types safe to send across threads. Sometimes, the extra boilerplate just isn’t worth it if it makes your code almost unreadable.
+### 用 rayon 实现并行增量
 
-Instead, there is an awesome package called Rayon which provides fantastic tools for parallelizing your computations in a seamless manner. For example, let’s say we have a function that computes the sum of squares of an array.
+有时, 你希望在遍历集会时并行化工作,
+但是, 在处理线程和确保类型可以安全的跨线程发送时却碰壁了;
+有时, 如果额外的样板文件令你的代码几乎不可读,那就已经不值得了;
+
+相反, 有一个名为 Rayon 很赞的包, 已经提供了以无缝方式并行化计算的上好工具;
+例如,假设我们有一个计算数组平方和的函数:
 
 ```rust
 fn sum_of_squares(input: &[i32]) -> i32 {
@@ -477,7 +517,12 @@ fn sum_of_squares(input: &[i32]) -> i32 {
 }
 ```
 
-The above can absolutely be parallelized due to the nature of multiplication and addition, and Rayon makes it trivial to do so by giving us automatic access to “parallel iterators” on collections such as arrays. Here’s what it looks like with pretty much zero boilerplate. It also does not compromise readability at all.
+由于乘法和加法的性质, 上述代码绝对可以并行化,
+Rayon 通过让我们自动访问数组等集会的"并行迭代器",
+使并行化变得微不足道;
+这是几乎零样板的代码;
+而且也完全不影响可读性:
+
 
 ```rust
 // Importing rayon prelude is what gives us access to .par_iter on arrays.
@@ -493,15 +538,54 @@ fn sum_of_squares(input: &[i32]) -> i32 {
 }
 ```
 
-### Understand the concept of extension traits when developing Rust libraries
-So how does Rayon accomplish the above in such a clean way? The answer lies in “extension traits”, which are traits that can be defined as extensions to other traits, such as Iterator. That is, we can add other helpful functions to items that normally implement the Iterator trait, but they will only be available if the trait is in scope, such as by importing it in a file.
+(`是也乎`:
 
-This approach is excellent because these traits will only be available if you import the extension trait in your project, and provide a great way to extend common collections and types with clean APIs that developers can use just as easily as their normal counterparts. Using parallel iterators is as easy as using iterators in Rust thanks to Rayon’s extension traits.
+工程中如果自己要构造各种内部库,
+也值得给出这种使用界面,
+和以往使用内置库的代码完全兼容,
+只是在关键节点处替换为自己魔改/加强过的...
+)
 
-In fact, there is a highly informative talk that explains how to use extension traits to develop a library that provides progress bars on iterators here
 
-### Embrace the monadic nature of Option and Result types
-After working with options and results, one will quickly see that `.unwrap()` moves values out of them, which will fail if the option or result is part of a shared reference such as a struct. However, sometimes all we want is to assert the option matches a value within or to obtain a reference to its internals. There are many ways to do this, but one way is to never leave the domain of options at all.
+### 开发 Rust 库时理解 拓展特征 的概念
+
+那么 Rayon 是如何以如此干净的方式完成上述工作的呢?
+答案在于"拓展特征",
+这些特征可以定义为对其它特征的拓展,
+例如 Iterator;
+也就是说,我们可以逈通常实现 Itertor 特征的项追加其它有用的函数,
+但是, 她们只有在特性范畴以内时才可用,
+比如通过将其导入文件中;
+
+这种方式非常好,因为,这些特征只有在你在项目中导入拓展特征时才可用,
+并提供了一种使用干净的 API 拓展通用集合和类型的好方法,
+开发者可以像使用普通 API 一样轻松的使用这些 API;
+由于 Rayon 的拓展特征,
+使用并行迭代器就像在 Rust 中使用普通迭代器一样简单;
+
+事实上,这有一个信息量很大的演讲,解释了如何使用 拓展特征 来开发一个在迭代器上提供进度条的库;
+
+(`是也乎`:
+
+["Type-Driven API Design in Rust" by Will Crichton - YouTube](https://www.youtube.com/watch?v=bnnacleqg6k)
+
+配套看看 Rayon 官方对自己实现原理的嗯哼: [rayon/src/iter/plumbing at master · rayon-rs/rayon](https://github.com/rayon-rs/rayon/tree/master/src/iter/plumbing)
+以及专门的解析文章: [How Rust supports Rayon's data parallelism | Red Hat Developer](https://developers.redhat.com/articles/2023/01/30/run-app-under-openshift-service-mesh)
+
+大约可以感受到 Rust 世界的任性了...
+)
+
+
+### 拥抱 Option 和 Result 类型的一元性
+
+使用 Option 和 Result 之后,
+人们会很快看到`.unwrap()` 将值从她们移出,
+如果 Option 和 Result 是共享引用(比如 struct)的一部分,
+就将导致失败;
+然而,有时我们想要的只是断言 Option 匹配内部的值或获取对其内部的引用;
+有很多方法可以作到这点,
+但是, 还有一种方式能不用离开 Option 领域:
+
 
 ```rust
 fn check_five(x: Option<i32>) -> bool {
@@ -510,7 +594,11 @@ fn check_five(x: Option<i32>) -> bool {
 }
 ```
 
-Another example is one where we want to replace data inside of an option with the None value, perhaps when interacting with some struct. We could write this in an imperative programming manner, and do things verbosely as follows:
+另一个示例是我们想要用 None 值替换 Option 内数据,
+也就是和某些结构交互时;
+我们可以用指令式编程的方式来编写,
+并按照以下方式详细完成:
+
 
 ```rust
 struct Foo {
@@ -530,7 +618,10 @@ impl<T> Foo<T> {
 }
 ```
 
-However, Options have some really cool properties due to their fundamental nature that they have useful methods defined on them which can make our lives a lot easier.
+然而, Option 有一些非常酷的属性,
+因为, 她们的基本性质是定义了有用的方法,
+可以让我们的生源更加轻松;
+
 
 ```rust
 // Takes the value of data and leaves None in its place.
@@ -539,7 +630,12 @@ fn pop(&mut self) -> Option<T> {
 }
 ```
 
-Options in Rust are modeled after the same paradigm in functional programming languages, belonging to a broader category of data types known as Monads. We won’t into what those are, but just think of them as wrappers around data that we can manipulate without needing to take things out of them. For example, picture a function which adds the inner values of two options together and returns an option.
+Rust 中的 Option 以函数式编程语言中相同的范例为模型,
+属于更广泛的数据类型类别, 称为 Monad;
+不用深入理解 Monad 是什么, 而嘦将其视为数据的包装器,
+我们可以在不需要从中取出东西的情况下对其进行操作;
+比如, 想象一个将两个 Option 内部值相加并返回一个 Option 的函数:
+
 
 ```rust
 fn add(x: Option<i32>, y: Option<i32>) -> Option<i32> {
@@ -550,7 +646,12 @@ fn add(x: Option<i32>, y: Option<i32>) -> Option<i32> {
 }
 ```
 
-The above looks kind of clunky because of the none checks it needs to perform, and it also sucks that we have to extract values out of both options and construct a new option out of that. However, we can much better than this thanks to Option’s special properties! Here’s what we could do
+上述代码看起来有点点笨拙,因为,需要执行 none 检验,
+而且我们必须从两个 Option 中提取值并从中构建一个新 Option 就很囧;
+然而, 由于 Option 的特殊属性,
+我们可以作的更好!
+这是我们可以获得的:
+
 
 ```rust
 fn add(x: Option<i32>, y: Option<i32>) -> Option<i32> {
@@ -558,14 +659,34 @@ fn add(x: Option<i32>, y: Option<i32>) -> Option<i32> {
 }
 ```
 
-We can zip and map options just like we can over arrays and vectors. This property is also found in Result types, and even in things such as `Future` types. If you’re curious about why this works, learn more about Monads here.
+可以对 option 使用 zip 和 map ,
+就像我们可以处理数组和向量一样;
+此属性也存在于 Result 类型中,
+甚至存在于诸如 `Future` 类型之类事物中;
+如果你对为什么这么作感到好奇,
+请继续挖掘 Monad 的更多信息 -> [functional programming - Monad in plain English? (For the OOP programmer with no FP background) - Stack Overflow](https://stackoverflow.com/questions/2704652/monad-in-plain-english-for-the-oop-programmer-with-no-fp-background)
 
-Embrace the monadic nature of the Option and Result types and don’t just use unwrap and if x.is_none() {} else everywhere. They have so many useful methods defined which you can read about in the standard library.
+接受 Option 和 Result 类型的一元性质,
+不要到处使用 unwrap 和 if x.is_none() {} else ;
+本身就包含了很多有用的方法,
+你可以在标准库中阅读这些方法;
 
-### Understand Drop how it should be implemented for different data structures
-The standard library describes the Drop trait as:
+(`是也乎:`
 
-When a value is no longer needed, Rust will run a “destructor” on that value. The most common way that a value is no longer needed is when it goes out of scope.
+所以, 标准库的通读是一个基本功了,
+不过, 相比 Python 等其它语言的官方文档,
+docs.rs 实在太麻了点儿,还要习惯一下;
+
+)
+
+
+### 了解 Drop 应该如何针对不同数据结构实现
+
+标准库将 Drop 特性描述为:
+
+当不再需要某个值时, Rust 将对该值运行"析构函数";
+不再需要某个值最常见方式是超出作用域;
+
 
 ```rust
 pub trait Drop {
@@ -573,19 +694,40 @@ pub trait Drop {
 }
 ```
 
-Drop is critical when writing data structures in Rust. One must have a sound approach towards how memory will be thrown away once you no longer need it. Using reference-counted types can help you get over these hurdles but it will not always be enough. For example, writing a custom linked list, or writing structs that use channels, would typically need to implement a custom version of Drop. Implementing drop is actually far easier than it seems, when you see how the standard lib actually does it:
+
+在 Rust 中编写数据结构时, Drop 是至关重要的;
+人们必须有一种合理的方法来处理一旦不再需要内存时如何丢弃(安全的);
+使用引用计数类型可以报时你克服这些障碍,
+但是, 这并不总是足够的;
+例如,编写自定义链表或是编写使用通道的结构时,通常要实现自定义版本的 Drop;
+当你看到标准库实际如何执行时,
+实现 Drop 比并看起来容易的多:
 
 ```rust
 // That's it!
 fn drop<T>(t: T) {}
 ```
 
-Using the clever rules of destruction upon losing scope, std::mem::drop has an empty function body! This is a trick you can use in your own custom Drop implementations as long as you cover all of your bases.
+巧妙利用失去作用域时销毁的规则,
+`std::mem::drop` 有一个空函数体!
 
-### Really annoyed by the borrow checker? Use immutable data structures
-Functional programmers love to say that global, mutable state is the root of all evil, so why use it if you can avoid it? Thanks to Rust’s functional constructs, we are able to construct data structures that never need mutation the first place! This is especially helpful when you need to write pure code similar to that seen in Haskell, OCaml, or other languages.
+这是一个技巧, 你可以在自己的自定义 Drop 实现中使用,
+嘦你涵盖所有基类?即可;
 
-With an example taken from a comprehensive tutorial on linked lists, we see how one could build an immutable list where nodes are reference counted:
+
+
+### 真的对借用检查员很气? 那就用不可变数据结构
+
+函数式程序员喜欢说全局的/可变的状态是万恶之源,
+如果可以避免,那毛还要使用呢?
+多亏了 Rust 的函数式结构,
+我们才能构建从一开始就不可能突变的结构结构!
+当你需要编写类似在 Haskell/OCaml 或其它语言中看到的纯粹函数式代码时,
+这尤其有用;
+
+通过链接列表综合教程中的示例,
+我们可以看到如何构建一个不可变列表,其中节点有引用计数:
+
 
 ```rust
 use std::rc::Rc;
@@ -619,18 +761,39 @@ impl<T> List<T> {
     ...
 ```
 
-This is awesome because it acts similarly to functional data structures where one does not modify a list by prepending, but rather creates a list by constructing with the new element as its head and the existing list as the tail.
+这就很赞,因为,其行为类似于函数式数据结构,
+在函数式数据结构中,
+人们不会通过追加前缀来修改列表,
+而是通过以新元素作为其头部和现有列表作为尾部来构建列表完成新构建;
 
 ```rust
     [head] ++ tail
 ```
 
-Note that none of the methods above need to be mut because our data structure is immutable! This is also efficient on memory because the structure is reference counted, meaning we won’t be wasting unnecessary resources duplicating the underlying memory of nodes if there are multiple callers on this data structure.
+请注意,上述方法都不需要 mut, 因为,我们的数据结构是不可变的!
+这在内存上也是非常高效的,因为,该结构是引用计数的,
+这意味着如果此数据结构上有多个调用者,
+我们不会浪费不必要的资源来复制节点的底层内存;
 
-Pure, functional code in Rust is neat, but many times, one will need tail recursion to write code that is performant in this manner. However, be careful, as tail-call optimization is not guaranteed by the Rust compiler. See more on this here
+Rust 中的纯函数代码很简洁,
+但是,多数时候,需要尾递归来了把用我快这种方式实现的高性能代码；
+而且，要小心，毕竟 Rust 编译器不保证尾调用优化；
+值得进一步挖掘更多信息 -> [When is tail recursion guaranteed in Rust? - Stack Overflow](https://stackoverflow.com/questions/59257543/when-is-tail-recursion-guaranteed-in-rust)
 
-### Blanket traits help reduce duplication
-Sometimes, you might want to constrain a generic parameter by many different traits:
+(`是也乎:`
+
+这就尴尬了, 只是个看起来很美的思路,
+毕竟 Rust 不是纯函数语言,
+递归并不是第一公民;
+
+所以, 这种场景中,还是老实和 借用管理员 好好商量吧...
+
+)
+
+###  traits 篮有助减少重复
+
+有时,可能希望通过很多不同的特征来约束泛型参数:
+
 
 ```rust
 struct Foo<T: Copy + Clone + Ord + Bar + Baz + Nyan> {
@@ -638,7 +801,10 @@ struct Foo<T: Copy + Clone + Ord + Bar + Baz + Nyan> {
 }
 ```
 
-However, this can quickly get out of hand as soon as you start writing impl statements, or when having multiple generic params. Instead, you can define a blanket trait that can make your code a more DRY.
+但是,一旦你开始编写 impl 语句,
+或是当你有多个通用参数时,
+这很快就会失控;
+相反你可溶性定义一个整体特征, 使代码更加 DRY;
 
 ```rust
 trait Fooer: Copy + Clone + Ord + Bar + Baz + Nyan {}
@@ -650,7 +816,16 @@ struct Foo<F: Fooer> {
 impl<F: Fooer> Foo<F> { ... }
 ```
 
-Blanket traits can help reduce duplication, however, don’t let them get way too big. In many cases, having a type require so many constraints might be a code-smell, as you are creating too large of an abstraction. Instead, pass in concrete types if you notice your constraints get too large for no reason. Certain applications, however, might benefit from blanket traits, such as libraries that aim to provide as generic of an API as possible.
+traits 篮可以帮助减少重复，
+但是，不要让其变得过大；
+在很多情况中，
+让一个类型需要如此多的约束可能会产生坏味道,
+因为,你创建的抽象太大了;
+相反,如果你发现约束无缘无故的变得太大,
+请传入具体类型;
+然而,某些应用和远又可能受益于 blanket traits/特征篮,
+例如旨在提供尽可能通用的 API 库;
+
 
 ### Match statements are very flexible and structural in nature
 Instead of nesting match statements, for example, one could bring values together as tuples and do the following:

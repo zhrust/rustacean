@@ -1,0 +1,435 @@
+<!DOCTYPE HTML>
+<html lang="en" class="sidebar-visible no-js light">
+
+<head>
+    <!-- Book generated using mdBook -->
+    <meta charset="UTF-8">
+    <title>Rust 丑句法 - be Rustaceans</title>
+
+
+    <!-- Custom HTML head -->
+    
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.png">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/chrome.css">
+    <link rel="stylesheet" href="../css/print.css" media="print">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="../highlight.css">
+    <link rel="stylesheet" href="../tomorrow-night.css">
+    <link rel="stylesheet" href="../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+
+</head>
+
+<body>
+    <!-- Provide site root to javascript -->
+    <script>
+        var path_to_root = "../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+    </script>
+
+    <!-- Work around some values being stored in localStorage wrapped in quotes -->
+    <script>
+        try {
+            var theme = localStorage.getItem('mdbook-theme');
+            var sidebar = localStorage.getItem('mdbook-sidebar');
+
+            if (theme.startsWith('"') && theme.endsWith('"')) {
+                localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+            }
+
+            if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- Set the theme before any content is loaded, prevents flash -->
+    <script>
+        var theme;
+        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
+        if (theme === null || theme === undefined) { theme = default_theme; }
+        var html = document.querySelector('html');
+        html.classList.remove('no-js')
+        html.classList.remove('light')
+        html.classList.add(theme);
+        html.classList.add('js');
+    </script>
+
+    <!-- Hide / unhide sidebar before it is displayed -->
+    <script>
+        var html = document.querySelector('html');
+        var sidebar = 'hidden';
+        if (document.body.clientWidth >= 1080) {
+            try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+            sidebar = sidebar || 'visible';
+        }
+        html.classList.remove('sidebar-visible');
+        html.classList.add("sidebar-" + sidebar);
+    </script>
+
+    <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <div class="sidebar-scrollbox">
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">2.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">2.1.</strong> 20年来作为软件工程师学到的10件事</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">3.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/fun-rust-operators.html"><strong aria-hidden="true">3.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">4.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">4.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">4.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">4.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html" class="active"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+        </div>
+        <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+    </nav>
+
+    <div id="page-wrapper" class="page-wrapper">
+
+        <div class="page">
+                        <div id="menu-bar-hover-placeholder"></div>
+            <div id="menu-bar" class="menu-bar sticky bordered">
+                <div class="left-buttons">
+                    <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents"
+                        aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <button id="theme-toggle" class="icon-button" type="button" title="Change theme"
+                        aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                        <i class="fa fa-paint-brush"></i>
+                    </button>
+                    <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                        <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button>
+                        </li>
+                    </ul>
+                    <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)"
+                        aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S"
+                        aria-controls="searchbar">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <h1 class="menu-title">be Rustaceans</h1>
+
+                <div class="right-buttons">
+                    <a href="../print.html" title="Print this book" aria-label="Print this book">
+                        <i id="print-button" class="fa fa-print"></i>
+                    </a>
+                    <a href="https://github.com/zhrust/rustacean/tree/main/src" title="Git repository" aria-label="Git repository">
+                        <i id="git-repository-button" class="fa fa-github"></i>
+                    </a>
+
+                </div>
+            </div>
+
+            <div id="search-wrapper" class="hidden">
+                <form id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..."
+                        aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </form>
+                <div id="searchresults-outer" class="searchresults-outer hidden">
+                    <div id="searchresults-header" class="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+            <script>
+                document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                    link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                });
+            </script>
+
+            <div id="content" class="content">
+                <main>
+                    <h1 id="rust-丑句法"><a class="header" href="#rust-丑句法">Rust 丑句法</a></h1>
+<p>原文: <a href="https://matklad.github.io/2023/01/26/rusts-ugly-syntax.html#Rust-s-Ugly-Syntax">Rust's Ugly Syntax</a></p>
+<h2 id="快译"><a class="header" href="#快译">快译</a></h2>
+<p>大家抱怨 Rust 的语法;
+不过,俺想大多数时候,
+当人们认为在对 Rust 语法有疑问时,
+实际上在反抗对应语义;
+在这篇有点儿异想天开的文章中,
+俺将尝试理清这两点;</p>
+<p>先从一个丑陋的语法示例开始:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read&lt;P: AsRef&lt;Path&gt;&gt;(path: P) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+  fn inner(path: &amp;Path) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+    let mut file = File::open(path)?;
+    let mut bytes = Vec::new();
+    file.read_to_end(&amp;mut bytes)?;
+    Ok(bytes)
+  }
+  inner(path.as_ref())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>此函数读取给定二进制文件内容;
+这是直接从标准库中提取的, 所以, 不算是稻草人式无用示例;
+而且,至少对俺来说, 这绝对不算漂亮;</p>
+<p>让我们想象一下,如果 Rust 有更好的语法, 这个函数应该是什么样儿;
+如果和真正的编程语言有任何相似之处, 无论真假, 纯属试合!</p>
+<p>从 Rs++ 开始:</p>
+<pre><code class="language-c++">template&lt;std::HasConstReference&lt;std::Path&gt; P&gt;
+std::io::outcome&lt;std::vector&lt;uint8_t&gt;&gt;
+std::read(P path) {
+    return read_(path.as_reference());
+}
+
+static
+std::io::outcome&lt;std::vector&lt;uint8_t&gt;&gt;
+read_(&amp;auto const std::Path path) {
+    auto file = try std::File::open(path);
+    std::vector bytes;
+    try file.read_to_end(&amp;bytes);
+    return okey(bytes);
+}
+</code></pre>
+<p>Rhodes 变体:</p>
+<pre><code class="language-ruby">public io.Result&lt;ArrayList&lt;Byte&gt;&gt; read&lt;P extends ReferencingFinal&lt;Path&gt;&gt;(
+        P path) {
+    return myRead(path.get_final_reference());
+}
+
+private io.Result&lt;ArrayList&lt;Byte&gt;&gt; myRead(
+        final reference lifetime var Path path) {
+    var file = try File.open(path);
+    ArrayList&lt;Byte&gt; bytes = ArrayList.new();
+    try file.readToEnd(borrow bytes);
+    return Success(bytes);
+}
+</code></pre>
+<p>经典 RhodesScript:</p>
+<pre><code class="language-js">public function read&lt;P extends IncludingRef&lt;Path&gt;&gt;(
+    path: P,
+): io.Result&lt;Array&lt;byte&gt;&gt; {
+    return myRead(path.included_ref());
+}
+
+private function myRead(
+    path: &amp;const Path,
+): io.Result&lt;Array&lt;byte&gt;&gt; {
+    let file = try File.open(path);
+    Array&lt;byte&gt; bytes = Array.new()
+    try file.readToEnd(&amp;bytes)
+    return Ok(bytes);
+}
+</code></pre>
+<p>响尾蛇/Rattlesnake:</p>
+<pre><code class="language-python">def read[P: Refing[Path]](path: P): io.Result[List[byte]]:
+    def inner(path: @Path): io.Result[List[byte]]:
+        file := try File.open(path)
+        bytes := List.new()
+        try file.read_to_end(@: bytes)
+        return Ok(bytes)
+    return inner(path.ref)
+</code></pre>
+<p>以及, CrabML:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>read :: 'p  ref_of =&gt; 'p -&gt; u8 vec io.either.t
+let read p =
+  let
+    inner :: &amp;path -&gt; u8 vec.t io.either.t
+    inner p =
+      let mut file = try (File.open p) in
+      let mut bytes = vec.new () in
+      try (file.read_to_end (&amp;mut bytes)); Right bytes
+  in
+    ref_op p |&gt; inner
+;;
+<span class="boring">}
+</span></code></pre></pre>
+<p>作为一个稍微严肃和有用的练习,
+让我们作相反的尝试--保留 Rust 语法,
+但是, 尝试简化语义直到最终结果, 看会是什么样儿;</p>
+<p>这是我们的起点:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read&lt;P: AsRef&lt;Path&gt;&gt;(path: P) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+  fn inner(path: &amp;Path) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+    let mut file = File::open(path)?;
+    let mut bytes = Vec::new();
+    file.read_to_end(&amp;mut bytes)?;
+    Ok(bytes)
+  }
+  inner(path.as_ref())
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>这时, 最大的噪音源是嵌套函数;
+动机有点儿深奥;
+外部函数是通用的,而内部不是;
+使用编译模式,这意味着外部函数和用户代码一起编译,
+而嵌的将优化;
+相比之下, 内部函数是在编译 std 本身时编译的,
+从而节省了编译用户代码的时间;
+简化这一点(损失一些性能)的一种方法,
+说是泛型函数总是单独编译,
+但是,能在幕后接受一个额外的运行时秋粮, 可以描述物理维度上的输入参数;</p>
+<p>这样我们获得:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read&lt;P: AsRef&lt;Path&gt;&gt;(path: P) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+  let mut file = File::open(path.as_ref())?;
+  let mut bytes = Vec::new();
+  file.read_to_end(&amp;mut bytes)?;
+  Ok(bytes)
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>下个噪音元素是 <code>&lt;P: AsRef&lt;Path&gt;&gt;</code> 约束;
+这是必需的,因为 Rust 喜欢将内存中字节的物理布局作为接口公开,
+特别是对可以带来性能的情况;
+特殊的, Path 的含义并不是文件路径的某种抽象,
+这里只是字面意义上内存中的一堆连续字节;
+所以, 我们需要 AsRef 来将其和任何能够表示这种字节片的抽象一起工作;
+但是, 如果我们不关心性能,
+就可以要求所有接口都相当抽象,并通过虚函数调用进行调解,
+而不是直接访问内存;
+那么, 我们就不需要 AsRef 这堆东西了:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read(path: &amp;Path) -&gt; io::Result&lt;Vec&lt;u8&gt;&gt; {
+  let mut file = File::open(path)?;
+  let mut bytes = Vec::new();
+  file.read_to_end(&amp;mut bytes)?;
+  Ok(bytes)
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>这样简化后,我们实际上也可以摆脱 <code>Vec&lt;u8&gt;</code> -- 如果我们不再使用泛型来表达语言本身的高效可增长字节数组;
+我们必须使用运行时提供的一些不透明字节类型:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read(path: &amp;Path) -&gt; io::Result&lt;Bytes&gt; {
+  let mut file = File::open(path)?;
+  let mut bytes = Bytes::new();
+  file.read_to_end(&amp;mut bytes)?;
+  Ok(bytes)
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>从技术上讲,我们仍然随身携带所有权和备用系统,
+但是,由于无法直接控制类型的内存布局,
+就无法带来巨大的性能优势;
+仍然有助于避免 GC,防止迭代器失效,
+并静态检验非线程安全代码是否实际上没有跨线程使用;
+不过, 如果我们只切换到 GC, 我们可以轻松摆脱那些 &amp;指针;
+我们甚至于不需要太担心并发性--因为,我们的对象是单独分配的,而且总是在指针后面,
+我们可以通过注意到指针大小,
+无论是否在 x86 系统上都是原子操作来消除数据竞争;</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read(path: Path) -&gt; io::Result&lt;Bytes&gt; {
+  let file = File::open(path)?;
+  let bytes = Bytes::new();
+  file.read_to_end(bytes)?;
+  Ok(bytes)
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>最后,我们在这对错误的处理过于迂腐 -- 我们并仅要关注返回类型失败的可能,
+甚至于要用 ? 来突出指示任何可能失败的特定表达式;
+完全不考虑错误处理,
+让一些顶层处理程序来处理:
+(比如: try { } catch (...) { /* intentionally empty */ })</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn read(path: Path) -&gt; Bytes {
+  let file = File::open(path);
+  let bytes = Bytes::new();
+  file.read_to_end(bytes);
+  bytes
+}
+<span class="boring">}
+</span></code></pre></pre>
+<p>现在是否好多了?</p>
+<h2 id="ps"><a class="header" href="#ps">PS:</a></h2>
+<p>的确是篇奇想, 这样简化后, 几乎就是 多了一些控制符号的 Python 了,
+又或是根本可以视为 TypeScript 了;
+当然, 如果有这种低效版 Rust 多数程序员还是愿意使用的;
+就象当年 CoffeeScript 的尝试;</p>
+<h2 id="logging"><a class="header" href="#logging">logging</a></h2>
+<blockquote>
+<p>版本记要</p>
+</blockquote>
+<ul>
+<li>..</li>
+<li>230206 ZQ init.</li>
+</ul>
+
+                </main>
+
+                <nav class="nav-wrapper" aria-label="Page navigation">
+                    <!-- Mobile navigation buttons -->
+                    <a rel="prev" href="../log/index.html" class="mobile-nav-chapters previous"
+                        title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+
+                    <div style="clear: both"></div>
+                </nav>
+            </div>
+        </div>
+
+        <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            <a rel="prev" href="../log/index.html" class="nav-chapters previous" title="Previous chapter"
+                aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <i class="fa fa-angle-left"></i>
+            </a>
+
+        </nav>
+
+    </div>
+
+
+
+
+    <script>
+        window.playground_copyable = true;
+    </script>
+
+
+    <script src="../elasticlunr.min.js" charset="utf-8"></script>
+    <script src="../mark.min.js" charset="utf-8"></script>
+    <script src="../searcher.js" charset="utf-8"></script>
+
+    <script src="../clipboard.min.js" charset="utf-8"></script>
+    <script src="../highlight.js" charset="utf-8"></script>
+    <script src="../book.js" charset="utf-8"></script>
+
+    <!-- Custom JS scripts -->
+
+
+    <hr />
+
+    <p style="text-align:center">
+
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议"
+                style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+        本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可;-)
+
+    </p>
+    <hr />
+
+    <script src="https://utteranc.es/client.js" repo="zhrust/comments" issue-term="pathname" label="✨💬✨"
+        theme="github-light" crossorigin="anonymous" async>
+        </script>
+
+</body>
+
+</html>
