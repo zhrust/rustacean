@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">2.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">2.1.</strong> 20年来作为软件工程师学到的10件事</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">3.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/fun-rust-operators.html"><strong aria-hidden="true">3.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../log/concepts-i-wish-i-learned-earlier.html" class="active"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">4.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">4.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">4.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">4.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">2.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">2.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html" class="active"><strong aria-hidden="true">2.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">3.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">3.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">3.2.</strong> Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">4.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">4.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">4.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">4.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -886,8 +886,8 @@ impl&lt;F: Fooer&gt; Foo&lt;F&gt; { ... }
 请传入具体类型;
 然而,某些应用和远又可能受益于 blanket traits/特征篮,
 例如旨在提供尽可能通用的 API 库;</p>
-<h3 id="match-statements-are-very-flexible-and-structural-in-nature"><a class="header" href="#match-statements-are-very-flexible-and-structural-in-nature">Match statements are very flexible and structural in nature</a></h3>
-<p>Instead of nesting match statements, for example, one could bring values together as tuples and do the following:</p>
+<h3 id="match-语句本质上很灵活和结构化的"><a class="header" href="#match-语句本质上很灵活和结构化的">Match 语句本质上很灵活和结构化的</a></h3>
+<p>例如,可以将值作为元组组合在一起并执行以下操作,而不是嵌套匹配语句:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>fn player_outcome(player: &amp;Move, opp: &amp;Move) -&gt; Outcome {
@@ -910,9 +910,10 @@ impl&lt;F: Fooer&gt; Foo&lt;F&gt; { ... }
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>This is an example of why pattern matching is far more powerful than switch statements seen in imperative languages and it can do more much than that when it comes to deconstructing inner values!</p>
-<h3 id="avoid-_--clauses-in-match-statements-if-your-matchees-are-finite-and-known"><a class="header" href="#avoid-_--clauses-in-match-statements-if-your-matchees-are-finite-and-known">Avoid _ =&gt; clauses in match statements if your matchees are finite and known</a></h3>
-<p>For example, let’s say we have an enum:</p>
+<p>这个示例足以说明为什么模型匹配比指令式语言中的 switch 语句更强大,
+而且, 在劳模内部值方面可以作的更多.</p>
+<h3 id="如果匹配对象是有限且已知的嫑使用-_--子句"><a class="header" href="#如果匹配对象是有限且已知的嫑使用-_--子句">如果匹配对象是有限且已知的,嫑使用 _ =&gt; 子句</a></h3>
+<p>例如,我们有个枚举:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>enum Foo {
@@ -925,7 +926,7 @@ impl&lt;F: Fooer&gt; Foo&lt;F&gt; { ... }
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>When writing match statements, we should match every single type of the enum if we can and not resort to catch-all clauses</p>
+<p>在编写 match 语句时,如果可能的话, 应该匹配枚举的所有类型,而不是求助于 catch-all 子句:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>match f {
@@ -938,10 +939,15 @@ impl&lt;F: Fooer&gt; Foo&lt;F&gt; { ... }
 }
 <span class="boring">}
 </span></code></pre></pre>
-<p>This is really helpful for maintenance of code, because if the original writer of the enum adds more variants to it, the project won’t compile if we forget to handle the new variants in our match statements.</p>
-<h3 id="match-guard-clauses-are-powerful"><a class="header" href="#match-guard-clauses-are-powerful">Match guard clauses are powerful</a></h3>
-<p>Match guards are awesome when you have an unknown or potentially infinite number of matchees, such as ranges of numbers. However, they will force you to have a catch-all <code>_ =&gt;</code> if your range cannot be fully encompassed by the guard, which can be a downside when writing maintainable code.</p>
-<p>The canonical example from the Rust book is below:</p>
+<p>这对代码维护非常有帮助,因为,如果枚举的原始编写者逈其追加更多变体,
+如果我们忘记在匹配语句中处理新变体, 功能将无法编译;</p>
+<h3 id="match-保护条款也很强大"><a class="header" href="#match-保护条款也很强大">Match 保护条款也很强大</a></h3>
+<p>当你有未知或是可能无限数量的匹配项时(例如数字范围),
+匹配守卫就很棒;
+然而, 如果你的范围不能被守卫完全包含时,
+将迫使你使用一个包罗万象的 <code>_ =&gt;</code>,
+这在编写可维护代码时可能就是一个缺点;</p>
+<p>Rust 书中典型示例如下:</p>
 <pre><pre class="playground"><code class="language-rust">enum Temperature {
     Celsius(i32),
     Fahrenheit(i32),
@@ -957,8 +963,12 @@ fn main() {
     }
 }
 </code></pre></pre>
-<h3 id="need-to-mess-with-raw-asm-theres-a-macro-for-that"><a class="header" href="#need-to-mess-with-raw-asm-theres-a-macro-for-that">Need to mess with raw asm? There’s a macro for that!</a></h3>
-<p>Core asm provides a macro that lets you write inline assembly in Rust, which can help when doing fancy things such as directly intercepting the CPU’s stack, or wanting to implement advanced optimizations. Here’s an example where we use inline assembly to trick the processor’s stack to execute our function by simply moving the stack pointer to it!</p>
+<h3 id="需要搞乱原始汇编嘛-有一个宏"><a class="header" href="#需要搞乱原始汇编嘛-有一个宏">需要搞乱原始汇编嘛? 有一个宏!</a></h3>
+<p>core asm 提供了一个闳, 可以让你在 Rust 中编写内联汇编语句,
+这在折腾一些花哨的事情时很有帮助,
+比如直接拦截 CPU 的堆栈,
+或是想要实现高级优化;</p>
+<p>这是一个示例,我们使用内联汇编通过简单的将堆栈指针移动到用来欺骗处理器的堆栈来执行我们的函数!</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use core::arch::asm;
@@ -998,8 +1008,15 @@ unsafe fn switch_stack_to_fn(new: *const StackContext) {
 }
 <span class="boring">}
 </span></code></pre></pre>
-<h3 id="use-criterion-to-benchmark-your-code-and-its-throughput"><a class="header" href="#use-criterion-to-benchmark-your-code-and-its-throughput">Use Criterion to benchmark your code and its throughput</a></h3>
-<p>The Criterion package for benchmarking Rust code is a fantastic work of engineering. It gives you access to awesome benchmarking features with graphs, regression analysis, and other fancy tools. It can even be used to measure different dimensions of your functions such as time and throughput. For example, we can see how fast we can construct, take, and collect raw bytes using the standard library’s iterator methods at different histogram buckets.</p>
+<p>(<code>是也乎</code>:</p>
+<p>所以说, 无法嵌入内联 汇编代码 的语言, 都不算系统语言?</p>
+<p>等等, Python 好象也可以哪...
+)</p>
+<h3 id="使用-criterion-对代码及其吞吐量进行基准测试"><a class="header" href="#使用-criterion-对代码及其吞吐量进行基准测试">使用 Criterion 对代码及其吞吐量进行基准测试</a></h3>
+<p>用来对 Rust 代码进行基准测试的 Criterion 是一项了不起的工程作品;
+能帮助你使用图形/回归分析和其它奇怪的工具来访问令人敬畏的基准测试功能;
+甚至可以用来衡量函数的不同维度,例如时间和吞吐量;
+又比如, 我们可以看到在不同的直方图中,使用标准库的迭代器方法构造/获取和收集原始字节的速度有多快;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use std::iter;
@@ -1026,7 +1043,8 @@ criterion_group!(benches, from_elem);
 criterion_main!(benches);
 <span class="boring">}
 </span></code></pre></pre>
-<p>and after adding the following entries to the project’s Cargo.toml file, one can run it with <code>cargo bench</code>.</p>
+<p>将以下条目追加到项目的 Cargo,toml 文件中,
+就可以用 cargo bench 运行了:</p>
 <pre><code class="language-toml">[dev-dependencies]
 criterion = &quot;0.3&quot;
 
@@ -1034,7 +1052,12 @@ criterion = &quot;0.3&quot;
 name = &quot;BENCH_NAME&quot;
 harness = false
 </code></pre>
-<p>Not only does criterion show you really awesome charts and descriptive info, but it can also remember prior results of benchmark runs, telling you of performance regressions. In this case, I was using my computer to do a lot of other things at the same time as I ran the benchmark, so it naturally regressed from the last time I measured it. Nonetheless, this is really cool!</p>
+<p>criterion 不仅可以向你展示非常棒的图表和描述性信息,
+而且,还能记住基准测试运行的先前结果,
+告诉你性能回归状态;
+在这种情况中,我在运行基准测试的同时, 还能用计算机作很多其它事儿,
+所以, 也能自然的通报从上次测量后退化了多少;
+总之,非常的COOL!</p>
 <pre><code>    Found 11 outliers among 100 measurements (11.00%)
       2 (2.00%) low mild
       4 (4.00%) high mild
@@ -1055,28 +1078,42 @@ harness = false
                             thrpt:  [-3.5767% -3.3173% -3.0451%]
                             Performance has regressed.
 </code></pre>
-<h3 id="understand-key-concepts-by-reading-the-std-lib"><a class="header" href="#understand-key-concepts-by-reading-the-std-lib">Understand key concepts by reading the std lib!</a></h3>
-<p>I love to get lost in some of the standard library, especially std::rc, std::iter, and std::collections. Here are some awesome tidbits I learned from it on my own:</p>
+<h3 id="通过阅读标准库来理解关键概念"><a class="header" href="#通过阅读标准库来理解关键概念">通过阅读标准库来理解关键概念!</a></h3>
+<p>我喜欢徜徉在标准库中,尤其是 std::rc, std::iter, and std::collections;
+以下是我自己从中学习到的一些很赞的技巧:</p>
 <ul>
-<li>How vec is actually implemented</li>
-<li>The ways in which interior mutability is achieved by different methods in std::cell and std::rc</li>
-<li>How channels are implemented in std::sync</li>
-<li>The magic of std::sync::Arc</li>
-<li>Hearing the thorough explanations of design decisions made while developing its libraries from Rust’s authors</li>
+<li>vec 是如何切实实现的</li>
+<li>通过 std::cell 和 std::rc 中的不同方法, 实现内部可变性的方式</li>
+<li>如何在 std::sync 中实现通道</li>
+<li>std::sync::Arc 的魔力</li>
+<li>了解 Rust 作者对开发对应库时,如何作出设计决策的详尽解释</li>
 </ul>
-<p>I hope this post was informative for folks coming into Rust and hitting some of its obstacles. Expect more Rust content to come soon, especially on more advanced topics!</p>
+<p>有希望这篇文章能为进入 Rust 并遇到一些障碍的人们提供可用信息;
+期待更多 Rust 内容能推出,
+尤其是关键更高级主题的...</p>
 <h3 id="shoutout"><a class="header" href="#shoutout">Shoutout</a></h3>
-<p>Shoutout to my colleagues at Offchain Labs, Rachel and Lee Bousfield for their incredible breadth of knowledge of the language. Some of their tips inspired this post</p>
+<p>感谢 Offchain Labs 同事 Rachel 和 Lee Bousfield 对这门语言的广泛了解;
+他们的一些技巧启发了这篇文章;</p>
 <h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
 </blockquote>
+<ul>
+<li><a href="http://blog.pnkfx.org/blog/2019/11/18/rust-bug-minimization-patterns/">Rust Bug Minimization Patterns - The {pnk}f(eli)x Blog</a></li>
+<li><a href="https://www.thecodedmessage.com/posts/default-params/">Rust and Default Parameters :: The Coded Message</a></li>
+<li><a href="https://github.com/sger/RustBooks#advanced-books">sger/RustBooks: List of Rust books</a>
+<ul>
+<li><a href="https://veykril.github.io/tlborm/decl-macros/macros2.html">Macros 2.0 - The Little Book of Rust Macros</a></li>
+<li>...</li>
+</ul>
+</li>
+</ul>
 <h2 id="logging"><a class="header" href="#logging">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
 <ul>
-<li>..</li>
+<li>230212 ZQ v1 done</li>
 <li>230120 ZQ init.</li>
 </ul>
 
@@ -1084,12 +1121,12 @@ harness = false
 
                 <nav class="nav-wrapper" aria-label="Page navigation">
                     <!-- Mobile navigation buttons -->
-                    <a rel="prev" href="../log/fun-rust-operators.html" class="mobile-nav-chapters previous"
+                    <a rel="prev" href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html" class="mobile-nav-chapters previous"
                         title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../101/index.html" class="mobile-nav-chapters next"
+                    <a rel="next" href="../tip/index.html" class="mobile-nav-chapters next"
                         title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -1100,12 +1137,12 @@ harness = false
         </div>
 
         <nav class="nav-wide-wrapper" aria-label="Page navigation">
-            <a rel="prev" href="../log/fun-rust-operators.html" class="nav-chapters previous" title="Previous chapter"
+            <a rel="prev" href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html" class="nav-chapters previous" title="Previous chapter"
                 aria-label="Previous chapter" aria-keyshortcuts="Left">
                 <i class="fa fa-angle-left"></i>
             </a>
 
-            <a rel="next" href="../101/index.html" class="nav-chapters next" title="Next chapter"
+            <a rel="next" href="../tip/index.html" class="nav-chapters next" title="Next chapter"
                 aria-label="Next chapter" aria-keyshortcuts="Right">
                 <i class="fa fa-angle-right"></i>
             </a>

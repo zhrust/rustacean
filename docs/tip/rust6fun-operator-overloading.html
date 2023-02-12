@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">2.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">2.1.</strong> 20年来作为软件工程师学到的10件事</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">3.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/fun-rust-operators.html" class="active"><strong aria-hidden="true">3.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../log/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">4.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">4.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">4.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">4.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">2.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">2.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">2.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">3.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html" class="active"><strong aria-hidden="true">3.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">3.2.</strong> Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">4.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">4.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">4.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">4.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -157,68 +157,139 @@
 <p>原文: <a href="https://wishawa.github.io/posts/fun-rust-operators/">Six fun things to do with Rust operator overloading | Wisha Wanichwecharungruang</a></p>
 <p><img src="https://wishawa.github.io/posts/fun-rust-operators/dot-product-pooh.jpg" alt="dot-product-pooh" /></p>
 <h2 id="快译"><a class="header" href="#快译">快译</a></h2>
-<p>C++ Input/Output
-Instead of</p>
-<p>stdin().read_line(&amp;mut buffer).unwrap();
+<h3 id="c-输入出"><a class="header" href="#c-输入出">C++ 输入/出</a></h3>
+<p>想替代:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>stdin().read_line(&amp;mut buffer).unwrap();
 println!(&quot;Hello I am {name}!!!&quot;);
-we can overload the shift operators on cin and cout to allow</p>
-<p>cin &gt;&gt; &amp;mut buffer;
+<span class="boring">}
+</span></code></pre></pre>
+<p>可以重载 cin 和 count 上的移位运算符来达成:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>cin &gt;&gt; &amp;mut buffer;
 cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt;&lt; endl;
-Variadic Functions
-Instead of</p>
-<p>std::cmp::max(x, y);
+<span class="boring">}
+</span></code></pre></pre>
+<p>(<code>是也乎:</code></p>
+<p>看起来意义更加不明了了?
+)</p>
+<h3 id="可变函数"><a class="header" href="#可变函数">可变函数</a></h3>
+<p>想替代</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>std::cmp::max(x, y);
 [w, x, y, z].into_iter().max();
-we can make</p>
-<p>// max+ is like std::cmp::max but better
+<span class="boring">}
+</span></code></pre></pre>
+<p>可以搞成:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// max+ is like std::cmp::max but better
 // it supports &gt;2 arguments
 max+(x, y);
 max+(w, x, y, z);
-More Concise Builders
-Here's a more serious one. Builder pattern sometimes involve a lot of repeated method calls. Take for example this usage of the warp web framework.</p>
-<p>let hi = warp::path(&quot;hello&quot;)
-.and(warp::path::param())
-.and(warp::header(&quot;user-agent&quot;))
-.map(|param: String, agent: String| {
-format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
-});
-What if the API look like this instead?</p>
-<p>let hi = warp::path(&quot;hello&quot;)
-+	warp::path::param()
-+	warp::header(&quot;user-agent&quot;)
-&gt;&gt;	|param: String, agent: String| {
-format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
-};
-Infix Functions
-Instead of</p>
-<p>x.pow(y);
+<span class="boring">}
+</span></code></pre></pre>
+<p>(<code>是也乎:</code></p>
+<p>内置标准库太丰富了...简直必须要有一个信仰过程</p>
+<p>)</p>
+<h3 id="更简洁的构建器"><a class="header" href="#更简洁的构建器">更简洁的构建器</a></h3>
+<p>这是一个更严重的问题;
+构建器模式有时涉及大量重复的方法调用;
+以 warp web 框架的这种用法为例:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hi = warp::path(&quot;hello&quot;)
+    .and(warp::path::param())
+    .and(warp::header(&quot;user-agent&quot;))
+    .map(|param: String, agent: String| {
+        format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+    });
+<span class="boring">}
+</span></code></pre></pre>
+<p>如果 API 看起来像这样呢?</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>let hi = warp::path(&quot;hello&quot;)
+	+	warp::path::param()
+	+	warp::header(&quot;user-agent&quot;)
+	&gt;&gt;	|param: String, agent: String| {
+			format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
+		};
+<span class="boring">}
+</span></code></pre></pre>
+<p>(<code>是也乎:</code></p>
+<p>等等, 这就是语法糖了吧?
+)</p>
+<h3 id="中缀函数"><a class="header" href="#中缀函数">中缀函数</a></h3>
+<p>想替代:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>x.pow(y);
 dot_product(a, b);
 a.cross(b.cross(c).cross(d))
-we can make</p>
-<p>x ^pow^ y;
-a <em>dot</em> b;
-a <em>cross</em> (b <em>cross</em> c <em>cross</em> d);
-Lots of people wanted this!</p>
-<p>Doublefish
-std::mem provides these functions</p>
-<p>size_of::<T>();
+<span class="boring">}
+</span></code></pre></pre>
+<p>我们可以这么来:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>x ^pow^ y;
+a *dot* b;
+a *cross* (b *cross* c *cross* d);
+<span class="boring">}
+</span></code></pre></pre>
+<p>很多人就想要这个!</p>
+<p>(<code>是也乎:</code></p>
+<p>嗯哼? 的确流畅很多哪...
+)</p>
+<h3 id="doublefish"><a class="header" href="#doublefish">Doublefish</a></h3>
+<p>std::mem 提供有这些功能:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>size_of::&lt;T&gt;();
 size_of_val(&amp;value);
-Turbofish enthusiasts would enjoy size_of but not so much size_of_val, so let's make our own improved version of size_of_val that's more turbofishy</p>
-<p>size_of::<T>();
+<span class="boring">}
+</span></code></pre></pre>
+<p>Turbofish 爱好者会喜欢 size_of,
+但是对 size_of_val 没什么感觉;
+所以, 我们可以自行改造出新版本的 size_of_val ,
+看起来更象 turbofishy:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>size_of::&lt;T&gt;();
 size_of_val&lt;&lt;&amp;value&gt;&gt;();
-Join and Race
-Futures combinators can have short-circuiting behaviors</p>
-<p>// quit if any of the 3 errors
-(fut1, fut2, fut3).try_join().await;</p>
-<p>// quit if any of the 3 succeeds
+<span class="boring">}
+</span></code></pre></pre>
+<h3 id="join-和-race"><a class="header" href="#join-和-race">Join 和 Race</a></h3>
+<p>特性组合器可能具有短路行为能力;</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// quit if any of the 3 errors
+(fut1, fut2, fut3).try_join().await;
+
+// quit if any of the 3 succeeds
 (fut4, fut5, fut6).race_ok().await;
-let's communicate this through &amp; and |</p>
-<p>(TryJoin &gt;&gt; fut1 &amp; fut2 &amp; fut3).await;
+<span class="boring">}
+</span></code></pre></pre>
+<p>可以通过 &amp; 和 | 在形式上表达出这点:</p>
+<pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>(TryJoin &gt;&gt; fut1 &amp; fut2 &amp; fut3).await;
 (RaceOk &gt;&gt; fut4 | fut5 | fut6).await;
-Useful Links
-Discuss this on Reddit
-Playground containing the implementations behind some of the code shown here
-std::ops docs
-Rust operators precedence table</p>
+<span class="boring">}
+</span></code></pre></pre>
+<p>(<code>是也乎</code>:</p>
+<p>这是从形式上和语义同步了.
+)</p>
+<h2 id="useful-links"><a class="header" href="#useful-links">Useful Links</a></h2>
+<ul>
+<li><a href="https://www.reddit.com/r/rust/comments/10golkq">Discuss this on Reddit</a></li>
+<li><a href="https://play.rust-lang.org/?version=stable&amp;mode=debug&amp;edition=2021&amp;gist=71da59351b0988249a69014e6b191353">Playground</a> containing the implementations behind some of the code shown here</li>
+<li><a href="https://doc.rust-lang.org/std/ops/index.html">std::ops docs</a></li>
+<li><a href="https://doc.rust-lang.org/reference/expressions.html#expression-precedence">Rust operators precedence table</a></li>
+</ul>
 <h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
 <blockquote>
 <p>关键参考</p>
@@ -228,7 +299,7 @@ Rust operators precedence table</p>
 <p>版本记要</p>
 </blockquote>
 <ul>
-<li>..</li>
+<li>230212 ZQ v1 done</li>
 <li>230125 ZQ init.</li>
 </ul>
 
@@ -241,7 +312,7 @@ Rust operators precedence table</p>
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../log/concepts-i-wish-i-learned-earlier.html" class="mobile-nav-chapters next"
+                    <a rel="next" href="../tip/default-params.html" class="mobile-nav-chapters next"
                         title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -257,7 +328,7 @@ Rust operators precedence table</p>
                 <i class="fa fa-angle-left"></i>
             </a>
 
-            <a rel="next" href="../log/concepts-i-wish-i-learned-earlier.html" class="nav-chapters next" title="Next chapter"
+            <a rel="next" href="../tip/default-params.html" class="nav-chapters next" title="Next chapter"
                 aria-label="Next chapter" aria-keyshortcuts="Right">
                 <i class="fa fa-angle-right"></i>
             </a>

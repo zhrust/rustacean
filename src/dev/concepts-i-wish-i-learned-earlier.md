@@ -827,8 +827,10 @@ traits 篮可以帮助减少重复，
 例如旨在提供尽可能通用的 API 库;
 
 
-### Match statements are very flexible and structural in nature
-Instead of nesting match statements, for example, one could bring values together as tuples and do the following:
+### Match 语句本质上很灵活和结构化的
+
+例如,可以将值作为元组组合在一起并执行以下操作,而不是嵌套匹配语句:
+
 
 ```rust
 fn player_outcome(player: &Move, opp: &Move) -> Outcome {
@@ -851,10 +853,12 @@ fn player_outcome(player: &Move, opp: &Move) -> Outcome {
 }
 ```
 
-This is an example of why pattern matching is far more powerful than switch statements seen in imperative languages and it can do more much than that when it comes to deconstructing inner values!
+这个示例足以说明为什么模型匹配比指令式语言中的 switch 语句更强大,
+而且, 在劳模内部值方面可以作的更多.
 
-### Avoid _ => clauses in match statements if your matchees are finite and known
-For example, let’s say we have an enum:
+### 如果匹配对象是有限且已知的,嫑使用 _ => 子句
+
+例如,我们有个枚举:
 
 ```rust
 enum Foo {
@@ -867,7 +871,8 @@ enum Foo {
 }
 ```
 
-When writing match statements, we should match every single type of the enum if we can and not resort to catch-all clauses
+在编写 match 语句时,如果可能的话, 应该匹配枚举的所有类型,而不是求助于 catch-all 子句:
+
 
 ```rust
 match f {
@@ -880,12 +885,19 @@ match f {
 }
 ```
 
-This is really helpful for maintenance of code, because if the original writer of the enum adds more variants to it, the project won’t compile if we forget to handle the new variants in our match statements.
+这对代码维护非常有帮助,因为,如果枚举的原始编写者逈其追加更多变体,
+如果我们忘记在匹配语句中处理新变体, 功能将无法编译;
 
-### Match guard clauses are powerful
-Match guards are awesome when you have an unknown or potentially infinite number of matchees, such as ranges of numbers. However, they will force you to have a catch-all `_ =>` if your range cannot be fully encompassed by the guard, which can be a downside when writing maintainable code.
+### Match 保护条款也很强大
 
-The canonical example from the Rust book is below:
+当你有未知或是可能无限数量的匹配项时(例如数字范围),
+匹配守卫就很棒;
+然而, 如果你的范围不能被守卫完全包含时,
+将迫使你使用一个包罗万象的 `_ =>`,
+这在编写可维护代码时可能就是一个缺点;
+
+Rust 书中典型示例如下:
+
 
 ```rust
 enum Temperature {
@@ -904,8 +916,15 @@ fn main() {
 }
 ```
 
-### Need to mess with raw asm? There’s a macro for that!
-Core asm provides a macro that lets you write inline assembly in Rust, which can help when doing fancy things such as directly intercepting the CPU’s stack, or wanting to implement advanced optimizations. Here’s an example where we use inline assembly to trick the processor’s stack to execute our function by simply moving the stack pointer to it!
+### 需要搞乱原始汇编嘛? 有一个宏!
+
+core asm 提供了一个闳, 可以让你在 Rust 中编写内联汇编语句,
+这在折腾一些花哨的事情时很有帮助,
+比如直接拦截 CPU 的堆栈,
+或是想要实现高级优化;
+
+这是一个示例,我们使用内联汇编通过简单的将堆栈指针移动到用来欺骗处理器的堆栈来执行我们的函数!
+
 
 ```rust
 use core::arch::asm;
@@ -945,8 +964,22 @@ unsafe fn switch_stack_to_fn(new: *const StackContext) {
 }
 ```
 
-### Use Criterion to benchmark your code and its throughput
-The Criterion package for benchmarking Rust code is a fantastic work of engineering. It gives you access to awesome benchmarking features with graphs, regression analysis, and other fancy tools. It can even be used to measure different dimensions of your functions such as time and throughput. For example, we can see how fast we can construct, take, and collect raw bytes using the standard library’s iterator methods at different histogram buckets.
+(`是也乎`:
+
+所以说, 无法嵌入内联 汇编代码 的语言, 都不算系统语言?
+
+等等, Python 好象也可以哪...
+)
+
+
+### 使用 Criterion 对代码及其吞吐量进行基准测试
+
+
+用来对 Rust 代码进行基准测试的 Criterion 是一项了不起的工程作品;
+能帮助你使用图形/回归分析和其它奇怪的工具来访问令人敬畏的基准测试功能;
+甚至可以用来衡量函数的不同维度,例如时间和吞吐量;
+又比如, 我们可以看到在不同的直方图中,使用标准库的迭代器方法构造/获取和收集原始字节的速度有多快;
+
 
 ```rust
 use std::iter;
@@ -973,7 +1006,8 @@ criterion_group!(benches, from_elem);
 criterion_main!(benches);
 ```
 
-and after adding the following entries to the project’s Cargo.toml file, one can run it with `cargo bench`.
+将以下条目追加到项目的 Cargo,toml 文件中,
+就可以用 cargo bench 运行了:
 
 ```toml
 [dev-dependencies]
@@ -984,9 +1018,13 @@ name = "BENCH_NAME"
 harness = false
 ```
 
+criterion 不仅可以向你展示非常棒的图表和描述性信息,
+而且,还能记住基准测试运行的先前结果,
+告诉你性能回归状态;
+在这种情况中,我在运行基准测试的同时, 还能用计算机作很多其它事儿,
+所以, 也能自然的通报从上次测量后退化了多少;
+总之,非常的COOL!
 
-
-Not only does criterion show you really awesome charts and descriptive info, but it can also remember prior results of benchmark runs, telling you of performance regressions. In this case, I was using my computer to do a lot of other things at the same time as I ran the benchmark, so it naturally regressed from the last time I measured it. Nonetheless, this is really cool!
 
 ```
     Found 11 outliers among 100 measurements (11.00%)
@@ -1010,31 +1048,40 @@ Not only does criterion show you really awesome charts and descriptive info, but
                             Performance has regressed.
 ```
 
-### Understand key concepts by reading the std lib!
-I love to get lost in some of the standard library, especially std::rc, std::iter, and std::collections. Here are some awesome tidbits I learned from it on my own:
+### 通过阅读标准库来理解关键概念!
+我喜欢徜徉在标准库中,尤其是 std::rc, std::iter, and std::collections;
+以下是我自己从中学习到的一些很赞的技巧:
 
-- How vec is actually implemented
-- The ways in which interior mutability is achieved by different methods in std::cell and std::rc
-- How channels are implemented in std::sync
-- The magic of std::sync::Arc
-- Hearing the thorough explanations of design decisions made while developing its libraries from Rust’s authors
+- vec 是如何切实实现的
+- 通过 std::cell 和 std::rc 中的不同方法, 实现内部可变性的方式
+- 如何在 std::sync 中实现通道
+-  std::sync::Arc 的魔力
+-  了解 Rust 作者对开发对应库时,如何作出设计决策的详尽解释
 
-I hope this post was informative for folks coming into Rust and hitting some of its obstacles. Expect more Rust content to come soon, especially on more advanced topics!
+
+有希望这篇文章能为进入 Rust 并遇到一些障碍的人们提供可用信息;
+期待更多 Rust 内容能推出,
+尤其是关键更高级主题的...
+
 
 ### Shoutout
 
-Shoutout to my colleagues at Offchain Labs, Rachel and Lee Bousfield for their incredible breadth of knowledge of the language. Some of their tips inspired this post
-
-
+感谢 Offchain Labs 同事 Rachel 和 Lee Bousfield 对这门语言的广泛了解;
+他们的一些技巧启发了这篇文章;
 
 ## refer.
 > 关键参考
 
+- [Rust Bug Minimization Patterns - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2019/11/18/rust-bug-minimization-patterns/)
+- [Rust and Default Parameters :: The Coded Message](https://www.thecodedmessage.com/posts/default-params/)
+- [sger/RustBooks: List of Rust books](https://github.com/sger/RustBooks#advanced-books)
+    - [Macros 2.0 - The Little Book of Rust Macros](https://veykril.github.io/tlborm/decl-macros/macros2.html)
+    - ...
 
 ## logging
 > 版本记要
 
-- ..
+- 230212 ZQ v1 done
 - 230120 ZQ init.
 
 
