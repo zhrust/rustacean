@@ -9,23 +9,50 @@
 Rust 可能看起来像一种 OOP 编程语言:
 类型可以和 "“methods" 关联,
 可以是 "intrinsic" 的或是通过 "traits";
+通常可以使用 C++ 或是 Java 风格的 OOP 语法调用方式:
+map.insert(key, value) 或 foo.clone();
+就像在 OOP 语言中一样,
+此语法涉及放置在调用者的 `.` 中, 而在被调用者中称为 self;
 
 
-Rust is not an object oriented programming language.
+但请不要误会: 尽管 Rust 可能借用了一些技巧/术语和语法,
+但是, Rust 并不是一种面向对象的编程语言;
+面向对象编程的三大支柱理念: 封装/多态/继承;
+其中, Rust 完全否决了 继承,
+因此, 永远不可能成为"真正的" OOP 语言;
+不过, 即便对于封装和多态, Rust 实现的方式也和 OOP 语言不同 --- 稍后将对此进行更加详细的介绍;
 
-Rust may look like an object-oriented programming language: Types can be associated with “methods,” either “intrinsic” or through “traits.” Methods can often be invoked with C++ or Java-style OOP syntax: map.insert(key, value) or foo.clone(). Just like in an OOP language, this syntax involves a “receiver” argument placed before a . in the caller, called self in the callee.
+这一切都让很多程序员感到惊讶以及无措;
+我在 Reddit 上看到 Rust 新手询问如何按字面意思实现 OOP 设计模式,
+试图获得像“shapes” 或是 “vehicles”这种"类层次结构",
+使用作为"Rust 版本继承"的 traits --- 换句话说, 
+试图解决他们想象中的问题, 
+因为, 他们致力于 OOP 方法, 并通过构建人为的 OOP 示例来尝试了解他们期待的应该存在的另外一个版本 Rust;
 
-But make no mistake: Though it may borrow some of the trappings, some of the terminology and syntax, Rust is not an object-oriented programming language. There are three pillars of object-oriented programming: encapsulation, polymorphism, and inheritance. Of these, Rust nixes inheritance entirely, so it can never be a “true” object-oriented programming language. But even for encapsulation and polymorphism, Rust implements them differently than OOP languages do – which we will go into in more detail later.
+这对很多人来说是一个绊脚石;
+我经常看到 Rust 新手和怀疑论者在互联网上提到"缺乏OOP",
+这是 Rust 难以适应/不合适他们的关键原因,
+甚至是 Rust 永远不会流行的原因;
+对于那些在 OOP 的高度来学习编程的人来说 --- 当像 C 和 ML 那样完美的语言都必须变成 Object-C 和 OCaML 这种面向对象的语言 --- 
+对非 OOP 语言的大量炒作感觉就不太香了;
 
-This all comes as a surprise and an adjustment to a lot of programmers. I see Rust newbies on Reddit asking how to implement OOP design patterns literally, trying to get “class hierarchies” like “shapes” or “vehicles” working with traits standing in as “the Rust version of inheritance” – in other words, trying to solve problems they only have because they’re committed to the OOP approach, and doing contrived OOP examples to try to learn what they expect to be just another version of it.
 
-It’s a stumbling block for many. I regularly see “lack of OOP” mentioned on the Internet by Rust newbies and sceptics as a reason Rust is hard to adjust to, or not a good fit for them, or even why it will never catch on. For people who learned to program in the height of OOP as a trend – when perfectly good languages like C and ML had to become object-oriented as Objective-C and OCaML – the amount of hype about a non-OOP language just feels off.
+这也不是一个容易的调整;
+如此多的程序猿以明确的面向对象的方式学习软件设计和体系结构;
+我看到一个又一个问题,
+一个初级或中级 Rust 程序员想要作一个面向对象的事儿,
+并想要一个字面上的 Rust 等价物;
+通常, 这些都是经典的 "XY 问题" (原文:[XY problem](https://xyproblem.info/), 酷壳有精采的翻译:[X-Y Problem | 酷 壳 - CoolShell](https://coolshell.cn/articles/10804.html))案例, 他们很难调头用更 Rusty 的方式解决问题;
 
-It’s not an easy adjustment either. So many programmers learned software design and architecture in an explicitly object-oriented way. I see question after question where a beginning or intermediate Rust programmer wants to do an object-oriented thing, and want a literal Rust equivalent. Often, these are examples of the XY problem, and they have trouble backtracking and approaching the problem in a more Rusty way.
+这其实都不是 Rust 的错;
+答案还是要我们去调整,
+虽然不容易;
+我们要成为更好的程序员, 不仅精通多种语言,
+而且要精通不同的编程范式;
 
-But that isn’t Rust’s fault. The answer is still for us to adjust, even if it isn’t easy; being proficient in not only multiple languages but also different programming paradigms makes us better programmers.
+而且, 作为一种范式, OOP 实际上非常平庸 --- 以至于我写了一整篇文章来解释为什么,
+以及为什么 Rust 的方法更好;
 
-And, as a paradigm, OOP is actually thoroughly mediocre – so much so that I’m writing a whole blog series to explain why, and why Rust’s approach is better.
 
 ### OOP Ideology
 Look, I get it. I used to drink the OOP Kool-Aid myself. I remember how it was billed to us: not as just a set of code organization practices, but a revolution in programming. The OOP way was held up as more intuitive, especially to non-programmers, because it would align better with how we think of the natural world.
@@ -172,4 +199,7 @@ Next up will be polymorphism!
 
 ## logging
 
+- 230220 ZQ re-start
 - 230215 ZQ init.
+
+

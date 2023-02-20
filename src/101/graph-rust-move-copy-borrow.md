@@ -42,8 +42,8 @@
 我故意使用希腊字母是因为目前 Rust 中还没有具体生命周期的语法;
 
 最后两个图以图形和文本形式总结了两种引用之间的主要区别和相似之处;
-在这种场景中"外部"限定词很重要,
-因为, 你仍然可以通过类似 Cell 的东西拥有内部可变性;
+在这种场景中"外部([exteriorly](https://doc.rust-lang.org/beta/book/mutability.html#interior-vs-exterior-mutability))"限定词很重要,
+因为, 你仍然可以通过类似 [Cell](https://doc.rust-lang.org/std/cell/) 的东西拥有内部可变性;
 
 
 
