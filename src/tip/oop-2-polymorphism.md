@@ -2,9 +2,10 @@
 原文:[Rust Is Beyond Object-Oriented, Part 2: Polymorphism :: The Coded Message](https://www.thecodedmessage.com/posts/oop-2-polymorphism/)
 
 
-
-
 ## 快译
+
+在这篇文章中, 通过讨论 OOP 三大传统支柱中的第二个: 多态,
+继续系列文章:关于 Rust 和传统 OOP 范式的不同;
 
 In this post, I continue my series on how Rust differs from the traditional object-oriented programming paradigm by discussing the second of the three traditional pillars of OOP: polymorphism.
 

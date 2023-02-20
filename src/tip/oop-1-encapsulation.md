@@ -4,6 +4,13 @@
 
 ## 快译
 
+是的, Rust 不是一种 OOP 编程语言;
+
+Rust 可能看起来像一种 OOP 编程语言:
+类型可以和 "“methods" 关联,
+可以是 "intrinsic" 的或是通过 "traits";
+
+
 Rust is not an object oriented programming language.
 
 Rust may look like an object-oriented programming language: Types can be associated with “methods,” either “intrinsic” or through “traits.” Methods can often be invoked with C++ or Java-style OOP syntax: map.insert(key, value) or foo.clone(). Just like in an OOP language, this syntax involves a “receiver” argument placed before a . in the caller, called self in the callee.
