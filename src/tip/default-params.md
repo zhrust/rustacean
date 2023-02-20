@@ -60,21 +60,50 @@ WindowHandle createWindow(int width, int height) {
 Rust 也没有函数重载,这是个复杂的多的问题,
 但是, 很多相同的论点都适用这个习惯用法的理解;
 
-## Benefits (and Detriments) of Default Parameters
-Defaults are good, and default parameters in this style are one way to implement them and reap their benefits.
+## 默认参数的好处(和坏处)
 
-Defaults are good because they uphold the DRY principle – Don’t Repeat Yourself. If we didn’t have defaults, we’d have to repeat parameters that don’t actually contribute to understanding of the goals of the code. And if the best default parameters changed in such a way that the best way to update the code was to continue using the default – perhaps because of a change of best practices – we’d have to update every call rather than just changing it once, where the default parameter is defined.
+默认值很好,这种风格的默认参数是实现并从中获益的一种方式;
 
-Defaults are also good because they decrease the programmer’s cognitive load. Programmers have to keep a lot of information in their brain at a time, and defaults help programmers by not forcing them to think about extra details when they don’t matter – which is the usual situation for most defaults.
+默认值是好的,因为,她们坚持 DRY 原则 --- 不要重复自己(Don’t Repeat Yourself);
+如果我们没有默认值, 就不得不重复那些实际上对理解代码没有帮助的参数;
+如果最佳默认秋粮的更改方式楼主更新代码的最佳方法是继续使用默认值--- 也许因为最佳实践发生了变化 ---
+我们将不得不更新每个调用, 而不是只要更改一处, 定义了默认参数那里;
 
-Default parameters also make the code more concise, and are popular for that reason. But this isn’t a particular value that I have. I believe the DRY principle is important, and that often amounts to more concise code, but given modern editors and IDE, and modern expectations of typing and reading speed, a moderate amount of verbosity in exchange for other benefits (such as clarity and explicitness) is completely acceptable to me. I believe that default parameters, as they are implemented in C++ and Python, have a substantial cost in clarity and explicitness, and therefore conciseness isn’t a good enough reason to justify them.
+默认徝很好,因为,她们减少了程序员的认知负担;
+程序员必须一次性在大脑中保留大量信息,
+而默认设置通过不强迫在无关场景时要考虑额外的细节来帮助程序员---这是太多数默认设置的常见作用场景;
 
-In this case, what particularly bothers me about the lack of clarity is that the reader of the code doesn’t know that there are potentially more parameters; there is no hint that there might be other parameters. If a maintenance programmer wants to change one of these calls to make invisible windows instead, they might not realize they should check the documentation for create_window: after all, it only seems to take two parameters, and neither of them have anything remotely to do with invisible windows.
+默认秋粮也使代码更加简洁,
+因此, 很受欢迎;
+但是,这不是专有的特殊价值;
+我相信 DRY 原则很重要, 这通常意味着更加简洁的代码,
+但是,考虑到现代编辑器和 IDE, 以及现代人劝为把不用又和阅读速度的期待,
+适度的冗长以能换取其它好处(比如, 清晰度和明确性),
+我还是完全可以接受的;
+相信默认参数,因为这是在 C++ 和 Python 中实现的,
+在清晰度和明确性方面付出了巨大的代价,
+因此,简洁性并不是证明她们合理的充分理由;
 
-Fortunately, Rust has alternative features that allow us to reap the benefits for cognitive load and DRY without sacrificing explicitness and clarity.
+在这种情况中, 让我特别困扰的是代码中的不清晰之处,
+在于代码的读者不知道可能还有更多的参数;
+没有暗示可能还有其它秋粮;
+如果维护者想更改其中一个调用以便创建不可见的窗口,
+领导作用可能没有意识到应该先检验 create_window 的文档:
+毕竟, 似乎只接受两个参数,
+而且也没有任何远程反应针对不可见窗口;
 
-## Defaults in Rust: the Default trait
-Rather than allowing default parameters, Rust allows you to optionally specify default values for your types using the Default trait. Here’s how it works:
+幸运的是, Rust 具有替代特性,
+使我们能在不牺牲明确性和清晰性的情况下,
+也获得认知负荷和 DRy 的好处;
+
+
+## Rust 中的默认值: 默认 trait
+
+Rust 不允许使用默认参数,
+而是允许你使用 Default trait 有选择的为你的类型指定默认值;
+
+是这样工作的:
+
 
 ```rust
 enum Foo {
@@ -89,8 +118,8 @@ impl Default for Foo {
 }
 ```
 
+或是, 使用更加简洁的 派生/derive 语法编写:
 
-Or, written using the more concise derive syntax:
 
 ```rust
 #[derive(Default)]
@@ -102,14 +131,28 @@ enum Foo {
 }
 ```
 
+一旦定义了这个默认值,
+Foo::default() 或是(在类型明确的上下文中) Default::default() 就可以代表 Foo::Bar ;
 
-Once this default is defined, Foo::default() or even (in a context where the type is clear) Default::default() can stand in for Foo::Bar.
+如果你习惯为你的函数参数重用现有类型,
+这可能看起来比不用更加糟糕;
+毕竟, 我们默认的参数是 bool 类型的,
+孤儿规则(在 Rust 的 trait 相关章节有解释) 禁止我们在 bool 上定义默认 trait ---
+正如我在上面提及的, Default 允许你对类型定义默认值;
+即便,我们可以为 bool 设置默认值也是一件过于强大的事儿,
+无法仅仅为这个函数参数提供默认值!
+毕竟, 其它一些函数也可能有一个具有不同默认值的 bool 类型参数;
 
-If you are used to re-using existing types for your function parameters, this might seem worse than useless. After all, the parameter we defaulted was of type bool, and the orphan rule (explained in the Rust book’s chapter on traits) forbids us from defining the Default trait on bool – as I alluded to above, Default allows you to define default values for your types. And even if we could, setting a default on booleans is way too overpowered a thing to do just to give this one function parameter have a default! After all, some other function might also have a boolean parameter with a different default.
 
-But this makes more sense if you consider that in Rust, it is common – even idiomatic and preferred – to create custom types for things like configuration and function parameters. After all, if you’re not looking at the documentation, it can be unclear what true means. It’s not even clear that it has anything to do with visibility, let alone that true means that the window is to be visible when the parameter could just as easily be called invisible.
+但是,如果在 Rust 中考虑, 这更加有意义 --- 甚至是惯用的和首选的 --- 为配置和函数参数等等创建自定义类型;
+毕竟, 如果你不查实文档, 可能不清楚 true 的含义;
+甚至于不清楚和可见性有什么关系,
+更不用说很容易将 true 当参数时意味着不可见窗口是可见的;
 
-In Rust, we would prefer to define a new type for this situation, an enum listing the visibility options – which will also help if a new visibility option is created. And on this enum, it would be reasonable to declare a default:
+在 Rust 中,我们更加愿意为这一情况定义一个新类型, 一个列出可见性选项的枚举---如果创建一个新的可见性选项,
+这才有所帮助;
+在这个枚举上, 声明一个默认值才是合理的:
+
 
 ```rust
 #[derive(Default)]
@@ -121,10 +164,13 @@ enum WindowVisibility {
 }
 ```
 
+是的, 这比我们的原始代码有些冗长, 但更清晰,
+而且不乏 DRY ;
+简洁本身并不是一种价值;
+明确的列出选项比隐式选项更可取;
 
-Yes, this is more verbosity, but it is more clear, and no less DRY, than our original code. Conciseness is again not a value in and of itself. Explicitly listing the options is preferred to leaving them implicit.
 
-Then, when we call the function, we can use this default:
+然后, 当我们调用该函数时, 可以这么使用默认值:
 
 ```rust
 fn create_window(width: u32, height: u32, visibility: WindowVisibility) -> WindowHandle;
@@ -134,18 +180,28 @@ let handle2 = create_window(100, 500, WindowVisibility::Visible);
 
 let handle3 = create_window(100, 500, WindowVisibility::default());
 let handle4 = create_window(100, 500, WindowVisibility::default());
-let handle5 = create_window(100, 500, Default::default()); // Also permitted
+let handle5 = create_window(100, 500, Default::default()); // 也允许
 ```
 
+正如承诺的那样, 这样冗长些, 同样 DRY,
+但是, 更加明确和清晰; (无歧义)
 
-This is, as promised, more verbose, but equally DRY, and much more explicit and clear.
 
-NB: I’m using free-standing functions for example purposes only. In reality, this particular function is just as likely to be part of a type’s intrinsic methods, something like WindowHandle::new or WindowHandle::create_window.
+注意: 我使用独立函数只是为了举例;
+实际上, 这个特定函数很可能是类型内部方法的一部分,
+例如 WindowHandle::new 或是 WindowHandle::create_window;
 
-### Scaling defaults in Rust: Struct update syntax
-So this is all well and good for one default. But it doesn’t scale that well. What if we want to add another 3 parameters to our window creation function? In a language like C++, we can give them defaults, and the callers don’t even need to be updated (parameters are for example purposes only and do not represent a well-thought out list of what you might want to specify in creating a window):
 
-```rust
+### Rust 中默认值缩放: 结构更新语法
+
+所以, 这对于一个默认值来说形式上更好;
+但是,拓展性并不好;
+如果我们想在我们的窗口创建函数中追加另外3个参数怎么办?
+在 C++ 中, 可以可以为她们提供默认值,
+调用者甚至不需要更新(参数仅用来示例, 并不代表在创建窗口):
+
+
+```C++
 WindowHandle createWindow(int width, int height, bool visible = true,
                           WindowStyle windowStyle = WindowStyle::Standard,
                           int z_position = -1,
@@ -156,12 +212,21 @@ createWindow(100, 500, false); // Also still works
 createWindow(100, 500, false, WindowStyle::Standard, 2, true); // Specify everything
 ```
 
+这是一个有用的功能;
+在 Rust 中,使用目前讨论的技术,
+无论参数有多少,我们都必须重复编写 Default::default() ;
+这是 DRY 违规行为, 会干挠追加新参数的能力;
 
-This is a useful feature. In Rust, with the techniques we’ve discussed so far, we’d have to write Default::default() repeatedly for however many parameters there are. This is a DRY violation, and interferes with the ability to add new parameters.
+但是, 此功能也存在缺陷;
+你现在已经限制自己在左侧指定参数,
+以便在右侧追加参数;
+在调用 createWindow 最后一个示例中, 我们通过显式指定一个值来违反 DRY,
+当时我们可能想使用默认值,但是,该值不可用, 因为,我们想为以后的参数覆盖默认值;
 
-There is a flaw with this feature, however. You’ve now constrained yourself to specifying parameters to the left in order to specify parameters on the right. In the last example call to createWindow, we violate DRY by explicitly specifying a value when we probably wanted to use the default, but that wasn’t available because we wanted to override the default for a later parameter.
-
-Fortunately, Rust has a version of this too. Just as we created an enum just for the purposes of this function call, it is idiomatic in Rust to create structures for configuration parameters like this. The structure would look something like this:
+幸运的是, Rust 也有这种版本;
+正如我们只是为了这个函数调用而创建了一个枚举一样,
+在 Rust 中为这种配置参数创建结构也是惯用的;
+该结构看起来像这样:
 
 ```rust
 pub struct WindowConfig {
@@ -174,8 +239,7 @@ pub struct WindowConfig {
 }
 ```
 
-
-Then, we can implement Default for that entire struct:
+然后, 我们就可以为整个结构指定 Default:
 
 ```rust
 impl Default for WindowConfig {
@@ -192,7 +256,8 @@ impl Default for WindowConfig {
 }
 ```
 
-Now, this might seem to be extremely tedious to use. You might imagine using it something like this:
+现在, 似乎使用起来很乏味;
+你可能想象得这么使用:
 
 ```rust
 let mut config = WindowConfig::default();
@@ -202,7 +267,13 @@ config.autoclose = AutoclosePolicy::Enable;
 let handle = create_window(config);
 ```
 
-I would argue that even this is preferable to default parameters, because again, it is explicit. However, Rust has a syntactic construct designed exactly for situations like this, struct update syntax. With it, we get something very similar to default parameters, but a little more verbose, a lot more explicit, and a lot more flexible:
+我认为即便是这样也比默认秋粮可取,
+因为,这样是明确的;
+然而, Rust 有一个专门为这种情况设计的语法结构:
+struct update syntax ;
+有了这,我们获得的东西和默认参数非常相似,
+但是,更冗长/明确/灵活:
+
 
 ```rust
 let handle = create_window(WindowConfig {
@@ -213,21 +284,50 @@ let handle = create_window(WindowConfig {
 });
 ```
 
+不像 C++ 风格的言论参数,
+我们可以完全覆盖我们想要的默认值;
+同样明确的是,
+如果我们愿意, 甚至可以修改其它参数,
+而不需强制维护开发者检查文档;
 
-Unlike C++-style default parameters, we can override exactly the defaults we want to. It is also explicitly clear that there are other parameters we could modify if we wanted to, without forcing the maintenance programmer to check the documentation.
+除此之外, 这样允许定义其它默认值集;
+除了 WindowConfig::default 之渑, 可能还有另外一组用来创建对话框的配置参数,
+例如: like WindowConfig::dialog() 或是 WindowConfig::default_dialog ;
+程序员通常在创建不可见窗口, 或是高度相同的窗口应用,
+可能会定义自己的默认设置, config::app_local_default_window_config();
+这些不会通过 Default 特性来调解,
+但是, Default 只是一个 trait ,
+而 Default::default() 是一个方法调用;
+你可以改为调用自己的方法,
+并仍然使用此`结构更新语法`;
 
-But beyond that, this allows there to be other sets of defaults defined. In addition to WindowConfig::default, there might be another set of configuration parameters for creating dialog boxes, like WindowConfig::dialog() or WindowConfig::default_dialog. An app where the programmer usually creates invisible windows, or windows all of the same height, might define its own default set, config::app_local_default_window_config(). These wouldn’t be mediated through the Default trait, but Default is just a trait, and Default::default() is just a method call. You can call your own methods instead, and still use this struct update syntax.
+所以,现在我们在 Rust 中有一个习惯用语系统来替换默认参数;
+这和 DRY 一样,
+并且同样减少了认知负荷;
+更加重要的是, 这样作并没有牺牲对到底发生了什么的明确性与清晰性 --- 一个给定的函数总是采用相同数量的参数,
+这是 Rust 维护开发者可以(并且正在)依赖的不变量;
 
-So now, we have a system of idioms in Rust to replace default parameters. It’s just as DRY, and decreases the cognitive load just as much. More importantly, it does so without sacrificing explicitness and clarity as to exactly what’s going on – a given function always takes the same number of parameters, which is an invariant that Rust maintenance programmers can (and do) rely on.
 
-### The Builder Pattern
-At this point, the old-hand Rustaceans in the audience will note that I haven’t discussed one common Rust approach to designing these configuration structs, the builder pattern.
+### 构建器模式
 
-That’s for a reason: I don’t like it. I personally prefer to use Default and struct update syntax where others might reach for the builder pattern. I think it’s less explicit, and since I have a lot of experience in non-OOP programming languages, it feels to me like a solution without a problem, the primary upshot of which is to make the code look more object-oriented.
+在这点上, Rustacean 老手们应该能注意到还没讨论一种通用的 Rust 方法来设计这些配置结构,
+即:  `构建器模式` (Builder Pattern);
 
-But it is a commonly used pattern in Rust, and you will use crates that use the builder pattern, so it’s worth being familiar with it. It’s the same concept as before: using a struct full of parameters to send configuration to a constructor or to a function call. It’s probably going to be called something like WindowBuilder instead of WindowConfig.
+这是有原因的: 我不喜欢丫的;
+(译按: 千金婎买我愿意, 没错...)
+我个人更加喜欢使用 Default 和 struct update 语法,
+其它人可能会使用  `构建器模式`  ;
+我认为这种模型不够明确, 而且由于在非 OOP 编程语言方面有很多经验,
+所以,我觉得这是一种没有问题的解决方案, 主要成果只是令代码看起来更加 OOP 而已;
 
-However, instead of using the struct update syntax directly, a bunch of helper methods are added to do the struct update:
+不过, 这也是 Rust 中常用的模式, 一般使用 `构建器模式` 的 crate,
+因而值得熟悉之;
+这和以往的概念相同:
+使用充满参数的结构, 将配置发送到 构建函数或是函数调用;
+有时这种会被称为 WindowBuilder 而不是 WindowConfig;
+
+但是, 不直接使用结构更新语法, 而是添加了一堆辅助方法来执行结构更新:
+
 
 ```rust
 impl WindowBuilder {
@@ -240,8 +340,7 @@ impl WindowBuilder {
 }
 ```
 
-
-Or, as I would notate it:
+或者, 正如想指出的那样:
 
 ```rust
 impl WindowBuilder {
@@ -256,7 +355,8 @@ impl WindowBuilder {
 }
 ```
 
-Sometimes, enumerations are split into multiple update methods:
+有时, 枚举被拆分为多个更新方法:
+
 
 ```rust
 impl WindowBuilder {
@@ -272,7 +372,10 @@ impl WindowBuilder {
 }
 ```
 
-Then, normally, instead of calling e.g. the window constructor, you call a build method defined on the builder (and at this point I cringe at the gratuitous OOP philosophy influencing the design):
+然后, 通常并不是调用例如: window constructor,
+你调用在构建器上定义的构建方法
+(此时,已经对影响设计的无偿 OOP 哲学感到畏缩)
+
 
 ```rust
 impl WindowBuilder {
@@ -281,7 +384,10 @@ impl WindowBuilder {
     }
 }
 ```
-Then, instead of using struct update syntax, you chain together calls to these methods:
+
+其实,不用 struct update 语法,
+而是将对这些方法调用链接在一起:
+
 
 ```rust
 let handle = WindowBuilder::new()
@@ -291,18 +397,38 @@ let handle = WindowBuilder::new()
     .build();
 ```
 
-I still prefer this to default parameters, but I also find it tacky. I don’t like being forced to think in terms of abstract “objects” like builders, and I don’t like the presumption that this style is more intuitive. Why is a “builder” an object that does something? Why is that prefered to a structure that is “configuration”? Are OOP programmers aware that in real life, the vast majority of objects literally don’t do things, and certainly don’t build other objects?
 
-But for people familiar with the idioms of object-oriented programming, this might be preferable. It is a commonly chosen option, so it’s important at least to recognize it.
+我仍然更加喜欢这个, 而不是默认参数,
+但是, 同时也感觉有点俗气;
+我不喜欢被迫使用像 构建器 这样的抽象"对象"来思考,
+也不喜欢这种风格中更直观的假设;
+为什么 "构建器" 是作某件事儿的对象?
+为什么它比"配置"结构更受欢迎?
+OOP 程序员是否意识到在现实生活中, 绝大多数对象根本不作任何事儿,
+当然, 也不会构建其它对象?
 
-## Conclusion and Application
-Rust has a lot of idioms that are different from those in other programming languages. I often see proposals from new Rustaceans to add default parameters – and other similar features – to Rust, and these new Rustaceans are confused that the strong demand they feel is not as widely felt in the greater Rust community.
+但是, 对于熟悉 OOP 习惯用法的人来说,
+这可能更可取;
+这是一个普通选择的选项, 因此, 至少识别这种模式很重要;
 
-And normally, it’s similar to this situation with default parameters. There are alternative idioms that accomplish the same goals, to the extent that those goals are in line with Rust’s values: in this case, DRYness, and reducing developers' cognitive loads. They are also better solutions in some other ways, according to Rusty values: the additional explicitness is worth a little more verbosity.
 
-But often, the new Rustaceans making these proposals are unaware of the Rusty way of doing things. And if they are aware of it, they are approaching it from the goals of other programming languages, and don’t see how the solution measures up.
 
-So I hope this can serve as a case study to help people understand that there often are Rusty ways of accomplishing the goals of popular features from OOP land, and why Rustaceans prefer these solutions to blind accumulation of features.
+## 结论和应用
+
+Rust 有很多不同于其它语言的习惯;
+我经常看到新的 Rustacean 提议为 Rust 添加默认参数和其它类似的功能,
+而这些新 Rustacean 感到困惑的是, 
+领导作用感受到的强烈要求在更大的 Rust 社区中并没有被广泛感受到;
+
+通常, 这和默认参数类似;
+有实现相同目标的替代习语, 嘦这些目标符合 Rust 的价值观:
+在此场景中, DRYness 并减少开发者认知负担;
+根据 Rusty 的价值观, 她们在其它方面也是更好的解决方案: 额外的明确性值得多点冗长代码;
+
+
+所以, 我希望这可以作为一个案例研究来报时大家理解,
+通常总是有 Rusty 的方法来实现 OOP 领域流行功能目标,
+以及, 为什么 Rustacean 更加喜欢这些方案而不是盲目的积累新功能;
 
 
 
@@ -310,6 +436,7 @@ So I hope this can serve as a case study to help people understand that there of
 > 版本记要
 
 - ..
+- 230220 ZQ v0 DONE
 - 230212 ZQ init.
 
 
