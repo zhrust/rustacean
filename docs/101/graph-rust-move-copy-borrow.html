@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>学习 - be Rustaceans</title>
+    <title>图形描述 Rust 中所有权和借用 - be Rustaceans</title>
 
 
     <!-- Custom HTML head -->
@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html" class="active"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/graph-rust-move-copy-borrow.html"><strong aria-hidden="true">2.1.</strong> 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.2.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.2.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.2.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/graph-rust-move-copy-borrow.html" class="active"><strong aria-hidden="true">2.1.</strong> 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.2.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.2.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.2.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -153,95 +153,58 @@
 
             <div id="content" class="content">
                 <main>
-                    <h1 id="学习"><a class="header" href="#学习">学习</a></h1>
-<blockquote>
-<p>learnning ...</p>
-</blockquote>
-<h2 id="background"><a class="header" href="#background">background</a></h2>
-<blockquote>
-<p>可能背景</p>
-</blockquote>
-<p>和其它语言不同, Rust 有太多公开的秘密,如果不能快速先习惯一批,
-很难写出可以运行的软件来...</p>
-<h2 id="goal"><a class="header" href="#goal">goal</a></h2>
-<blockquote>
-<p>必要目标</p>
-</blockquote>
-<p>最常用的那 20% Rust 常识...</p>
-<h2 id="trace"><a class="header" href="#trace">trace</a></h2>
-<blockquote>
-<p>具体推进</p>
-</blockquote>
-<h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
-<blockquote>
-<p>各种参考</p>
-</blockquote>
-<h3 id="youtube"><a class="header" href="#youtube">Youtube</a></h3>
-<blockquote>
-<p>真的是什么都有</p>
-</blockquote>
-<ul>
-<li>各种劝解:
-<ul>
-<li><a href="https://www.youtube.com/watch?v=sDtQaO5_SOw">Rust Linz, June 2021 - Tim McNamara - How to learn Rust - YouTube</a></li>
-</ul>
-</li>
-<li>110+<a href="https://www.youtube.com/playlist?list=PL3azK8C0kje1DUJbaOqce19j3R_-tIc4_">Rust 编程语言入门教程 [2021] - YouTube</a>
-<ul>
-<li>42+<a href="https://www.youtube.com/playlist?list=PLVvjrrRCBy2JSHf9tGxGKJ-bYAN_uDCUL">RUST PROGRAMMING TUTORIALS - YouTube</a></li>
-<li>44+<a href="https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW">Intro to Rust - YouTube</a></li>
-<li>14+<a href="https://www.youtube.com/playlist?list=PLKkEWK6xRmes17LQUEA5bNjYISuCEOTXx">Rust For Starters - YouTube</a></li>
-</ul>
-</li>
-<li>44+<a href="https://www.youtube.com/playlist?list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8">The Rust Lang Book - YouTube</a></li>
-<li>25+<a href="https://www.youtube.com/playlist?list=PLJbE2Yu2zumDD5vy2BuSHvFZU0a6RDmgb">Rust Projects - YouTube</a>
-<ul>
-<li>24+<a href="https://www.youtube.com/playlist?list=PL5dTjWUk_cPYuhHm9_QImW7_u4lr5d6zO">50 RUST Projects - YouTube</a></li>
-</ul>
-</li>
-<li><a href="https://www.youtube.com/@jonhoo">Jon Gjengset - YouTube</a>
-<ul>
-<li><a href="https://www.youtube.com/playlist?list=PLqbS7AVVErFgY2faCIYjJZv_RluGkTlKt">Rust live-coding - YouTube</a>
-<ul>
-<li>都是几个小时的连续调试过程</li>
-</ul>
-</li>
-<li><a href="https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa">Crust of Rust - YouTube</a></li>
-</ul>
-</li>
-<li><a href="https://www.youtube.com/playlist?list=PLZaoyhMXgBzoM9bfb5pyUOT3zjnaDdSEP">Rust Talks - YouTube</a>
-<ul>
-<li>各种畅想...</li>
-<li><a href="https://www.youtube.com/playlist?list=PLnhCUtqrIE-zgfmf6hn6fLwhfR_hDSG9T">Contributing to Rustc - YouTube</a> ~ 牛人直播如何为 Rust 编译器贡献特性...</li>
-</ul>
-</li>
-<li><a href="https://www.youtube.com/watch?v=_jMSrMex6R0&amp;list=PLFjq8z-aGyQ6t_LGp7wqHsHTYO-pDDx84">Rust - YouTube</a>
-<ul>
-<li>各种前景分析</li>
-<li><a href="https://www.youtube.com/watch?v=qjwWF6K-7uE&amp;list=PLFjq8z-aGyQ78CQu1G3C5CT9ieiNpsnbJ">WebAssembly - YouTube</a> ~ 各种实现应用</li>
-</ul>
-</li>
-<li>...</li>
-</ul>
+                    <h1 id="图形描述-rust-中所有权和借用"><a class="header" href="#图形描述-rust-中所有权和借用">图形描述 Rust 中所有权和借用</a></h1>
+<p>原文: <a href="https://rufflewind.com/2017-02-15/rust-move-copy-borrow">Graphical depiction of ownership and borrowing in Rust - Rufflewind's Scratchpad</a></p>
+<h2 id="快译"><a class="header" href="#快译">快译:</a></h2>
+<p>以下是 Rust 语言中 moving, copying, 和 borrowing 的图形描述;
+这些概念中的大多数是 Rust 持有的,
+因此, 也是很多学习者常见绊脚石;</p>
+<p>为了避免图形混乱, 尽量减少了文字;
+并不是要取代现有各种教程, 而是为喜欢直观理解概念的程序员提供不同的视角;
+如果你正在学习 Rust 并发现这些图形有报时,
+建议你使用这类图表注释自己的代码以便帮助巩固概念 ;-)</p>
+<h2 id="rust-中所有权和借用"><a class="header" href="#rust-中所有权和借用">Rust 中所有权和借用</a></h2>
+<p><img src="https://rufflewind.com/img/rust-move-copy-borrow.png" alt="" /></p>
+<p>可以通过点击图像来放大, 也可以下载 <a href="https://rufflewind.com/img/rust-move-copy-borrow.svg">SVG</a>
+和 <a href="https://rufflewind.com/img/rust-move-copy-borrow.pdf">PDF</a> 版本在本地放大;</p>
+<p>上面的图形描述了你拥有数据的两种主要语义: 移动或是复制;</p>
+<p>关于移动的解释(~&gt;)看起来太简单了;
+这里没有把戏: 移动语义本身就很奇怪,因为,大多数语言允许变量被程序员随意使用多次;
+这和现实世界的大部分情况形成鲜明对比:
+我不能把我的笔给别人,然后,仍然用它继续写字!
+在 Rust 中,任何类型未实现 Copy trait 的变量都具有移动语义,
+并且会像所示那样运行;</p>
+<p>复制语义(⎘)是为实现 Copy trait 的类型保留的;
+在这种情况中, 对象的每次使用都会产生一个副本, 正如所示分叉; 中间的两个数字描绘了你可以借用你拥有物品的两种方式,
+以及每种方式提供的操作;</p>
+<p>对于可变借用, 我使用了锁符号(🔒)来表示原始对象在借用期间被有效锁定,
+令其无法使用;</p>
+<p>相反,对于非可变备用, 我使用了雪花符号(❄)来表示原始对象只是被冻结了:
+你仍然可以获取更多非可变引用, 但是, 你不能移动或是获取其可变引用;</p>
+<p>在这两个图中, <code>'ρ</code> 是我为引用的生命周期选择的名称;
+我故意使用希腊字母是因为目前 Rust 中还没有具体生命周期的语法;</p>
+<p>最后两个图以图形和文本形式总结了两种引用之间的主要区别和相似之处;
+在这种场景中&quot;外部&quot;限定词很重要,
+因为, 你仍然可以通过类似 Cell 的东西拥有内部可变性;</p>
 <h2 id="logging"><a class="header" href="#logging">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
 <ul>
 <li>..</li>
-<li>221214 ZQ init.</li>
+<li>230220 ZQ init.</li>
 </ul>
 
                 </main>
 
                 <nav class="nav-wrapper" aria-label="Page navigation">
                     <!-- Mobile navigation buttons -->
-                    <a rel="prev" href="../abt/zhrust.html" class="mobile-nav-chapters previous"
+                    <a rel="prev" href="../101/index.html" class="mobile-nav-chapters previous"
                         title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
-                    <a rel="next" href="../101/graph-rust-move-copy-borrow.html" class="mobile-nav-chapters next"
+                    <a rel="next" href="../101/exercism.html" class="mobile-nav-chapters next"
                         title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
                         <i class="fa fa-angle-right"></i>
                     </a>
@@ -252,12 +215,12 @@
         </div>
 
         <nav class="nav-wide-wrapper" aria-label="Page navigation">
-            <a rel="prev" href="../abt/zhrust.html" class="nav-chapters previous" title="Previous chapter"
+            <a rel="prev" href="../101/index.html" class="nav-chapters previous" title="Previous chapter"
                 aria-label="Previous chapter" aria-keyshortcuts="Left">
                 <i class="fa fa-angle-left"></i>
             </a>
 
-            <a rel="next" href="../101/graph-rust-move-copy-borrow.html" class="nav-chapters next" title="Next chapter"
+            <a rel="next" href="../101/exercism.html" class="nav-chapters next" title="Next chapter"
                 aria-label="Next chapter" aria-keyshortcuts="Right">
                 <i class="fa fa-angle-right"></i>
             </a>

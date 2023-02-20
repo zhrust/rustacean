@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html" class="active"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/graph-rust-move-copy-borrow.html"><strong aria-hidden="true">2.1.</strong> 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.2.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.2.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.2.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html" class="active"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -245,8 +245,7 @@ impl Default for Foo {
         Foo::Bar
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>或是, 使用更加简洁的 派生/derive 语法编写:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -257,8 +256,7 @@ enum Foo {
 
     Baz,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>一旦定义了这个默认值,
 Foo::default() 或是(在类型明确的上下文中) Default::default() 就可以代表 Foo::Bar ;</p>
 <p>如果你习惯为你的函数参数重用现有类型,
@@ -285,8 +283,7 @@ enum WindowVisibility {
 
     Invisible,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>是的, 这比我们的原始代码有些冗长, 但更清晰,
 而且不乏 DRY ;
 简洁本身并不是一种价值;
@@ -302,8 +299,7 @@ let handle2 = create_window(100, 500, WindowVisibility::Visible);
 let handle3 = create_window(100, 500, WindowVisibility::default());
 let handle4 = create_window(100, 500, WindowVisibility::default());
 let handle5 = create_window(100, 500, Default::default()); // 也允许
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>正如承诺的那样, 这样冗长些, 同样 DRY,
 但是, 更加明确和清晰; (无歧义)</p>
 <p>注意: 我使用独立函数只是为了举例;
@@ -347,8 +343,7 @@ createWindow(100, 500, false, WindowStyle::Standard, 2, true); // Specify everyt
     pub z_position: i32,
     pub autoclose: AutoclosePolicy,
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>然后, 我们就可以为整个结构指定 Default:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -364,8 +359,7 @@ createWindow(100, 500, false, WindowStyle::Standard, 2, true); // Specify everyt
         }
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>现在, 似乎使用起来很乏味;
 你可能想象得这么使用:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -375,8 +369,7 @@ config.width = 500;
 config.z_position = 2;
 config.autoclose = AutoclosePolicy::Enable;
 let handle = create_window(config);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>我认为即便是这样也比默认秋粮可取,
 因为,这样是明确的;
 然而, Rust 有一个专门为这种情况设计的语法结构:
@@ -391,8 +384,7 @@ struct update syntax ;
     autoclose: AutoclosePolicy::Enable,
     ..Default::default()
 });
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>不像 C++ 风格的言论参数,
 我们可以完全覆盖我们想要的默认值;
 同样明确的是,
@@ -438,8 +430,7 @@ struct update syntax ;
 
     // ...
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>或者, 正如想指出的那样:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -453,8 +444,7 @@ struct update syntax ;
 
     // ...
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>有时, 枚举被拆分为多个更新方法:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -469,8 +459,7 @@ struct update syntax ;
         self
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>然后, 通常并不是调用例如: window constructor,
 你调用在构建器上定义的构建方法
 (此时,已经对影响设计的无偿 OOP 哲学感到畏缩)</p>
@@ -481,8 +470,7 @@ struct update syntax ;
         window_create(self)
     }
 }
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>其实,不用 struct update 语法,
 而是将对这些方法调用链接在一起:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -492,8 +480,7 @@ struct update syntax ;
     .z_position(2)
     .autoclose_enable()
     .build();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>我仍然更加喜欢这个, 而不是默认参数,
 但是, 同时也感觉有点俗气;
 我不喜欢被迫使用像 构建器 这样的抽象&quot;对象&quot;来思考,

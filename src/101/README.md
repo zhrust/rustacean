@@ -24,6 +24,8 @@
 ### Youtube
 > 真的是什么都有
 
+- 各种劝解:
+    - [Rust Linz, June 2021 - Tim McNamara - How to learn Rust - YouTube](https://www.youtube.com/watch?v=sDtQaO5_SOw)
 - 110+[Rust 编程语言入门教程 \[2021\] \- YouTube](https://www.youtube.com/playlist?list=PL3azK8C0kje1DUJbaOqce19j3R_-tIc4_)
     - 42+[RUST PROGRAMMING TUTORIALS \- YouTube](https://www.youtube.com/playlist?list=PLVvjrrRCBy2JSHf9tGxGKJ-bYAN_uDCUL)
     - 44+[Intro to Rust \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW)

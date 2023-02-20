@@ -83,7 +83,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.1.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.1.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.1.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html" class="active"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 有关</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item expanded "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li></ol></li><li class="chapter-item expanded "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> 学习</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/graph-rust-move-copy-borrow.html"><strong aria-hidden="true">2.1.</strong> 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item expanded "><a href="../101/exercism.html"><strong aria-hidden="true">2.2.</strong> Exercism</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.2.1.</strong> 42:all-your-base</a></li><li class="chapter-item expanded "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.2.2.</strong> 43:Allergies</a></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> 开发</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.1.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item expanded "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.2.</strong> 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> 技巧</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../tip/rust6fun-operator-overloading.html" class="active"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item expanded "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item expanded "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item expanded "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a></li><li><ol class="section"><li class="chapter-item expanded "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -163,15 +163,13 @@
 </span><span class="boring">fn main() {
 </span>stdin().read_line(&amp;mut buffer).unwrap();
 println!(&quot;Hello I am {name}!!!&quot;);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>可以重载 cin 和 count 上的移位运算符来达成:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>cin &gt;&gt; &amp;mut buffer;
 cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt;&lt; endl;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>(<code>是也乎:</code></p>
 <p>看起来意义更加不明了了?
 )</p>
@@ -181,8 +179,7 @@ cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt
 </span><span class="boring">fn main() {
 </span>std::cmp::max(x, y);
 [w, x, y, z].into_iter().max();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>可以搞成:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -190,8 +187,7 @@ cout &lt;&lt; &quot;Hello I am &quot; &lt;&lt; name &lt;&lt; &quot;!!!&quot; &lt
 // it supports &gt;2 arguments
 max+(x, y);
 max+(w, x, y, z);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>(<code>是也乎:</code></p>
 <p>内置标准库太丰富了...简直必须要有一个信仰过程</p>
 <p>)</p>
@@ -207,8 +203,7 @@ max+(w, x, y, z);
     .map(|param: String, agent: String| {
         format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
     });
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>如果 API 看起来像这样呢?</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -218,8 +213,7 @@ max+(w, x, y, z);
 	&gt;&gt;	|param: String, agent: String| {
 			format!(&quot;Hello {}, whose agent is {}&quot;, param, agent)
 		};
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>(<code>是也乎:</code></p>
 <p>等等, 这就是语法糖了吧?
 )</p>
@@ -230,16 +224,14 @@ max+(w, x, y, z);
 </span>x.pow(y);
 dot_product(a, b);
 a.cross(b.cross(c).cross(d))
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>我们可以这么来:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>x ^pow^ y;
 a *dot* b;
 a *cross* (b *cross* c *cross* d);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>很多人就想要这个!</p>
 <p>(<code>是也乎:</code></p>
 <p>嗯哼? 的确流畅很多哪...
@@ -250,8 +242,7 @@ a *cross* (b *cross* c *cross* d);
 </span><span class="boring">fn main() {
 </span>size_of::&lt;T&gt;();
 size_of_val(&amp;value);
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>Turbofish 爱好者会喜欢 size_of,
 但是对 size_of_val 没什么感觉;
 所以, 我们可以自行改造出新版本的 size_of_val ,
@@ -260,8 +251,7 @@ size_of_val(&amp;value);
 </span><span class="boring">fn main() {
 </span>size_of::&lt;T&gt;();
 size_of_val&lt;&lt;&amp;value&gt;&gt;();
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <h3 id="join-和-race"><a class="header" href="#join-和-race">Join 和 Race</a></h3>
 <p>特性组合器可能具有短路行为能力;</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
@@ -271,15 +261,13 @@ size_of_val&lt;&lt;&amp;value&gt;&gt;();
 
 // quit if any of the 3 succeeds
 (fut4, fut5, fut6).race_ok().await;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>可以通过 &amp; 和 | 在形式上表达出这点:</p>
 <pre><pre class="playground"><code class="language-rust"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>(TryJoin &gt;&gt; fut1 &amp; fut2 &amp; fut3).await;
 (RaceOk &gt;&gt; fut4 | fut5 | fut6).await;
-<span class="boring">}
-</span></code></pre></pre>
+<span class="boring">}</span></code></pre></pre>
 <p>(<code>是也乎</code>:</p>
 <p>这是从形式上和语义同步了.
 )</p>
