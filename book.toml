@@ -1,9 +1,10 @@
 [book]
+title = "be Rustaceans"
+description = "如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程..."
 authors = ["ZoomQuiet"]
-language = "en"
+#language = "en"
 multilingual = false
 src = "src"
-title = "be Rustaceans"
 base_url = "rs.101.so"
 
 # Enables the `mdbook-template` preprocessor
@@ -19,8 +20,13 @@ build-dir = "docs"
 git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
 #edit-url-template = "https://github.com/rust-lang/mdBook/edit/master/guide/{path}"
 
-[output.html.playground]
+[output.html.playpen]
 line-numbers = true
+#editable = true
+#editor = "ace"
+
+[output.html.fold]
+enable = true
 
 [output.html.search]
 limit-results = 20
@@ -35,3 +41,6 @@ heading-split-level = 2
 #   230220 ++ cognitive-engineering-lab/aquascope
 #   : Interactive visualizations of Rust at compile-time and run-time https://github.com/cognitive-engineering-lab/aquascope
 #[preprocessor.aquascope]
+
+[rust]
+edition = "2021"

@@ -1,10 +1,7 @@
-# Summary
 
 - [有关](./abt/README.md)
     + [gh-pages](./abt/gh-pages.md)
     + [zhrust](./abt/zhrust.md)
-
-# learnning
 
 ----
 
@@ -15,16 +12,12 @@
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
 
-# developing
-
 ----
 
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
     + [20年来作为软件工程师学到的10件事](./dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
     + [希望一早知道的关键概念](./dev/concepts-i-wish-i-learned-earlier.md)
-
-# skill
 
 ----
 
@@ -33,8 +26,6 @@
     + [Rust 超越面向对象,第1部分](./tip/oop-1-encapsulation.md)
     + [Rust 超越面向对象,第2部分](./tip/oop-2-polymorphism.md)
     + [OOP:Rust 和默认参数](./tip/default-params.md)
-
-# logging
 
 ----
 
