@@ -1,5 +1,5 @@
 
-- [有关](./abt/README.md)
+- [成为 Rustacean](./abt/README.md)
     + [gh-pages](./abt/gh-pages.md)
     + [zhrust](./abt/zhrust.md)
 
