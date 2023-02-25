@@ -3,21 +3,41 @@
 - [有关](./abt/README.md)
     + [gh-pages](./abt/gh-pages.md)
     + [zhrust](./abt/zhrust.md)
+
+# learnning
+
+----
+
 - [Rust 学习](./101/README.md)
     + [图形描述 Rust 中所有权和借用](./101/graph-rust-move-copy-borrow.md)
     + [伴学ChatGPT](./101/chatgpt101.md)
     + [Exercism](./101/exercism.md)
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
+
+# developing
+
+----
+
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
     + [20年来作为软件工程师学到的10件事](./dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
     + [希望一早知道的关键概念](./dev/concepts-i-wish-i-learned-earlier.md)
+
+# skill
+
+----
+
 - [Rust 技艺](./tip/README.md)
     + [运算符重载六件趣事](./tip/rust6fun-operator-overloading.md)
     + [Rust 超越面向对象,第1部分](./tip/oop-1-encapsulation.md)
     + [Rust 超越面向对象,第2部分](./tip/oop-2-polymorphism.md)
     + [OOP:Rust 和默认参数](./tip/default-params.md)
+
+# logging
+
+----
+
 - [笔记](./log/README.md)
     + [Rust 丑句法](./log/rust-s-ugly-syntax.md)
     + [Rust 课程笔记](./log/rust101logging.md)

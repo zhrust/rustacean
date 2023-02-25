@@ -299,14 +299,32 @@ Smalltalk 传统上允许你在一个特殊的浏览器中游览代码库,
 
 
 
-### Alternative #1: Closures
-Sometimes, an OOP interface or polymorphic decision only involves one actual operation. In such a situation, a closure can just be used instead.
+### 备选方案 #1: 闭包
+> Alternative #1: Closures
 
-I don’t want to spend too much time on this, because most OOP programmers are already aware of this, and have been since their OOP languages have caught up with functional languages and gotten syntax for lambdas – Java in Java 8, C++ in C++11. Silly one-method interfaces like Java’s Comparator are therefore – fortunately – mostly a thing of the past.
+有时, 一个 OOP 接口或是多态决策只涉及一个实际操作;
+在这种情况中,只能使用闭包;
 
-Also, closures in Rust technically involve traits, and so are implemented using the same mechanism as the next two alternatives, so one could also argue that this isn’t really a separate option in Rust. In my mind, however, lambdas, closures, and the FnMut/FnOnce/Fn traits are special enough aesthetically and situationally that it deserved a little bit of time.
+我不想在这方面花太多时间,
+因为, 大多数 OOP 程序员已经意识到这点,
+并且, 自从他们的 OOP 语言已经赶上了函数式语言,
+并获得了 lambda 语法 --- Java 中的 Java 8 ,
+C++ 中的, C++11;
+因此, 像 Java 的 Comparator 这种愚蠢的单一方法接口 ---
+幸运的是 --- 基本上已经都感染过去式了;
 
-And so I’ll take the little bit of time to just say this: If you find yourself writing a trait (or a Java interface or a C++ class) with exactly one method, please consider whether you should instead be using some sort of closure or lambda type. Only you can prevent overengineering.
+此外, Rust 中的闭包在技术上涉及 traits,
+因此,使用和接下来的两个替代方案相同的机制来竀,
+所以,也有人可能会争辩说这在 Rust 中并不是真正的独立选项;
+然而,在我看来 lambda/闭包和
+FnMut/FnOnce/Fn 等 trait 们在美学上和情境上都非常特别,
+值得花点时间掌握;
+
+因此, 我将花些时时间来说明这点:
+如果你发现自己只使用一种方法编写 trait 
+(Java 接口或是 C++ 类),
+请考虑你是否应该改用某种闭包或是 lambda 类型;
+毕竟只有你自己才能防止过度设计;
 
 ### Alternative #2: Polymorphism with Traits
 Just like Rust has a version of encapsulation more flexible and more powerful than the OOP notion of classes, as I discuss in the previous post, Rust has a more powerful version of polymorphism than OOP posits: traits.
