@@ -47,6 +47,12 @@
 - 各种劝解:
     - [Rust Linz, June 2021 - Tim McNamara - How to learn Rust - YouTube](https://www.youtube.com/watch?v=sDtQaO5_SOw)
 - 110+[Rust 编程语言入门教程 \[2021\] \- YouTube](https://www.youtube.com/playlist?list=PL3azK8C0kje1DUJbaOqce19j3R_-tIc4_)
+    - 94+ [Rust - YouTube](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
+        - 专题:[rusqlite - YouTube](https://www.youtube.com/watch?v=xhU8KDzL0vA&list=PLVhhUNGAUIQRR7JheZsDaxF_Cd5Pf5slw)
+        - [SQL Cheat Sheet | Crazcalm](http://ogcrazcalm.blogspot.com/2015/11/sql-cheat-sheet.html)
+        - [SQLite - Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/database/sqlite.html#insert-and-select-data)
+        - [rusqlite - crates.io: Rust Package Registry](https://crates.io/crates/rusqlite)
+        - [File in std::fs - Rust](https://doc.rust-lang.org/std/fs/struct.File.html#examples)
     - 42+[RUST PROGRAMMING TUTORIALS \- YouTube](https://www.youtube.com/playlist?list=PLVvjrrRCBy2JSHf9tGxGKJ-bYAN_uDCUL)
     - 44+[Intro to Rust \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW)
     - 14+[Rust For Starters \- YouTube](https://www.youtube.com/playlist?list=PLKkEWK6xRmes17LQUEA5bNjYISuCEOTXx)

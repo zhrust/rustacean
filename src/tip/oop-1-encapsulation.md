@@ -277,7 +277,10 @@ pub struct Point {
 }
 ```
 
-… than the Java idiomatic “JavaBean” equivalent from when I was a Java programmer (Java has apparently changed since then, but this is representative of many OOP programming languages including Smalltalk and many books on how to program):
+... 相比俺还是 Java 程序员时惯用的 “JavaBean” 等价物
+(Java 从那时起显然发生了变化,
+但是, 这代表了很多 OOP 编程琂,包括 Smalltalk 和许多关于如何编程的书籍):
+
 
 ```rust
 class Point {
@@ -311,38 +314,119 @@ class Point {
 }
 ```
 
-Such data types generally don’t use any of the other features that OOP classes get, such as polymorphism or inheritance. To use such features in such “JavaBean” classes would also violate the principle of least surprise. The “class” concept is overkill for these record types.
+此类数据类型通常不使用 OOP 类获得的任何其它功能,
+例如多态或是继承;
+在此类 “JavaBean” 类中使用此类功能也将违反最小意外原则;
+"类"概念对于这些记录类型来说,根本就是矫枉过正;
 
-And of course, a Java developer (or Smalltalk, or C#) will say that by accessing the fields indirectly through these getter and setter methods, that they are future-proofing the class, in case the design changes (and in fact I was reminded to add this paragraph when someone on Reddit made exactly this point). But I find this disingenuous, or at least misguided – it is often used for structures internal to a portion of the program, where the far more reasonable thing to do would be to change the fields openly to all users of the structure. It is also extremely difficult to think of an unsurprising thing for these methods to do besides literally set or get a field, as the method name implies – making a network call, for example, would be a shocking surprise for a get or set method and therefore a violation of at least the implicit contract. In my time programming object-oriented programming languages, I never once saw a situation where it was appropriate for a getter or setter to do anything but literally get or set the field.
+当然, Java 开发者(或是 Smalltalk 又或 C#) 会说,
+应该通过这些 getter 和 setter 方法间接访问字段, 他们是面向未来的类,
+以防设计发生变化
+(事实上我是当 Reddit 上有人提出这点时,才被提醒到, 追加了这段);
+但是,我发现这是虚伪的,
+或者蕛是被误导的 --- 它通常用于程序内部结构的一部分,
+在这种情况中, 更加合理的作法是向结构所有用户公开更改字段;
+除了字面意义上的设置或是获取字段之外，
+也很难想到这些方法还可以作什么不足为奇的事儿，
+正如方法名称所暗示的那样 --- 例如,
+进行网络调用对于获取或是设置方法来说,
+将是一个令人震惊的惊喜,
+并且,因此至少违反了隐含的协约;
+在我编写 OOP 代码时,
+我从来没见过适合 getter 或是 setter 执行任何操作的情况,
+除了字面上的获取或是设置字段;
 
-If code does change to require the getter or setter to do something else, I would rather change the name of the method to reflect what else it does, rather than pretend that’s somehow not a breaking change. fetchZFromNetwork or setAndValidateZ seem more appropriate than a getZ or setZ that does something more than the simple field access that we assume a setter or getter does. OOP’s insistence that every type should be its own code abstraction boundary is often absurd when applied to these lightweight aggregate types. These sorts of getters and setters are used to protect an abstraction boundary that shouldn’t exist and just gets in the way, and future-proof against implementation changes that shouldn’t be made without also changing the interface.
+如果代码确实更改为要求 getter 或是 setter 执行其它操作,
+我宁愿更改方法的名称以便反映具体还作了什么,
+而不是假装这不是重大变更;
+fetchZFromNetwork 或是 setAndValidateZ 似乎比 getZ 或是 setZ 更加合适,
+它们所作的事儿, 比我们假设 setter 或是 getter 所作的简单字段访问到的更多;
+OOP 坚持每个类型都应该是其自己的代码抽象边界,
+这在应用这些轻量级聚合类型时, 常常就变的荒谬了;
+这些类型的 getter 和 setter 用以保护不应该存在且哪小得小妨碍的抽象边界,
+并且,在未来防止在不更改接口的情况中,
+不应该进行的实现变更;
 
-Setters and getters, in short, are an anti-pattern. If you intend to create an abstraction besides “data structure,” where validation or network calls or anything else beyond raw field accesses would be appropriate, then these get and set names are the wrong names for that abstraction.
+setter 和 setter 简而言之,
+是一种反模式;
+如果你打算创建除 "数据结构" 之外的抽象,
+其中验证或是网络调用又或原始字段访问之外的任何其它内容加班是合适的,
+那么这些 get 和 set 名称就是该抽象的错误名称;
 
-Edit 2023-02-13 to add this paragraph: To be clear, these objections apply to properties as well. It’s not the syntactic inconvenience that I object to, but the entire notion that replacing field accesses with code transparently is a good thing to strive for, or an important possibility to leave open. I should hope that foo.bar = 3 would never make a network call in Rust! And what if it had to be async? It should be clear if I’m calling a function. Rust is about explicitness.
+2023-02-13 追加了此段:
+明确的说, 这些异议也适用于属性;
+我反对的不是语法上的不便,
+而是使用代码透明的替换字段访问的整个概念是一件值得努力的好事,
+或者是保持开放的重要可能性;
+有希望 foo.bar = 3 永远不会在 Rust 中触发进行网络调用!
+如果这必须是异步的呢?
+如果我在调用函数,应该很清楚;
+而 Rust 是关于明确性的思考成果;
 
-The get and set functions, in reality, are only used as wrappers to satisfy the constraints of object-oriented ideology. The future-proofing they purportedly provide is an illusion. If you provide “JavaBean” style types, or types with properties, over an abstraction boundary, you are in practice just as locked in as if you’d provided raw field access – the changes you are most likely to want to make to those structures would not allow shifting the getters and setters to maintain compatibility. Leveraging this future-proofing is likely to be completely impossible for the changes you’d want to make, and at best it would involve a horrendous hack.
+实际上, get 和 set 函数仅用作包装器以便满足 OOP 思想的约束;
+领导作用称提供的面向未来的证明是一种幻想;
+如果你在抽象边界上提供“JavaBean”样式类型或是具有属性的类型,
+那么你实际上就像提供原始字段访问一样被锁定 --- 你最有可能希望对这些结束进行的更改不允许移动 getter 和 setter 以保持兼容性;
+对于你想要进行的更改,
+利用这种面向未来的方法可能是完全不可能的,
+充其量会涉及可怕的骇客攻击;
 
-Rust might seem to be the same as OOP languages in all of this; it superficially looks like it has something very similar to classes. You can define functions associated with a given type – and they are even called methods! Like OOP methods, they syntactically privilege taking values of that type (or references to those values) as the first argument, called the special name self. You even mark fields of a record type (called struct in Rust) as public or (by default) private, encouraging private fields just like in an object-oriented programming language.
+在所有这些方面, Rust 似乎和 OOP 语言相同;
+从表面上看, 又和类非常相似;
+你可以定义和给定类型关联的函数 --- 它们甚至于被称为方法!
+和 OOP 方法一样,
+在语法上优先采用该类型的值
+(或是对这些值的引用)作为第一个参数,
+称为特殊名称 self;
+你甚至于可以将记录类型(在 Rust 中称为结构)的字段标记为公共或
+(默认情况下)私有,
+就像在面向对象的编程语言中一样鼓励私有字段;
 
-According to this pillar, Rust seems pretty close to being OOP. And that’s a fair assessment, for this pillar, and an intentional choice to make Rust programming more comfortable to people used to the everyday syntax of OOP programming in C++ (or Java, or JavaScript).
+根据这个支柱, Rust 似乎非常接近 OOP;
+对于这个支柱来说, 这是个公平的评估,
+也是一个有意的选择,目的是让习惯了 C++
+(或是 Java 又或 JavaScript) OOP 编程日常语法的人们更容易使用
+Rust 编程;
 
-But the similarity is only skin-deep. Encapsulation is the least distinct pillar of OOP (after all, all modern programming languages have some form of it), and the implementation in Rust is not bound with the type. When you declare a field private in Rust (by not specifying pub), that doesn’t mean private to its methods, that means private to the module. A module can provide multiple types, and any function in that module, whether a “method” of that type or not, can access all of the fields defined in that type. Passing around records is encouraged when appropriate, rather than discouraged to the point that accessors are forced instead, even in tightly-bound related code.
+但是, 相似之处只是肤浅的;
+封装其实是 OOP 中最不明显的支柱
+(毕竟, 所有现代编程语言都有某种形式的封装),
+Rust 中的实现不受类型约束;
+当你在 Rust 中声明一个字段私有时(通过不指定 pub),
+这并不意味着对其方法私有,
+这只是意味着对模块私有;
+一个模块可以提供多种类型,
+并且该模块中的任何函数, 无论是否是该类型的"方法",
+都可以访问该类型中定义的所有字段;
+在适当的时候鼓励传递记录,
+而不是鼓励访问者被强制访问,
+即便在紧密绑定的相关代码中也是如此;
+
+这是我们看到 Rust 的第一个迹象,
+尽管语法很简洁, 但是, 并不是一种 OOP 编程语言;
 
 This is the first sign we see that Rust, in spite of its superficial syntax, is not an OOP programming language.
 
-### Future Posts
-And at this point I’m going to have to pause for today.
+### 接下来
+在这点上, 今天不得不暂停一下;
 
-Of course, encapsulation isn’t the only fancy thing OOP-style classes can do. If it were, classes wouldn’t have enamored so many people: it would simply be obvious to everyone that classes were nothing more than glorified modules, and methods nothing more than glorified procedures.
+当然, 封装并不是 OOP 风格类所能作的唯一奇特的事儿;
+如果是这样, 那么类就不会迷惑这么多人这么多年了:
+每个人都会明白,类不过是美化的模块,
+而方法不过是美化的过程;
 
-In the next posts of this series, we will discuss the other features associated with OOP, the two remaining traditional pillars of OOP, polymorphism and inheritance, analyze them from a practical point of view, and see how Rust compares with OOP as it comes to those pillars.
+在本系列下篇文章中,
+我们将讨论和 OOP 相关的其它特性,
+OOP 剩下的两大传统支持,
+多态和继承,
+从实践的角度分析,
+并了解 Rust 和 OOP 在性能方面的比较, 针对那些支柱概念;
 
-Next up will be polymorphism!
-
+接下来将是 多态!
 
 ## logging
 
+- 230225 ZQ v1 done
 - 230220 ZQ re-start
 - 230215 ZQ init.
 
