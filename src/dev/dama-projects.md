@@ -12,6 +12,8 @@
 - [ ] NNera ~ 牛妞纪元
 - [ ] bxmr ~ BXM 输入码表维护器
 - [ ] yuzu ~ 柚子, 简陋的私用短址生成器
+    - [x] SUUID ~ 短 UUID 生成器; 组合标准的 UUID+Md5 就好
+    - [ ] 自制, 参考: [shortuuid/main.py at master · skorokithakis/shortuuid](https://github.com/skorokithakis/shortuuid/blob/master/shortuuid/main.py)
 - [ ] Yazi ~ 睚眦 git 仓库行为分析器
 
 

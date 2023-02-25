@@ -18,6 +18,26 @@ Recommended tools:
 - [ ] cargo edit - to add/remove dependencies
 - [ ] cargo fmt - to format code
 - [ ] cargo clippy - for all insights and tips
+    - 安装：rustup component add clippy
+    - 参考: [Rustup Book学习笔记 | Rust学习笔记](https://skyao.io/learning-rust/docs/build/rustup/rustup-book.html)
+    - 如果出问题:
+        - [Fresh install on macos can't install rustfmt and clippy using rustup · Issue #1558 · rust-lang/rustup](https://github.com/rust-lang/rustup/issues/1558)
+        - rustup toolchain remove stable && rustup toolchain install stable
+        - ...
+```
+info: syncing channel updates for 'stable-x86_64-apple-darwin'
+info: latest update on 2023-02-09, rust version 1.67.1 (d5a82bbd2 2023-02-07)
+info: downloading component 'cargo'
+info: downloading component 'clippy'
+info: downloading component 'rust-docs'
+info: downloading component 'rust-std'
+
+...
+
+  stable-x86_64-apple-darwin installed - rustc 1.67.1 (d5a82bbd2 2023-02-07)
+
+info: checking for self-updates
+```
 - [ ] cargo fix - for fixing warnings
 
 #### 检验和切换工具链

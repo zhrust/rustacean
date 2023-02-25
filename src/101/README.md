@@ -24,6 +24,9 @@
 - [ ] 核心数据结构,及其常用操作
 - [ ] 推荐工程结构
     - [ ] crate 以及内部模块管理
+    - [x] logging
+        - tracing = "0.1"
+        - clia-tracing-config = "0.2"
 - [ ] 实用开发/调试流程
     - [ ] MVP/ CLI 工程
     - [ ] MVP/ web 工程
@@ -61,6 +64,14 @@
     - 各种前景分析
     - [WebAssembly - YouTube](https://www.youtube.com/watch?v=qjwWF6K-7uE&list=PLFjq8z-aGyQ78CQu1G3C5CT9ieiNpsnbJ) ~ 各种实现应用
 - ...
+
+
+### free Books
+> 这个世界上免费好资源太多了...
+
+[free-programming-books/free-programming-books-langs.md at main · EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-langs.md#rust)
+
+
 
 
 ## logging
