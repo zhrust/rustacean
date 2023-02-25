@@ -6,7 +6,7 @@
 ----
 
 - [Rust 学习](./101/README.md)
-    + [图形描述 Rust 中所有权和借用](./101/graph-rust-move-copy-borrow.md)
+    + [tracing 初步](./101/tracing.md)
     + [伴学ChatGPT](./101/chatgpt101.md)
     + [Exercism](./101/exercism.md)
         + [42:all-your-base](./101/ex42all-your-base.md)
@@ -32,4 +32,5 @@
 - [笔记](./log/README.md)
     + [Rust 丑句法](./log/rust-s-ugly-syntax.md)
     + [Rust 课程笔记](./log/rust101logging.md)
+    + [图形描述 Rust 中所有权和借用](./log/graph-rust-move-copy-borrow.md)
 
