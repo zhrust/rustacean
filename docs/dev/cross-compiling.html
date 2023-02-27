@@ -4,7 +4,7 @@
 <head>
     <!-- Book generated using mdBook -->
     <meta charset="UTF-8">
-    <title>图形描述 Rust 中所有权和借用 - be Rustaceans</title>
+    <title>交叉编译? - be Rustaceans</title>
 
 
     <!-- Custom HTML head -->
@@ -82,7 +82,7 @@
 
     <nav id="sidebar" class="sidebar" aria-label="Table of contents">
         <div class="sidebar-scrollbox">
-            <ol class="chapter"><li class="chapter-item "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li><li class="spacer"></li></ol></li><li class="chapter-item "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/tracing.html"><strong aria-hidden="true">2.1.</strong> tracing 初步</a></li><li class="chapter-item "><a href="../101/chatgpt101.html"><strong aria-hidden="true">2.2.</strong> 伴学ChatGPT</a></li><li class="chapter-item "><a href="../101/exercism.html"><strong aria-hidden="true">2.3.</strong> Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.3.1.</strong> 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.3.2.</strong> 43:Allergies</a></li><li class="spacer"></li></ol></li></ol></li><li class="chapter-item "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html"><strong aria-hidden="true">3.1.</strong> 小作品</a></li><li class="chapter-item "><a href="../dev/cross-compiling.html"><strong aria-hidden="true">3.2.</strong> 交叉编译?</a></li><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html"><strong aria-hidden="true">3.3.</strong> Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.4.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.5.</strong> 希望一早知道的关键概念</a></li><li class="spacer"></li></ol></li><li class="chapter-item "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> Rust 技艺</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li><li class="spacer"></li></ol></li><li class="chapter-item expanded "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li><li class="chapter-item "><a href="../log/rust101logging.html"><strong aria-hidden="true">5.2.</strong> Rust 课程笔记</a></li><li class="chapter-item expanded "><a href="../log/graph-rust-move-copy-borrow.html" class="active"><strong aria-hidden="true">5.3.</strong> 图形描述 Rust 中所有权和借用</a></li></ol></li></ol>
+            <ol class="chapter"><li class="chapter-item "><a href="../abt/index.html"><strong aria-hidden="true">1.</strong> 成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html"><strong aria-hidden="true">1.1.</strong> gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html"><strong aria-hidden="true">1.2.</strong> zhrust</a></li><li class="spacer"></li></ol></li><li class="chapter-item "><a href="../101/index.html"><strong aria-hidden="true">2.</strong> Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/tracing.html"><strong aria-hidden="true">2.1.</strong> tracing 初步</a></li><li class="chapter-item "><a href="../101/chatgpt101.html"><strong aria-hidden="true">2.2.</strong> 伴学ChatGPT</a></li><li class="chapter-item "><a href="../101/exercism.html"><strong aria-hidden="true">2.3.</strong> Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html"><strong aria-hidden="true">2.3.1.</strong> 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html"><strong aria-hidden="true">2.3.2.</strong> 43:Allergies</a></li><li class="spacer"></li></ol></li></ol></li><li class="chapter-item expanded "><a href="../dev/index.html"><strong aria-hidden="true">3.</strong> Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html"><strong aria-hidden="true">3.1.</strong> 小作品</a></li><li class="chapter-item expanded "><a href="../dev/cross-compiling.html" class="active"><strong aria-hidden="true">3.2.</strong> 交叉编译?</a></li><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html"><strong aria-hidden="true">3.3.</strong> Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html"><strong aria-hidden="true">3.4.</strong> 20年来作为软件工程师学到的10件事</a></li><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html"><strong aria-hidden="true">3.5.</strong> 希望一早知道的关键概念</a></li><li class="spacer"></li></ol></li><li class="chapter-item "><a href="../tip/index.html"><strong aria-hidden="true">4.</strong> Rust 技艺</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html"><strong aria-hidden="true">4.1.</strong> 运算符重载六件趣事</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html"><strong aria-hidden="true">4.2.</strong> Rust 超越面向对象,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html"><strong aria-hidden="true">4.3.</strong> Rust 超越面向对象,第2部分</a></li><li class="chapter-item "><a href="../tip/default-params.html"><strong aria-hidden="true">4.4.</strong> OOP:Rust 和默认参数</a></li><li class="spacer"></li></ol></li><li class="chapter-item "><a href="../log/index.html"><strong aria-hidden="true">5.</strong> 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html"><strong aria-hidden="true">5.1.</strong> Rust 丑句法</a></li><li class="chapter-item "><a href="../log/rust101logging.html"><strong aria-hidden="true">5.2.</strong> Rust 课程笔记</a></li><li class="chapter-item "><a href="../log/graph-rust-move-copy-borrow.html"><strong aria-hidden="true">5.3.</strong> 图形描述 Rust 中所有权和借用</a></li></ol></li></ol>
         </div>
         <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
     </nav>
@@ -156,46 +156,107 @@
                     <nav class="pagetoc"></nav>
                 </div>
                 <main>
-                    <h1 id="图形描述-rust-中所有权和借用"><a class="header" href="#图形描述-rust-中所有权和借用">图形描述 Rust 中所有权和借用</a></h1>
-<p>原文: <a href="https://rufflewind.com/2017-02-15/rust-move-copy-borrow">Graphical depiction of ownership and borrowing in Rust - Rufflewind's Scratchpad</a></p>
-<h2 id="快译"><a class="header" href="#快译">快译:</a></h2>
-<p>以下是 Rust 语言中 moving, copying, 和 borrowing 的图形描述;
-这些概念中的大多数是 Rust 持有的,
-因此, 也是很多学习者常见绊脚石;</p>
-<p>为了避免图形混乱, 尽量减少了文字;
-并不是要取代现有各种教程, 而是为喜欢直观理解概念的程序员提供不同的视角;
-如果你正在学习 Rust 并发现这些图形有报时,
-建议你使用这类图表注释自己的代码以便帮助巩固概念 ;-)</p>
-<h2 id="rust-中所有权和借用"><a class="header" href="#rust-中所有权和借用">Rust 中所有权和借用</a></h2>
-<p><img src="https://rufflewind.com/img/rust-move-copy-borrow.png" alt="" /></p>
-<p>可以通过点击图像来放大, 也可以下载 <a href="https://rufflewind.com/img/rust-move-copy-borrow.svg">SVG</a>
-和 <a href="https://rufflewind.com/img/rust-move-copy-borrow.pdf">PDF</a> 版本在本地放大;</p>
-<p>上面的图形描述了你拥有数据的两种主要语义: 移动或是复制;</p>
-<p>关于移动的解释(~&gt;)看起来太简单了;
-这里没有把戏: 移动语义本身就很奇怪,因为,大多数语言允许变量被程序员随意使用多次;
-这和现实世界的大部分情况形成鲜明对比:
-我不能把我的笔给别人,然后,仍然用它继续写字!
-在 Rust 中,任何类型未实现 Copy trait 的变量都具有移动语义,
-并且会像所示那样运行;</p>
-<p>复制语义(⎘)是为实现 Copy trait 的类型保留的;
-在这种情况中, 对象的每次使用都会产生一个副本, 正如所示分叉; 中间的两个数字描绘了你可以借用你拥有物品的两种方式,
-以及每种方式提供的操作;</p>
-<p>对于可变借用, 我使用了锁符号(🔒)来表示原始对象在借用期间被有效锁定,
-令其无法使用;</p>
-<p>相反,对于非可变备用, 我使用了雪花符号(❄)来表示原始对象只是被冻结了:
-你仍然可以获取更多非可变引用, 但是, 你不能移动或是获取其可变引用;</p>
-<p>在这两个图中, <code>'ρ</code> 是我为引用的生命周期选择的名称;
-我故意使用希腊字母是因为目前 Rust 中还没有具体生命周期的语法;</p>
-<p>最后两个图以图形和文本形式总结了两种引用之间的主要区别和相似之处;
-在这种场景中&quot;外部(<a href="https://doc.rust-lang.org/beta/book/mutability.html#interior-vs-exterior-mutability">exteriorly</a>)&quot;限定词很重要,
-因为, 你仍然可以通过类似 <a href="https://doc.rust-lang.org/std/cell/">Cell</a> 的东西拥有内部可变性;</p>
+                    <h1 id="交叉编译"><a class="header" href="#交叉编译">交叉编译</a></h1>
+<blockquote>
+<p>主要是懒...</p>
+</blockquote>
+<h2 id="background"><a class="header" href="#background">background</a></h2>
+<p>日常环境:</p>
+<pre><code>  neofetch
+                    'c.          zoomq@ZQ160626rMBP
+                 ,xNMM.          ------------------
+               .OMMMMo           OS: macOS Big Sur 10.16 22D68 arm64
+               OMMM0,            Host: MacBookPro18,4
+     .;loddo:' loolloddol;.      Kernel: 22.3.0
+   cKMMMMMMMMMMNWMMMMMMMMMM0:    Uptime: 5 days, 5 hours, 39 mins
+ .KMMMMMMMMMMMMMMMMMMMMMMMWd.    Packages: 330 (brew)
+ XMMMMMMMMMMMMMMMMMMMMMMMX.      Shell: bash 5.1.16
+;MMMMMMMMMMMMMMMMMMMMMMMM:       Resolution: 2048x1280, 3200x1800
+:MMMMMMMMMMMMMMMMMMMMMMMM:       DE: Aqua
+.MMMMMMMMMMMMMMMMMMMMMMMMX.      WM: Spectacle
+ kMMMMMMMMMMMMMMMMMMMMMMMMWd.    Terminal: iTerm2
+ .XMMMMMMMMMMMMMMMMMMMMMMMMMMk   Terminal Font: FiraCode-Regular 18 (normal) / SarasaMonoSCNerd-regular 18 (non-ascii)
+  .XMMMMMMMMMMMMMMMMMMMMMMMMK.   CPU: Apple M1 Max
+    kMMMMMMMMMMMMMMMMMMMMMMd     GPU: Apple M1 Max
+     ;KMMMMMMMWXXWMMMMMMMk.      Memory: 11065MiB / 65536MiB
+       .cooc,.    .,coo:.
+</code></pre>
+<p>虽然有 linux 的 home server, 不过, 
+一个小工具,能在本地编译出来发布二进制执行文件多好?</p>
+<h2 id="goal"><a class="header" href="#goal">goal</a></h2>
+<p>从本地同时可以 cargo build 出来两个主要场景的成品:</p>
+<ul>
+<li>macOS arm64 </li>
+<li>Ubuntu 18.04.6 LTS (GNU/Linux 4.15.0-175-generic x86_64) 类似 LTS 目标环境</li>
+</ul>
+<h2 id="trace"><a class="header" href="#trace">trace</a></h2>
+<p>没办法简单的成功, 还是用真机或是对应专用编译 Docker 来完成吧...</p>
+<h3 id="abrew"><a class="header" href="#abrew">abrew</a></h3>
+<blockquote>
+<p>arm 版本 brew</p>
+</blockquote>
+<pre><code>$ abrew install FiloSottile/musl-cross/musl-cross
+</code></pre>
+<p>引发一系列手工安装:</p>
+<ul>
+<li>abrew install --build-from-source gnu-sed</li>
+<li>abrew install --build-from-source lzip</li>
+<li>abrew install --build-from-source make</li>
+<li>...</li>
+</ul>
+<p><img src="https://ipic.zoomquiet.top/2023-02-26-zshot%202023-02-26%2015.22.58.jpg" alt="" /></p>
+<pre><code>...
+==&gt; /opt/homebrew/opt/make/bin/gmake install TARGET=x86_64-linux-musl
+🍺  /opt/homebrew/Cellar/musl-cross/0.9.9_1: 1,851 files, 215.8MB, built in 5 minutes 35 seconds
+==&gt; Running `brew cleanup musl-cross`...
+Disable this behaviour by setting HOMEBREW_NO_INSTALL_CLEANUP.
+Hide these hints with HOMEBREW_NO_ENV_HINTS (see `man brew`).
+</code></pre>
+<p>对应 Cargo.toml 中追加:</p>
+<pre><code>...
+[target.x86_64-unknown-linux-musl]
+linker = &quot;/opt/homebrew/Cellar/musl-cross/0.9.9_1/bin/x86_64-linux-musl-gcc&quot;
+
+</code></pre>
+<p>尝试编译:</p>
+<pre><code>$ cargo build --target x86_64-unknown-linux-musl
+</code></pre>
+<p>然后:</p>
+<pre><code>...
+Some errors have detailed explanations: E0405, E0408, E0412, E0416, E0425, E0433, E0463, E0531.
+error: could not compile `regex-syntax` due to 990 previous errors
+</code></pre>
+<p>折腾出 900+ 错误...败退...</p>
+<h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
+<blockquote>
+<p>关键参考</p>
+</blockquote>
+<p><a href="https://kerkour.com/rust-cross-compilation">Cross-compilation in Rust</a></p>
+<ul>
+<li>M1 macOS host:
+<ul>
+<li><a href="https://stackoverflow.com/questions/68139162/how-can-i-cross-compile-rust-code-into-intel-assembly-on-an-arm-m1-apple-silicon">macos - How can I cross compile Rust code into Intel assembly on an ARM M1 Apple Silicon Mac? - Stack Overflow</a></li>
+<li><a href="https://www.reddit.com/topics/a-1/">M1 Users - How are you Cross Compiling? : rust</a></li>
+<li><a href="https://levelup.gitconnected.com/bash-vs-python-for-modern-shell-scripting-c1d3d79c3622?source=read_next_recirc---two_column_layout_sidebar------3---------------------95f4769b_05fc_410f_a439_5b8e347b5325-------">Cross-compiling Rust From Mac to Linux | by Merlin Fuchs | Better Programming</a></li>
+<li><a href="https://manuel.bernhardt.io/posts/2022-11-04-rust-development-for-the-raspberry-pi-on-apple-silicon/">Rust Development for the Raspberry Pi on Apple Silicon - Manuel Bernhardt</a></li>
+<li>...</li>
+</ul>
+</li>
+<li>arm Linux host:
+<ul>
+<li><a href="https://burgers.io/cross-compile-rust-from-arm-to-x86-64">Cross-compiling Rust from ARM to x86-64 | Bryan Burgers</a></li>
+<li>...</li>
+</ul>
+</li>
+<li><a href="https://www.docker.com/blog/cross-compiling-rust-code-for-multiple-architectures/">Cross Compiling Rust Code for Multiple Architectures | Docker</a></li>
+</ul>
 <h2 id="logging"><a class="header" href="#logging">logging</a></h2>
 <blockquote>
 <p>版本记要</p>
 </blockquote>
 <ul>
 <li>..</li>
-<li>230220 ZQ init.</li>
+<li>230226 ZQ init.</li>
 </ul>
 
                     <div id="giscus-container"></div>
@@ -203,11 +264,15 @@
 
                 <nav class="nav-wrapper" aria-label="Page navigation">
                     <!-- Mobile navigation buttons -->
-                    <a rel="prev" href="../log/rust101logging.html" class="mobile-nav-chapters previous"
+                    <a rel="prev" href="../dev/dama-projects.html" class="mobile-nav-chapters previous"
                         title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
                         <i class="fa fa-angle-left"></i>
                     </a>
 
+                    <a rel="next" href="../dev/rust-unit-test-everything-wanted-know.html" class="mobile-nav-chapters next"
+                        title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
 
                     <div style="clear: both"></div>
                 </nav>
@@ -215,11 +280,15 @@
         </div>
 
         <nav class="nav-wide-wrapper" aria-label="Page navigation">
-            <a rel="prev" href="../log/rust101logging.html" class="nav-chapters previous" title="Previous chapter"
+            <a rel="prev" href="../dev/dama-projects.html" class="nav-chapters previous" title="Previous chapter"
                 aria-label="Previous chapter" aria-keyshortcuts="Left">
                 <i class="fa fa-angle-left"></i>
             </a>
 
+            <a rel="next" href="../dev/rust-unit-test-everything-wanted-know.html" class="nav-chapters next" title="Next chapter"
+                aria-label="Next chapter" aria-keyshortcuts="Right">
+                <i class="fa fa-angle-right"></i>
+            </a>
         </nav>
 
     </div>
@@ -240,7 +309,7 @@
     <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
     <script src="../book.js" type="text/javascript" charset="utf-8"></script>
     <script type="text/javascript" charset="utf-8">
-        var pagePath = "log/graph-rust-move-copy-borrow.md"
+        var pagePath = "dev/cross-compiling.md"
     </script>
 
 
