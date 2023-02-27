@@ -25,9 +25,9 @@
 
 - [Rust 技艺](./tip/README.md)
     + [运算符重载六件趣事](./tip/rust6fun-operator-overloading.md)
-    + [Rust 超越面向对象,第1部分](./tip/oop-1-encapsulation.md)
-    + [Rust 超越面向对象,第2部分](./tip/oop-2-polymorphism.md)
     + [OOP:Rust 和默认参数](./tip/default-params.md)
+    + [Rust 超越OOP,第1部分](./tip/oop-1-encapsulation.md)
+    + [Rust 超越OOP,第2部分](./tip/oop-2-polymorphism.md)
 
 ----
 
