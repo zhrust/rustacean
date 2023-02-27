@@ -16,6 +16,8 @@
 
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
+    + [交叉编译?](./dev/cross-compiling.md)
+    + [Rust 单元测试得知道的一切](./dev/rust-unit-test-everything-wanted-know.md)
     + [20年来作为软件工程师学到的10件事](./dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
     + [希望一早知道的关键概念](./dev/concepts-i-wish-i-learned-earlier.md)
 

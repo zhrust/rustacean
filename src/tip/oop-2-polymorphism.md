@@ -326,12 +326,31 @@ FnMut/FnOnce/Fn 等 trait 们在美学上和情境上都非常特别,
 请考虑你是否应该改用某种闭包或是 lambda 类型;
 毕竟只有你自己才能防止过度设计;
 
-### Alternative #2: Polymorphism with Traits
-Just like Rust has a version of encapsulation more flexible and more powerful than the OOP notion of classes, as I discuss in the previous post, Rust has a more powerful version of polymorphism than OOP posits: traits.
+### 备选方案#2: 具有Traits的多态
 
-Traits are like interfaces from Java (or an all-abstract superclass in C++), but without most of the constraints that I discuss at the beginning of the blog post. They have neither the semantic constraints or the performance constraints. Traits are heavily inspired in semantics and principle by Haskell’s typeclasses, and in syntax and implementation by C++’s templates. C++ programmers can think of them as templates with concepts (except done right, baked into the programming language from the get-go, and without having to deal with all the code that doesn’t use it).
+就像 Rust 有个比 OOP 类概念更加灵活/强大的封装版本,
+正如在上篇文章中讨论的那样,
+Rust 有一个比 OOP 假设更加强大的多态版本: trait;
 
-Let’s start with the semantics: What can you do with traits that you can’t do with pure OOP, even if you throw all the indirection in the world at it? Well, in pure OOP terms, there’s no way you can write an interface like Rust Eq and Ord, given greatly oversimplified definitions here (the real definitions of Eq and Ord extend other classes that allow partial equivalence and orderings between different types, but like these simplified definitions, the Rust standard library version of non-partial Eq and Ord do cover equivalence and ordering between values of the same type):
+trait 就像来自 Java 的接口
+(又或是 C++ 中的全抽象超类),
+但是,并没有我在文章开头指出的大部分限制;
+trait 即没有语义约束, 也没有性能约束;
+trait 在语义和原理方面深受 C++ 模板的启发;
+C++ 程序员可以将其视为带有concepts/概念的模板
+(除非设计的,从一开始就融入编程语言,
+而且不必要处理所有不使用它的代码;)
+
+让我们从语义开始:
+你可以使用 trait 完成那些无法使用纯 OOP 完成的,
+即便你将世界上所有的间接调用都丢给她?
+好吧, 在纯粹的 OOP 术语中,
+是无法编写像 Rust Eq 和 Ord 这样的接口,
+这里给出了非常简单的定义
+(Eq 和 Ord 的真正定义在于拓展了其它允许不同类型之间的部分等价和排序的类,
+但是, 像这种简化定义,
+非部分 Eq 和 Ord 的 Rust 标准库版本确定涵盖了相同类型值之间的等价和排序):
+
 
 ```rust
 trait Eq {
@@ -349,9 +368,24 @@ trait Ord: Eq {
 }
 ```
 
-See what’s happening? Like in an OOP-style interface, the methods take a “receiver” type, a self parameter, of the Self type – that is, of whatever concrete type implements the trait (technically here a reference to Self or &Self). But unlike in an OOP-style interface, they also take another argument of &Self type. In order to implement Eq and Ord, a type T provides a function that takes two references to T. That’s meant literally: two references to T, not one reference to T and one reference to T or any subclass (such a thing doesn’t exist in Rust), not one reference to T and one reference to any other value that implements Eq, but two bona-fide non-heterogeneous references to the same concrete type, that the function can then compare for equality (or ordering).
+看看发生了什么?
+就像在 OOP 风格的接口中一样,
+这些无法采用 Self 类型的“接受者”类型,
+一个 self 秋粮 -- 也就是说,任何实现 trait 的具体类型
+(技术上这里是对 Self 或 &Self 的引用);
+但是, 和 OOP 风格的接口不同,
+这里还能采用另外一个 &Self 类型的参数;
+为了实现 Eq 和 Ord,
+类型 T 提供了一个函数,
+该函数接受对 T 的两个引用;
+字面上的意思是: 对 T 的两个引用, 而不是对 T 的一个引用和对 T 或是任何子类的一个引用
+(这样的事情在 Rust 中并不存在),
+不是对 T 的一个引用和对实现 Eq 的任何其它值的一个引用,
+而是对同一具体类型的两个真正的非异构引用,
+然后，函数就可以比较她们是否相等(或是进行排序);
 
-This is important, because we want to use this to implement methods like sort:
+这点很就将要,因为,
+我们想用这种能力来实现像排序这类方法:
 
 ```rust
 impl Vec<T> {
