@@ -13,6 +13,9 @@ base_url = "rs.101.so"
 [build]
 build-dir = "docs"
 
+[preprocessor.rss]
+files-glob = "src/*.md"
+url-base = "https://rs.101.so/"
 
 [output.html]
 #mathjax-support = true

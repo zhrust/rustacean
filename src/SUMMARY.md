@@ -11,6 +11,8 @@
     + [Exercism](./101/exercism.md)
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
+    + [idioms](./101/idioms.md)
+        + [idiom#325:构造队列](./101/idiom325_create_a_queue.md)
 
 ----
 
