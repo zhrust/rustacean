@@ -77,6 +77,7 @@ MVP ~ 最小可行工程能力?
 > 关键参考
 
 - [介绍 - Rust 的绅士介绍](https://llever.com/gentle-intro/readme.zh.html)
+- [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
 - ...
 
 ## logging
@@ -84,3 +85,13 @@ MVP ~ 最小可行工程能力?
 
 - ..
 - 221023 ZQ init.
+
+
+
+```
+     _~^~^~_
+ \/ /  o o  \ \/
+   '_   u   _'
+   \ '-----' /
+
+```

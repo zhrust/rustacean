@@ -1,5 +1,5 @@
 # zhRust
-> zn.rust 域名
+> cn.rust 域名
 
 ## background
 > 名正言顺
@@ -36,6 +36,9 @@ rust 相关中文社区比当年 Python 的多不少,
 
 ## refer.
 > 关键参考
+
+- [cn|china.rust](https://github.com/zhrust)
+- ...
 
 ## logging
 > 版本记要

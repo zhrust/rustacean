@@ -3,17 +3,20 @@
 
 ## background
 
-自学使用 Python 第21年,
-看着 Perl7 消失,
-看着 Golang 突然变成 G+,
-看着 Rust 突然变成现学,
-忍不住了...
+- 自学使用 Python 第21年,
+- 看着 Perl7 消失,
+- 看着 Golang 突然变成 G+,
+- 看着 Rust 突然变成显学,
+- 忍不住了...
 
 ## goal
 
 充分复用以往各种技术栈的自学经验,
 尽可能合理和效率的完成 Pythoneer -> Rustacean 的转化;
 或是外挂?
+
+
+合适的时候注册到: [Rustaceans](https://rustaceans.org/)
 
 
 ## trace
@@ -26,12 +29,11 @@
 - 220918 确定肯定已经明确开始转化进程
 
 
-
 ## refer.
 
 - 大妈:
     - 主索引: [mapping \-> ZoomQuiet\.io \{by gen4dot2htm\.py vv\.190718 at:190911 18:07:32,877571\}](https://zoomquiet.io/)
-    - ...
+- [Animated Ferris - JSFiddle](https://jsfiddle.net/Diggsey/3pdgh52r/embedded/result/)
 
 
 ## logging
@@ -39,3 +41,15 @@
 - ...
 - 221111 ZQ 尝试 .rs 域名失败
 - 221101 ZQ init.
+
+
+
+
+```
+     _~^~^~_
+ \) /  o o  \ (/
+   '_   ¬   _'
+   / '-----' \
+
+
+```

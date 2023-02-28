@@ -22,7 +22,7 @@
     - [ ] Box
     - [ ] ...
 - [ ] 核心数据结构,及其常用操作
-- [ ] 推荐工程结构
+- [ ] 推荐工程结构 ~> [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
     - [ ] crate 以及内部模块管理
     - [x] logging
         - tracing = "0.1"
@@ -40,6 +40,8 @@
 
 ## refer.
 > 各种参考
+
+[I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
 
 ### Youtube
 > 真的是什么都有
@@ -59,10 +61,9 @@
 - 44+[The Rust Lang Book \- YouTube](https://www.youtube.com/playlist?list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8)
 - 25+[Rust Projects \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDD5vy2BuSHvFZU0a6RDmgb)
     - 24+[50 RUST Projects \- YouTube](https://www.youtube.com/playlist?list=PL5dTjWUk_cPYuhHm9_QImW7_u4lr5d6zO)
-- [Jon Gjengset \- YouTube](https://www.youtube.com/@jonhoo)
-    - [Rust live\-coding \- YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFgY2faCIYjJZv_RluGkTlKt)
-        - 都是几个小时的连续调试过程
-    - [Crust of Rust \- YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
+- [Jon Gjengset - YouTube](https://www.youtube.com/@jonhoo)
+    - 14+ [Crust of Rust - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
+    - 14+ [Rust live-coding - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFgY2faCIYjJZv_RluGkTlKt)
 - [Rust Talks \- YouTube](https://www.youtube.com/playlist?list=PLZaoyhMXgBzoM9bfb5pyUOT3zjnaDdSEP)
     - 各种畅想...
     - [Contributing to Rustc \- YouTube](https://www.youtube.com/playlist?list=PLnhCUtqrIE-zgfmf6hn6fLwhfR_hDSG9T) ~ 牛人直播如何为 Rust 编译器贡献特性...
@@ -85,3 +86,14 @@
 
 - ..
 - 221214 ZQ init.
+
+
+
+```
+               _~^~^~_
+           \) /  o o  \ \/
+             '_   u   _'
+             | '-----' |
+
+
+```
