@@ -45,4 +45,6 @@
     + [Rust 课程笔记](./log/rust101logging.md)
     + [Rust 丑句法](./log/rust-s-ugly-syntax.md)
     + [图形描述 Rust 中所有权和借用](./log/graph-rust-move-copy-borrow.md)
+    + [Choas嗯哼]()
+        + [0基础入门C?](./log/c101.md)
 
