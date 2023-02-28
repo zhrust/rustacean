@@ -8,6 +8,7 @@
 - [Rust 学习](./101/README.md)
     + [tracing 初步](./101/tracing.md)
     + [伴学ChatGPT](./101/chatgpt101.md)
+        + [dyn 初步](./101/chat_dyn101.md)
     + [Exercism](./101/exercism.md)
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
