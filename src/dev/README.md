@@ -76,6 +76,8 @@ MVP ~ 最小可行工程能力?
 ## refer.
 > 关键参考
 
+[贡献者公约/Contributor Covenant:](https://www.contributor-covenant.org/zh-cn/version/2/1/code_of_conduct/)
+
 - [介绍 - Rust 的绅士介绍](https://llever.com/gentle-intro/readme.zh.html)
 - [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
 - ...

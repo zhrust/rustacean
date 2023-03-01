@@ -27,6 +27,7 @@
         - [ ] crate
     - [ ] CLI
     - [ ] 发布
+        - [ ] RESTful ... etc
     - [ ] 测试
 - [ ] Yazi ~ 睚眦 git 仓库行为分析器
     - [ ] CLI
@@ -49,6 +50,19 @@
     - [Introducing the Determinate Nix Installer — Determinate Systems](https://determinate.systems/posts/determinate-nix-installer) ~ 实战案例, 从 bash 迁移为 rust...
 - [Rustacean.net: Home of Ferris the Crab](https://rustacean.net/)
 - ...
+
+
+### +Pg
+
+[From Zero to PostgreSQL extension in 3 hours with Rust - Postgres Conference](https://postgresconf.org/blog/posts/from-zero-to-postgresql-extension-in-3-hours-with-rust)
+
+- +Tokio ~ [How to Write a REST API Using Rust and Axum Framework | by Shanmukh Sista | Medium](https://shanmukhsista.com/real-world-rest-api-using-rust-axum-framework-with-request-validations-and-error-handling-75d4175cef96)
+- + SQLx ~ [Rust - Build a CRUD API with SQLX and PostgreSQL 2023](https://codevoweb.com/rust-build-a-crud-api-with-sqlx-and-postgresql/)
+    - [Axum と SQLx で Todo アプリを作る（DB は PostgreSQL）](https://zenn.dev/codemountains/articles/159a8a0323a56f)
+    - ...
+- [Creating a REST API in Rust with Persistence: Rust, Rocket and Diesel | by Gene Kuo | Medium](https://genekuo.medium.com/creating-a-rest-api-in-rust-with-persistence-rust-rocket-and-diesel-a4117d400104)
+- +actix ~ [Rust Web Development Tutorial: REST API | Cloudmaker](https://cloudmaker.dev/how-to-create-a-rest-api-in-rust/)
+- 
 
 
 ## logging
