@@ -43,6 +43,26 @@
 
 [I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
 
+必刷练习:
+
+- [GitHub - rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings)
+- [Rust Quiz #1](https://dtolnay.github.io/rust-quiz/1)
+- [Rust on Exercism](https://exercism.org/tracks/rust)
+- ...
+
+### rustCC
+> 中文社区:
+
+- [程序设计训练（Rust）](https://lab.cs.tsinghua.edu.cn/rust/) ~2021-2022 年夏季学期起清华大学计算机系开设的《程序设计训练（Rust）》
+- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
+    - [Rust 中文文档 | Rust 文档网](https://rustwiki.org/docs/)
+    - [Rust 文档翻译指引 | Rust 文档网](https://rustwiki.org/wiki/translate/rust-translation-guide/#tong-yi-fan-yi-zhu-yu-he-gu-ding-yong-yu)
+    - [常见问题解答 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/faq.html#lifetimes)
+    - ...
+- ...
+
+
+
 ### Youtube
 > 真的是什么都有
 

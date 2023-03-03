@@ -20,6 +20,8 @@
 ## refer.
 > 关键参考
 
+[Introduction - The Rust RFC Book](https://rust-lang.github.io/rfcs/introduction.html#when-you-need-to-follow-this-process)
+
 ### GPTs
 > 通用任务
 

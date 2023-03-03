@@ -28,6 +28,8 @@
         + [tokio](./dev/tokio.md)
     + [TTD]()
         + [Rust 单元测试得知道的一切](./dev/rust-unit-test-everything-wanted-know.md)
+    + [嵌入](./dev/embedded_rs.md)
+        + [Pico](./dev/emb_rp2040pico.md)
     + [CI/CD]()
         + [交叉编译?](./dev/cross-compiling.md)
     + [20年来作为软件工程师学到的10件事](./dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
@@ -35,8 +37,11 @@
 
 ----
 
-- [Rust 技艺](./tip/README.md)
+- [Rust 技能](./tip/README.md)
+    + [Awesome.rs](./tip/awesome4rs.md)
+        + [Handlebars](./tip/aw4rs_handlebars.md)
     + [BMP:最小bug模式](./tip/rust_min_bug_patterns.md)
+        + [Crate中合理划分目录](./tip/manag_growing_proj_with_crates_modules.md)
     + [anti-OOP]()
         + [OOP:Rust 和默认参数](./tip/default-params.md)
         + [Rust 超越OOP,第1部分](./tip/oop-1-encapsulation.md)

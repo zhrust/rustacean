@@ -42,6 +42,102 @@
 - 目测嘦会用 RA 就可以了...呗?
 - ...
 
+### crate.io
+
+> cargo login 
+首先偶到的问题:
+
+```
+$ cargo login [自己的 crate.io token]
+error: crates-io is replaced with non-remote-registry source registry `tuna`;
+include `--registry crates-io` to use crates.io
+```
+
+意味着你的 Rust 包管理器 Cargo 正在使用一个名为 tuna 的本地 Rust 包源，而不是默认的远程源 crates.io。
+
+根据提示首次使用官方源:
+
+```
+$ cargo login [自己的 crate.io token] --registry crates-io -v
+    Updating crates.io index
+     Running `git fetch --force --update-head-ok 'https://github.com/rust-lang/crates.io-index' '+HEAD:refs/remotes/origin/HEAD'`
+       Login token for `crates-io` saved
+```
+
+追加上目标仓库 `--registry crates-io` 就可以完成了...
+(大约3分钟后)
+
+> cargo package
+
+```
+$ cargo package
+...
+   Compiling proc-macro2 v1.0.51
+   Compiling quote v1.0.23
+   Compiling unicode-ident v1.0.6
+   Compiling libc v0.2.139
+    ...
+   Compiling ferris-actor v0.1.42 (/path/2/../ferris-actor/target/package/ferris-actor-0.1.42)
+    Finished dev [unoptimized + debuginfo] target(s) in 20.85s
+    Packaged 12 files, 40.8KiB (13.1KiB compressed)
+```
+
+不错, 自动化完成所有
+
+> cargo publish --registry crates-io
+
+```
+$ cargo publish --registry crates-io
+    Updating crates.io index
+...
+   Compiling proc-macro2 v1.0.51
+   Compiling unicode-ident v1.0.6
+   Compiling quote v1.0.23
+   ...
+
+```
+同样, 必须追加上 `--registry crates-io` 目标仓库参数
+
+> LICENSES
+
+```
+...
+    Packaged 12 files, 40.9KiB (13.1KiB compressed)
+   Uploading ferris-actor v0.1.42 (/Users/zoomq/Exercism/proj/ferris-actor)
+error: failed to publish to registry at https://crates.io
+
+```
+无法完成发布, 原因竟然是 Caused by:
+
+-  the remote server responded with an error: unknown or invalid license expression; 
+   -  see http://opensource.org/licenses for options, 
+   -  and http://spdx.org/licenses/ for their identifiers
+
+对比其它 crate 修订 Cargo.toml 中的关键配置项目为:
+
+> license = "BSD-2-Clause"
+
+是的, 就少了 github 自动创建时后面的一个 `License` 就通过了:
+
+```
+$   cargo publish --registry crates-io
+    Updating crates.io index
+...
+     Waiting on `ferris-actor` to propagate to crates.io index (ctrl-c to wait asynchronously)
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+```
+
+完成发布;-)
+
 
 ## refer.
 > 各种相关参考...

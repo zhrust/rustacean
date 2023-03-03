@@ -19,7 +19,7 @@
 
 MVP ~ 最小可行工程能力?
 
-- [ ] 工程结构管理
+- [ ] 工程结构
     - [ ] crate/library/pakage/workspace/project 划分和使用
         - [x] package ~ cargo new 出来的东西
         - [x] crate ~ src/*.rs 
@@ -53,6 +53,7 @@ MVP ~ 最小可行工程能力?
         - [ ] workspace
         - [ ] project
     - [ ] 模块切分/命名..艺术?
+    - [x] [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
 - [ ] 基本应用
     - [x] 基本调试循环 ~ 配合 tracing 和 log 目录...
     - [ ] 基本单元测试
@@ -72,6 +73,10 @@ MVP ~ 最小可行工程能力?
     - [ ] 宏
     - [ ] GDB
     - [ ] ...
+- [ ] 嵌入式
+    - [ ] 基本工具箱
+    - [ ] Pico
+    - [ ] ...
 
 ## refer.
 > 关键参考
@@ -80,6 +85,7 @@ MVP ~ 最小可行工程能力?
 
 - [介绍 - Rust 的绅士介绍](https://llever.com/gentle-intro/readme.zh.html)
 - [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
+- [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
 - ...
 
 ## logging
@@ -166,7 +172,7 @@ MVP ~ 最小可行工程能力?
 
 
      _-^-^-_
- \) / -> -> \ (/
+ \) / -> → \ (/
    '_   𝟂   _'
    / '-----' \
 
@@ -177,7 +183,7 @@ MVP ~ 最小可行工程能力?
    / '-----' \
 
      _-^-^-_
- \) /  $ $  \ (/
+ \) /  * $  \ (/
    '_   𝟂   _'
    / '-----' \
 

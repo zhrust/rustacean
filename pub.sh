@@ -22,6 +22,7 @@ pwd
 $MDBOOK build
 cp -fv $CNAME $DOC
 ls $DOC
+exa -T -L2 src/
 
 NOW=`date "+%y%m%d %H:%M:%S"`
 git upd "re-build by mdbook AT{$NOW}"
