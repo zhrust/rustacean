@@ -19,15 +19,16 @@
 
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
-    + [CLI]()
+    + [TUI](./dev/tui4cli.md)
         + [NNera](./dev/cli_nnera.md)
         + [BXMr](./dev/cli_bxmr.md)
         + [Ferris艺术](./dev/cli_ferris_art.md)
         + [Yuzu](./dev/cli_yuzu.md)
-    + [异步]()
+    + [异步](./dev/web4async.md)
         + [tokio](./dev/tokio.md)
     + [TTD]()
         + [Rust 单元测试得知道的一切](./dev/rust-unit-test-everything-wanted-know.md)
+    + [GUI](./dev/gui4web.md)
     + [嵌入](./dev/embedded_rs.md)
         + [Pico](./dev/emb_rp2040pico.md)
     + [CI/CD]()
@@ -57,3 +58,13 @@
     + [Choas嗯哼]()
         + [0基础入门C?](./log/c101.md)
 
+----
+
+```
+         _~∽|-~_
+     \/ /  > <  \ \/
+       '_   ⎵   _'
+       > '--⌄--' \
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

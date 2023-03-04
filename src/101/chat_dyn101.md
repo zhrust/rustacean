@@ -357,3 +357,18 @@ fn main() -> MyResult {
 - [Traits: Defining Shared Behavior - The Rust Programming Language](https://doc.rust-lang.org/book/ch10-02-traits.html#defining-a-trait)
 
 ...这些链接对应的是 Rust 官方文档中的《Rust 程序设计语言》一书中的相关章节，包含了静态多态和动态多态的基本概念、使用方法和示例代码等内容，非常适合初学者阅读学习。除此之外，还可以参考 Rust 官方文档中的其他部分，如《Rust 标准库 API 参考》和《Rust 风格指南》等，来深入理解 Rust 中的泛型和 trait 等概念。
+
+
+
+
+
+```
+       _~~|-~_
+   () /  ◕ -  \ (/
+     '_   ⎵   _'
+     | '-----' |
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+
+

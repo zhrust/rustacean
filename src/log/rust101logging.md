@@ -104,3 +104,17 @@ info: checking for self-updates
         - 都是几个小时的连续调试过程
     - [Crust of Rust \- YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
 
+
+
+
+
+
+```
+      _~`|-~_
+  \/ /  - =  \ \/
+    '_   ⏝   _'
+    ( '--~--' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+

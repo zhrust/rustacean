@@ -31,3 +31,14 @@ TBD
     - [关于Raspberry Pi Pico的一切 - PiCockpit | 监控和控制你的Raspberry Pi：最多可以免费使用5个Pis!](https://picockpit.com/raspberry-pi/zh/2020/11/)
     - 
 - ...
+
+
+
+```
+        _~`|`~_
+    \/ /  = ◶  \ ()
+      '_   𝟂   _'
+      \ '--⌄--' |
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

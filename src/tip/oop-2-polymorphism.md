@@ -479,3 +479,14 @@ Unlike in C++, you don’t have to learn two completely different sets of syntax
 ## logging
 
 - 230215 ZQ init.
+
+
+
+```
+         _~^&∽~_
+     \/ /  O ^  \ \/
+       '_   v   _'
+       / '--#--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
