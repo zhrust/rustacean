@@ -446,6 +446,40 @@ use crate::inv::util;
 </ul>
 </li>
 </ul>
+<h3 id="env"><a class="header" href="#env">.env</a></h3>
+<blockquote>
+<p>如何可以缓存各种常用配置?</p>
+</blockquote>
+<p>和 Python 日常开发和部署使用不同, 以往:</p>
+<ul>
+<li>一般使用个 _settings.py 文件,作为一个全局变量桶, 收集各种在所有模块中都要用的关键配置和数据
+<ul>
+<li>反正一般 Python 小工具发行时, 并没有编译/打包的过程, 都是脚本和配置一起发布</li>
+<li>嘦注意加载的目录关系, 就可以无视操作系统, 在 Python 运行时的帮助下加载到需要的配置</li>
+</ul>
+</li>
+</ul>
+<p>但是, 在尝试用相似的行为套在 Rust 工程中才囧rz...</p>
+<ul>
+<li>如果也是用 _stettings.rs 那么编译后, 位置就不知道了, 而且用户本地要现场配置的东西也不可能写回 _settings.rs 了</li>
+<li>那么,使用一个外部的 .toml 配置文件呢? 进行 cargo build --release 后, 发行单一可执行二进制目标文件, 和对应内核系统配套的, 一般并没人拖一个 .toml 来到本地配置</li>
+<li>尝试将客户的配置信息记录到环境变量中, 才发现, 想永远有效必须写对应 *rc 文件, 问题是现在 bash 如不是大一统, 还有其它流行 shell 版本, 对应的 *rc 文件格式和位置也是不可预见的...</li>
+<li>要不, 嘦涉及到外部导入/导出的来源和发布目标文件, 要求每次指令用户自己通过附加参数给出来就好?
+<ul>
+<li>回想自己使用就过程, 每次无论什么指令, 都要跟上 1~2 个, 或是更多路径参数....败退...</li>
+</ul>
+</li>
+<li>...突然想到还有个 <code>.env</code> 文件哪...算是应用系统的随身运行时环境变量,本身很简单可以视为简化版本的 .ini 文件</li>
+<li>追查了一下果然有 <a href="https://crates.io/crates/dotenv/0.15.0">dotenv - crates.io: Rust Package Registry</a>
+<ul>
+<li>那么逻辑就简单了:</li>
+<li>无论用哪个指令, 先检验固定的和执行文件同目录的 .env 文件</li>
+<li>如果没有, 指引用户先用 <code>$ bxmr cfg ...</code> 指令来完成关键文件的指引</li>
+<li>然后, 写入 .env 文件中, 并自动加载到环境变量里</li>
+<li>这样, 嘦运行自己工具的发行版, 就可以从本身所在目录中加载到以往的关键配置, 用在具体指令响应过程中...</li>
+</ul>
+</li>
+</ul>
 <h3 id="async"><a class="header" href="#async">async</a></h3>
 <blockquote>
 <p>只是想加速一个文件的读取...</p>
