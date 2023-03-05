@@ -4,12 +4,11 @@
 ## backgroung
 作为一名程序猿, 总是要对输入法也要有全面控制
 
-所以, 一直有折腾:
-[ZqBXM/mac at master · ZoomQuiet/ZqBXM](https://github.com/ZoomQuiet/ZqBXM/tree/master/mac)
+所以, 一直有折腾:[ZqBXM/Rime-Squirrel at master · ZoomQuiet/ZqBXM](https://github.com/ZoomQuiet/ZqBXM/tree/master/Rime-Squirrel)
 
 ## goal
 
-全面使用 Rust 重构原有 Python 版本的维护指令集
+全面使用 Rust 重构原有 Python 版本的维护指令集;
 
 
 ## trace
@@ -18,6 +17,244 @@
 - 后来用 Python 写了个脚本, 但是还是要人工复制到对应目录中再重新编译码表
 - 又后来, 使用 invoke 框架拓展并增强了 BXM 码表的维护内部编辑
 - 现在, 轮到 Rust 来重构了...
+
+
+### feeling
+> 终于有感觉了...
+
+知道 Rust 有年头了, 但是, 和 golang 类似, 一直没有认真上手,
+golang 也开发过几个实用小工具/系统, 感觉和用 Python 差不多,
+还是得靠 print 以及线上人眼观察...
+
+Rust 开始进入 Linux 内核了, 感觉不一样了, 足够敦实了,
+而且, 以往好象所有折腾过的开发语言都是有 GC 的...
+
+在完成 [Ferris艺术](/dev/cli_ferris_art.md) 小工具后,
+决定介入日常生活, 重制这个实用工具: `BXMr` ~ BXM 管理器;
+以便替代原先 Python 版本的 -> [tasks.py](https://github.com/ZoomQuiet/ZqBXM/blob/master/Rime-Squirrel/tasks.py)
+
+
+代码的增长, 要求必须对项目目录结构进行良好的规划/控制/演变/...
+
+进一步的, 在代码调试过程中, 发现, 有了 rust-analyzer 的加持,
+以往的循环:
+
+```
+    开发
+    ^   \ 
+    |    运行
+    |     \
+    |     观察 print()
+    |    /
+     调试
+```
+
+可以有质的提升, 现在可以完全信任编译器了,
+现在的流程变成:
+
+- 思考问题
+- 撰写代码, 实时根据 RA(rust-analyzer) 提示, 进行修订
+- 那么嘦在 IDE 中没有警告时 
+    - 一般 cargo check 也不会有问题
+    - 以及 cargo check 也不会有问题
+    - 甚至 cargo build 也不会有问题
+    - ...也就意味着此时, 代码包含的所有应用/系统行为就已经是可信/可用/坚不可摧的了
+- 这种问题/目标/代码/理解/... all-in-one 的感觉太坚实了
+    - 对比以往其它语言, 即便是 IDE/编译器 都没问题
+    - 真正运行起来时, 照样有各种意外
+    - ...那种感觉就象 屎莱姆 ...软卟卟的,想怎么折腾就怎么折腾, 可就是永远固定不到一个理想的状态
+- 而 Rust 世界中,嘦编译器过了, 基本上就夯实了...
+- 如果有问题, 基本上可以明确, 绝对不是代码问题
+    - 只可能是自己对问题的理解有偏差
+    - 以及代码表述的行为和我们的期待不同...
+
+
+> 工作量:
+
+
+```
+
+༄  tokei
+===============================================================================
+ Language            Files        Lines         Code     Comments       Blanks
+===============================================================================
+ Markdown                2          218            0          152           66
+ Rust                   13         1137          657          322          158
+ TOML                    1           51           28           15            8
+===============================================================================
+ Total                  16         1406          685          489          232
+===============================================================================
+```
+
+对比原有 Python 的版本:
+
+```
+
+༄  tokei tasks.py
+===============================================================================
+ Language            Files        Lines         Code     Comments       Blanks
+===============================================================================
+ Python                  1          248          157           22           69
+===============================================================================
+ Total                   1          248          157           22           69
+===============================================================================
+```
+
+嗯哼? 没有主观感觉的10倍, 当然,过程中删除的不同版本,得有10倍了;
+
+
+### verb
+> 纠结所在....
+
+原问题是这样的:
+
+- 输入法的码表, 只是就是一批 键码和文字 的 K/V 值对
+- 在 rIME-Squirrel 中则是要求组织为一个约定的 .yaml 文件
+    - 数据结构为: "{文字}\t{键码}"
+    - 键码相同指向多个文字时, 就对应复制出新行来
+    - 行的前后顺序决定了输入时推荐的顺序
+    - 比如现有定义码表行片段:
+        - 敠    aaaa
+        - 叕    aaaa
+        - 敪    aaaa
+        - 娺    aaaa
+        - 啊啊啊啊    aaaa
+    - 那么在使用 rIME 输入时自动弹出的推荐字列就应该是:
+
+![aaaa](https://ipic.zoomquiet.top/2023-03-05-zshot%202023-03-05%2021.16.04.jpg)
+
+难点在 `键/字` 条目行的次序是有要求的, 以后插入时要遵守:
+
+- 短键码在前
+- ASCII 字母顺序为先
+- 长度从 1 到 4 个字符
+- 不可能超过 4 个字符
+- 例如:
+    - a 在 b 之前
+    - a 在 aa 之前
+    - aa 在 ab 之前
+    - az 在 aaa 之前
+    - aaaa 在 b 之前
+    - ...
+- 如果对应键并没定制就不记录
+- 例如:
+    - 原有定义条目记录:
+        - btk 是不并
+        - btmd 悬而未决
+    - 那么, 想追加一个 `btl 是也乎` 就应该插入为:
+        - btk 是不并
+        - btl 是也乎
+        - btmd 悬而未决
+- 这里就问题就在一个原本有具体排序要求的键码序列
+    - 本身是残缺的
+    - 要判定某个新增键码应该在哪里插入,要顾虑的条件很多
+    - 以往都是人工观察插入的...还不得保证对, 那时 rIME 编译时就报错...
+
+
+所以, Python 代码实现时, 用了一个反模式:
+
+- 先根据 BXM 的编码规则, 构造出一个严格按照键码排序的编码表
+- 然后, 再根据现行使用的 BXM 定义 `键/字` 填写入这个编码表
+- 那么, 进行维护时就变成一个简单的查表过程:
+    - 对原有 `键/字` 的条目, 追加同键不同字时, 追加字到对应的键后数组就好
+    - 对原先没有的条目, 到对应键后空白数组中追加就好
+    - ...
+    - 最后需要更新 .yaml 时,  从这个全码全序的编码表对其中有效的条目进行转换输出就好
+- 也就是说, 将原先 .yaml 中的 "{文字}\t{键码}" 定义记录条目文本
+    - 先变成 "{"键":["字0","字1",,]}" 类字典/HashMap 记录
+    - 而且,其中的键是吻合 BXM 规则的全部顺序可能键码
+
+对应原有 Python 代码:
+
+```python
+BXMC = "abcdefghijklmnopqrstuvwxyz"
+
+@task
+def init2(c):
+    print(f"init from\n\t{ORIG};\nAIM->\t{AIMP}")
+    print(f"{AIMP} exists?\n\t",os.path.exists(f"{AIMP}"))
+    _gbxm = {}
+
+    def generate_strings(length, prefix=''):
+        if length == 0:
+            return
+        for c in BXMC:
+            key = prefix + c
+            print(key)
+            _gbxm[key] = []
+            generate_strings(length-1, key)
+
+    generate_strings(4)
+    print(f"gen. all BXM code as {len(_gbxm.keys())}")
+    return None
+```
+
+对应 Rust 版本是:
+
+```rust
+//  定义在: src/inv/util.rs
+pub const BXMC: &str = "abcdefghijklmnopqrstuvwxyz";
+pub const MBCL: usize = 4; // code len.
+
+pub fn generate_strings(length: usize, 
+            prefix: String, 
+            gbxm: &mut BTreeMap<String, Vec<String>>
+        ) {
+        if length == 0 {
+            return;
+        }
+        for c in BXMC.chars() {
+            let key = prefix.clone() + &c.to_string();
+            gbxm.insert(key.clone(), Vec::new());
+            generate_strings(length - 1, key, gbxm);
+        }
+    }
+
+pub fn init2(codelen:usize) -> Option<BTreeMap<String, Vec<String>>> {
+    let mut gbxm = BTreeMap::new();
+    generate_strings(codelen, String::new(), &mut gbxm);
+    //println!("\n\t gen. all BXM code as {} ", gbxm.len());
+
+    Some(gbxm)
+}
+
+//  具体调用形式:
+use crate::inv::util;
+...
+    let gbxm = util::init2(util::MBCL).unwrap();
+```
+
+基本上和 Python 代码 1:1 转换, 当然, 代码的可信度要高很多;
+
+接下来才是问题:
+
+- 生成的全量键码有 475,254 个
+    - 用 toml 记录时, 有4Mb
+- 而对应 BXM 当前包含的所有键码仅 60,337 个
+    - 用 yaml 记录时, 只有 700Kb
+- 用 Python 加载/更新/回写/... IO 操作时,要3~4秒
+- 而用 cargo run 进行试用时, 要10秒左右
+    - 好在 cargo build --release 之后的二进制执行文件运行时, 快到了 2~3 秒
+- 这样还是慢哪....
+    - 尝试用异步 crate 加速, 效果不明显
+    - 以字母表为基准切为26个文件? 太麻烦而且, 要在用户本地生成一组文件本身也是问题
+    - 上 SQLite 内存数据库? 相同的数据量想加载到内存中一样有耗时要等待
+    - ....
+
+
+> 还能怎么加速呢?
+
+- 以现行有效 `键/字` 定义为准, 只管理不到7万行数据,比将近50万行肯定要快
+    - 但是, 这就得完成完备的插入次序判定算法
+    - ...当然也行, 只是没必要, 如果 BXMr 想兼容所有输入法的话, 就不能特化支持特定码表...
+- 回到问题源头:
+    - 数据文件大, 所以加载慢
+    - 而且没使用多核 CPU 来加速
+    - ...
+    - 也就是说, 值得折腾的是利用 Rust 的系统编程能力:
+        - 构造 `键/字` 全量码表的二进制文件形式, 大幅减少要加载的文件尺寸
+        - 动用异步/并发/并行/多线程/非阻塞/... 能力, 在数据加载以及处理上加速
+    - 正好, 这也就能将以往看的资料中高级话题, 对应到具体问题需求上来了...
 
 ### async
 > 只是想加速一个文件的读取...
@@ -54,6 +291,7 @@
 
 
 如果不是 rust-analyzer 一路提醒, 真会蒙圈儿的...
+
 
 
 ## refer.
