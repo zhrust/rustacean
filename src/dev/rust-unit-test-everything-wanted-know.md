@@ -106,3 +106,16 @@ Learn how to write unit tests in Rust with this hands-on video that covers these
     - Twitter: https://twitter.com/jdortiz
     - Mastodon: https://fosstodon.org/@jdortiz
     - LinkedIn: https://www.linkedin.com/in/jorgeortiz/
+
+
+
+
+
+```
+            _~`&∽~_
+        () /  o →  \ \/
+          '_   △   _'
+          > '--#--' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

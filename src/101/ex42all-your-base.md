@@ -26,3 +26,15 @@
 - [rust新手的一个问题：fold和scan。 - Rust语言中文社区](https://rustcc.cn/article?id=2f4b3a15-7874-4c68-b9d8-5a717e9a3af0)
     - [抛弃Rust的try...catch和null检查 - 掘金](https://juejin.cn/post/7067102952602746910)
     - ...
+
+
+
+
+```
+         _~-|^~_
+     () /  ? o  \ \/
+       '_   ⏝   _'
+       ( '--.--' \
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

@@ -21,3 +21,14 @@
 - [由“千万字母表问题”看多范式编程语言 | 灰蓝时光](https://hltj.me/lang/2016/11/07/10m-letters.html)
     - [Linux Programming / お気楽 Rust プログラミング超入門](http://www.nct9.ne.jp/m_hiroi/linux/rust14.html)
 - ...
+
+
+
+```
+      _~~-~~_
+  \) /  ◷ ☉  \ \/
+    '_   ⏝   _'
+    ( '-----' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

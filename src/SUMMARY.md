@@ -6,14 +6,15 @@
 ----
 
 - [Rust 学习](./101/README.md)
-    + [tracing 初步](./101/tracing.md)
     + [伴学ChatGPT](./101/chatgpt101.md)
         + [dyn 初步](./101/chat_dyn101.md)
+    + [idioms](./101/idioms.md)
+        + [idiom#325:构造队列](./101/idiom325_create_a_queue.md)
+    + [Quiz.rs](./101/quiz.md)
+        + [Quiz#1](./101/quiz_1.md)
     + [Exercism](./101/exercism.md)
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
-    + [idioms](./101/idioms.md)
-        + [idiom#325:构造队列](./101/idiom325_create_a_queue.md)
 
 ----
 
@@ -41,6 +42,8 @@
 - [Rust 技能](./tip/README.md)
     + [Awesome.rs](./tip/awesome4rs.md)
         + [Handlebars](./tip/aw4rs_handlebars.md)
+        + [tracing 初步](./tip/tracing.md)
+        + [文件加速打开](./tip/open_big_file_speed.md)
     + [BMP:最小bug模式](./tip/rust_min_bug_patterns.md)
         + [Crate中合理划分目录](./tip/manag_growing_proj_with_crates_modules.md)
     + [anti-OOP]()

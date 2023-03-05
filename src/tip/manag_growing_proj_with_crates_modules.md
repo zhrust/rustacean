@@ -156,6 +156,10 @@ Abort trap: 6
 
 [使用 use 关键字将路径引入作用域 - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch07-04-bringing-paths-into-scope-with-the-use-keyword.html#%E4%BD%BF%E7%94%A8-pub-use-%E9%87%8D%E5%AF%BC%E5%87%BA%E5%90%8D%E7%A7%B0) -> 使用 pub use 重导出名称
 
+- [Rust中的代码组织:package/crate/mod - 腾讯云开发者社区-腾讯云](https://cloud.tencent.com/developer/article/1899628)
+- [模块和货物 - Rust 的绅士介绍](http://llever.com/gentle-intro/pain-points.zh.html)
+- ...
+
 
 ```
           _~∽|^~_

@@ -16,8 +16,11 @@
 
 ...TBD
 
+
 ### usage
 ...TBD
+
+
 
 ## tracing
 > 问题是这么来的...
@@ -205,11 +208,19 @@ foobar/
 
 ### refer.
 
-- [ferris-says - crates.io: Rust Package Registry](https://crates.io/crates/ferris-says)
-- [ferris-say - crates.io: Rust Package Registry](https://crates.io/crates/ferris-say)
-    - [spaghettidev 🦀 — I'm a Software engineering student and Typescript & Rust developer.](https://spaghettidev.tech/posts/creating-a-cli-with-rust/)
 - [Rustacean.net: Home of Ferris the Crab](https://rustacean.net/)
     - [Animated Ferris - JSFiddle](https://jsfiddle.net/Diggsey/3pdgh52r/embedded/result/)
+    - [ferris-says - crates.io: Rust Package Registry](https://crates.io/crates/ferris-says)
+    - [ferris-say - crates.io: Rust Package Registry](https://crates.io/crates/ferris-say)
+        - [spaghettidev 🦀 — I'm a Software engineering student and Typescript & Rust developer.](https://spaghettidev.tech/posts/creating-a-cli-with-rust/)
+- [Introduction - Rain's Rust CLI recommendations](https://rust-cli-recommendations.sunshowers.io/index.html#locations)
+  - [clap - crates.io: Rust Package Registry](https://crates.io/crates/clap)
+      - [Building a Command-Line Application in Rust | www.joshfinnie.com](https://www.joshfinnie.com/blog/a-command-line-application-in-rust/)
+      - [Data Engineering With Rust And Apache Arrow DataFusion 2/4 — A CLI Application with Clap | by Matt | Jul, 2022 | Medium | Medium](https://medium.com/@MatthieuL49/data-processing-with-rust-and-apache-arrow-datafusion-a-cli-application-with-clap-73c9df229540)
+      - [Rustで手軽にCLIツールを作れるclapを軽く紹介する - Qiita](https://qiita.com/Tadahiro_Yamamura/items/4ae32347fb4be07ea642#app%E3%81%A8parser%E3%81%AE%E3%81%A9%E3%81%A1%E3%82%89%E3%82%92%E4%BD%BF%E3%81%86%E3%81%B9%E3%81%8D%E3%81%8B)
+      - [What is the way to display the author? · clap-rs/clap · Discussion #4316](https://github.com/clap-rs/clap/discussions/categories/q-a)
+          - [clap 4.0, a Rust CLI argument parser](https://epage.github.io/blog/2022/09/clap4/#polishing-help-output)
+      - ..
 - [Tokens - The Rust Reference](https://doc.rust-lang.org/reference/tokens.html#raw-string-literals)
     - ...
 

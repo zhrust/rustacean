@@ -90,6 +90,11 @@ error: could not compile `regex-syntax` due to 990 previous errors
 折腾出 900+ 错误...败退...
 
 
+### GitHub-action
+> 能免费用起来的, 先用起来...
+
+
+..TBD
 
 
 ## refer.
@@ -114,3 +119,15 @@ error: could not compile `regex-syntax` due to 990 previous errors
 
 - ..
 - 230226 ZQ init.
+
+
+
+
+```
+          _~∽|-~_
+      \) /  ◷ O  \ \/
+        '_   ⎕   _'
+        \ '--.--' <
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

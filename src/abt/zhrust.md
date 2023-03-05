@@ -46,3 +46,14 @@ rust 相关中文社区比当年 Python 的多不少,
 - 230101 ZQ 变更域名指向
 - 221230 ZQ init.
     - 迁移 utterances 🔮 评注到 https://github.com/zhrust/comments
+
+
+
+```
+        _~∽+^~_
+    () /  o *  \ \/
+      '_   𝟂   _'
+      | '--+--' <
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```

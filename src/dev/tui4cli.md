@@ -9,6 +9,7 @@
 找到一种舒服的姿势:
 
 - [x] 可以快速构造出各种 CLI 工具
+    - [x] [Rustで手軽にCLIツールを作れるclapを軽く紹介する - Qiita](https://qiita.com/Tadahiro_Yamamura/items/4ae32347fb4be07ea642#app%E3%81%A8parser%E3%81%AE%E3%81%A9%E3%81%A1%E3%82%89%E3%82%92%E4%BD%BF%E3%81%86%E3%81%B9%E3%81%8D%E3%81%8B)
 - [ ] 可以快速构造出各种 TUI 软件 ~ 类似 POS 系统界面的...
     - 参考作品: [extrawurst/gitui: Blazing 💥 fast terminal-ui for git written in rust 🦀](https://github.com/extrawurst/gitui/search?l=makefile)
         - [ClementTsang/bottom: Yet another cross-platform graphical process/system monitor.](https://github.com/ClementTsang/bottom)
