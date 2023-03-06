@@ -110,7 +110,7 @@ var initAll = function () {
         pagePath = "index"
     }
 
-    // add visitors count
+/*     // add visitors count
     var ele = document.createElement("div");
     ele.setAttribute("align","center");
     var count = document.createElement("img")
@@ -120,7 +120,7 @@ var initAll = function () {
 
     document.getElementById("giscus-container").appendChild(ele);
     document.getElementById("giscus-container").appendChild(divider);
-
+ */
     // 选取浏览器默认使用的语言
     // const lang = navigator.language || navigator.userLanguage
 
