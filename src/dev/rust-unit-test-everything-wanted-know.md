@@ -100,13 +100,14 @@ Learn how to write unit tests in Rust with this hands-on video that covers these
 
 [mongodb-developer/unit-testing-rust: This repository contains the code used in MongoDB's video "Intro to Unit Testing in Rust."](https://github.com/mongodb-developer/unit-testing-rust)
 
-联系原著:
 
-- Jorge:
+
+- 联系原著/Jorge:
     - Twitter: https://twitter.com/jdortiz
     - Mastodon: https://fosstodon.org/@jdortiz
     - LinkedIn: https://www.linkedin.com/in/jorgeortiz/
-
+- 以及: 
+    - [What is Unit Testing? How to Perform Unit Tests in Rust](https://www.freecodecamp.org/news/unit-testing-in-rust/)
 
 
 

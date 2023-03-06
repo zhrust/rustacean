@@ -41,13 +41,31 @@
 ## refer.
 > 各种参考
 
-[I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
 
 必刷练习:
 
-- [GitHub - rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings)
+- [GitHub - rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings) ~ 官方大佬亲自编撰的...形式上也充分利用了 Cargo 工具链, 非常的锈...
 - [Rust Quiz #1](https://dtolnay.github.io/rust-quiz/1)
 - [Rust on Exercism](https://exercism.org/tracks/rust)
+- ...
+
+
+### 自锈路径
+
+- [I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
+- [Learn Rust\!](https://gist.github.com/noxasaxon/7bf5ebf930e281529161e51cd221cf8a)
+- [Learn Rust Programming Course – Interactive Rust Language Tutorial on Replit](https://www.freecodecamp.org/news/author/shaun/)
+- [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches)
+- ...
+- [Michael Yuan - 袁钧涛](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/) ~ 天体物理学博士, 早期 JBoss 成员, WEB3 专家...
+    - [The Top 8 Things I Learned From 4000 Rust Developers](https://www.freecodecamp.org/news/author/michael/)
+    - [How to Learn Rust Without Installing Any Software](https://www.freecodecamp.org/news/learn-rust-with-github-actions/) ~ 白嫖专家...
+        - [GitHub Codespaces – How to Code Right in Your Browser with Your Own Cloud Dev Environment](https://www.freecodecamp.org/news/learn-programming-in-your-browser-the-right-way/)
+    - [How to Create a Serverless Meme-as-a-Service](https://www.freecodecamp.org/news/create-a-serverless-meme-as-a-service/)
+    - [Edge Cloud Microservices – How to Build High Performance & Secure Apps with WasmEdge and Rust](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/)
+    - WASM/
+        - [How to use Rust + WebAssembly to Perform Serverless Machine Learning and Data Visualization in the Cloud](https://www.freecodecamp.org/news/rust-webassembly-serverless-tencent-cloud/)
+        - [How to Build a Personal Dev Server on a $5 Raspberry Pi](https://www.freecodecamp.org/news/build-a-personal-dev-server-on-a-5-dollar-raspberry-pi/)
 - ...
 
 ### rustCC
@@ -60,7 +78,6 @@
     - [常见问题解答 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/faq.html#lifetimes)
     - ...
 - ...
-
 
 
 ### Youtube
@@ -98,7 +115,12 @@
 
 [free-programming-books/free-programming-books-langs.md at main · EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-langs.md#rust)
 
-
+- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
+- [Rust 中文文档 | Rust 文档网](https://github.com/rust-lang-cn/rustdoc-cn/fork)
+- [Rust 语言之旅 - Let's go on an adventure!](https://tourofrust.com/11_zh-cn.html)
+- [Y分钟速成X ~ 其中 X=Rust](https://learnxinyminutes.com/docs/zh-cn/rust-cn/)
+    - [Rust 备忘清单 & rust cheatsheet & Quick Reference](https://wangchujiang.com/rust-cn-document-for-docker/quick-reference/docs/rust.html)
+- ...
 
 
 ## logging
