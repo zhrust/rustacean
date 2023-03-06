@@ -131,6 +131,7 @@ var initAll = function () {
         theme = "light"
     }
 
+    /* 
     var script = document.createElement("script")
     script.type = "text/javascript";
     script.src = "https://giscus.app/client.js";
@@ -150,7 +151,7 @@ var initAll = function () {
     // 预先加载评论会更好，这样用户读到那边时，评论就加载好了
     // script.setAttribute("data-loading", "lazy");
     document.getElementById("giscus-container").appendChild(script);
-
+ */
 
 
 };
