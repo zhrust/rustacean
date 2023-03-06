@@ -3,7 +3,11 @@
     + [gh-pages](./abt/gh-pages.md)
     + [zhrust](./abt/zhrust.md)
 
-----
+
+
+# 自学练习
+
+---
 
 - [Rust 学习](./101/README.md)
     + [伴学ChatGPT](./101/chatgpt101.md)
@@ -16,15 +20,19 @@
         + [42:all-your-base](./101/ex42all-your-base.md)
         + [43:Allergies](./101/ex43Allergies.md)
 
-----
+
+
+# 实践🌚🌘🌗🌖🌝
+
+---
 
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
     + [TUI](./dev/tui4cli.md)
-        + [NNera](./dev/cli_nnera.md)
-        + [BXMr](./dev/cli_bxmr.md)
-        + [Ferris艺术](./dev/cli_ferris_art.md)
-        + [Yuzu](./dev/cli_yuzu.md)
+        + 🌝[NNera](./dev/cli_nnera.md)
+        + 🌖[Ferris艺术](./dev/cli_ferris_art.md)
+        + 🌖[BXMr](./dev/cli_bxmr.md)
+        + 🌚[Yuzu](./dev/cli_yuzu.md)
     + [异步](./dev/web4async.md)
         + [Tokio](./dev/tokio.md)
         + [GraphQL](./dev/graphql.md)
@@ -37,8 +45,14 @@
         + [交叉编译?](./dev/cross-compiling.md)
     + [20年来作为软件工程师学到的10件事](./dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.md)
         + [希望一早知道的关键概念](./dev/concepts-i-wish-i-learned-earlier.md)
+    + [实用工具推荐...]()
+        + [Bottom](./dev/cli_btm.md)
 
-----
+
+
+# 工程经验
+
+---
 
 - [Rust 技能](./tip/README.md)
     + [Awesome.rs](./tip/awesome4rs.md)
@@ -53,7 +67,11 @@
         + [Rust 超越OOP,第2部分](./tip/oop-2-polymorphism.md)
     + [运算符重载六件趣事](./tip/rust6fun-operator-overloading.md)
 
-----
+
+
+# 笔记嗯哼
+
+---
 
 - [笔记](./log/README.md)
     + [Rust 课程笔记](./log/rust101logging.md)
