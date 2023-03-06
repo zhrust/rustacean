@@ -18,19 +18,25 @@ files-glob = "src/*.md"
 url-base = "https://rs.101.so/"
 
 [output.html]
+additional-css = ["theme/style.css"]
+additional-js = ["assets/custom.js", "assets/bigPicture.js"]
+git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
+edit-url-template = "https://github.com/zhrust/rustacean/edit/master/{path}"
 #mathjax-support = true
 #site-url = "/mdBook/"
-git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
-#edit-url-template = "https://github.com/rust-lang/mdBook/edit/master/guide/{path}"
 
-[output.html.playpen]
-line-numbers = true
+#[output.html.playpen]
+#line-numbers = true
 #editable = true
 #editor = "ace"
+[output.html.playground]
+editable = true
+copy-js = true
+# line-numbers = true
 
 [output.html.fold]
 enable = true
-#level = 1
+level = 1
 
 [output.html.search]
 limit-results = 20

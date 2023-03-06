@@ -6,33 +6,36 @@
 ## goal
 将当前日常要用的各种工具, 转化为 rust 版本的...
 
-
 ## plan
+进展图例: 
 
-- [ ] NNera ~ 牛妞纪元
+- 🌚 ~ 萌动
+- 🌘 ~ 开搞
+- 🌗 ~ 折腾
+- 🌖 ~ 可用
+- 🌝 ~ 发布
+
+
+- [ ] 🌖NNera ~ 牛妞纪元
     - [x] CLI
     - [ ] 发布
-    - [ ] 测试
-- [ ] bxmr ~ BXM 输入码表维护器
+- [x] 🌝bxmr ~ BXM 输入码表维护器
     - [x] CLI
-    - [ ] 发布
-    - [ ] 测试
-- [ ] ferris ~ 吉祥物ASCII-art 生成器
-    - [ ] CLI
-    - [ ] crate
-    - [ ] 测试
-- [ ] yuzu ~ 柚子, 简陋的私用短址生成器
+    - [x] 发布
+- [x] 🌝 ferris ~ 吉祥物ASCII-art 生成器
+    - [x] CLI
+    - [x] crate
+- [ ] 🌚[RSS4mdbook](/dev/cli_rss4mdbook.md) 自制 RSS 生成器
+- [ ] 🌚 yuzu ~ 柚子, 简陋的私用短址生成器
     - [x] SUUID ~ 短 UUID 生成器; 组合标准的 UUID+Md5 就好
         - [ ] 自制, 参考: [shortuuid/main.py at master · skorokithakis/shortuuid](https://github.com/skorokithakis/shortuuid/blob/master/shortuuid/main.py)
         - [ ] crate
     - [ ] CLI
     - [ ] 发布
         - [ ] RESTful ... etc
-    - [ ] 测试
-- [ ] Yazi ~ 睚眦 git 仓库行为分析器
+- [ ] 🌚 Yazi ~ 睚眦 git 仓库行为分析器
     - [ ] CLI
     - [ ] 发布
-    - [ ] 测试
 
 ## trace
 > 追踪笔记
