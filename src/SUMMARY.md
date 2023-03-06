@@ -29,11 +29,11 @@
 - [Rust 开发](./dev/README.md)
     + [小作品](./dev/dama-projects.md)
     + [TUI](./dev/tui4cli.md)
-        + [NNera](./dev/cli_nnera.md) 🌝
-        + [Ferris艺术](./dev/cli_ferris_art.md) 🌖
-        + [BXMr](./dev/cli_bxmr.md) 🌖
-        + [RSS4mdbook](./dev/cli_rss4mdbook.md) 🌚
-        + [Yuzu](./dev/cli_yuzu.md) 🌚
+        + [🌝 NNera](./dev/cli_nnera.md)
+        + [🌖 Ferris艺术](./dev/cli_ferris_art.md)
+        + [🌖 BXMr](./dev/cli_bxmr.md)
+        + [🌚 RSS4mdbook](./dev/cli_rss4mdbook.md)
+        + [🌚 Yuzu](./dev/cli_yuzu.md)
     + [异步](./dev/web4async.md)
         + [Tokio](./dev/tokio.md)
         + [GraphQL](./dev/graphql.md)
