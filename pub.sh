@@ -7,6 +7,8 @@ VER="pub.sh {v23.1.6} auto mdbook and git upd"
 DATE=`date "+%y%m%d"`
 
 MDBOOK="$(which mdbook)"
+RSS4BOOK="$(which rss4mdbook)"
+
 GIT="$(which git)"
 #==================================================================== abt. path
 ROOT="/Users/zoomq/Exercism/_sites/rustacean"

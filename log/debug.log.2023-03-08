@@ -1,0 +1,16 @@
+  [2m2023-03-08 01:26:04.779[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/dev/cli_rss4mdbook.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-08 01:26:04.780[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/dev/debug_rust_with_codelldb.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-08 01:26:04.780[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/tip/rust_min_bug_patterns.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-08 01:26:04.780[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/101/README.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
