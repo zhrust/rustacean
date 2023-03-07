@@ -120,6 +120,10 @@
 - [Rust 语言之旅 - Let's go on an adventure!](https://tourofrust.com/11_zh-cn.html)
 - [Y分钟速成X ~ 其中 X=Rust](https://learnxinyminutes.com/docs/zh-cn/rust-cn/)
     - [Rust 备忘清单 & rust cheatsheet & Quick Reference](https://wangchujiang.com/rust-cn-document-for-docker/quick-reference/docs/rust.html)
+- [sger/RustBooks: List of Rust books](https://github.com/sger/RustBooks#advanced-books)
+    - [ctjhoa/rust-learning: A bunch of links to blog posts, articles, videos, etc for learning Rust](http://llogiq.github.io/2015/07/15/profiling.html)
+    - [Introduction - Learning Rust With Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/first.html)
+    - ...
 - ...
 
 

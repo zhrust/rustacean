@@ -90,8 +90,12 @@ table {
 .fa-github {
     font-weight: 550;
 }
-.fa-github:after{
+/*
+🦀
     content: "繁星点点尽在你的指尖 🌟";
+*/
+.fa-github:after{
+    content: "锈迹斑斑尽在你我指尖 🦀";
     margin-left: 4px;
 }
 

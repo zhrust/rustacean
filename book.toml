@@ -12,10 +12,14 @@ base_url = "rs.101.so"
 
 [build]
 build-dir = "docs"
+[rss4mdbook]
+url_base = "https://rs.101.so"
+rss_title = "be Rustaceans ~ 成锈纪"
+rss_desc = "~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧..."
 
-[preprocessor.rss]
-files-glob = "src/*.md"
-url-base = "https://rs.101.so/"
+#[preprocessor.rss]
+#files-glob = "src/*.md"
+#url-base = "https://rs.101.so/"
 
 [output.html]
 additional-css = ["theme/style.css"]

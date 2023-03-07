@@ -21,8 +21,11 @@ echo "###::run@" `date +"%Y/%m/%d %H:%M:%S"` #>> $LOGF
 pwd 
 $MDBOOK build
 cp -fv $CNAME $DOC
-ls $DOC
+#ls $DOC
 #exa -T -L2 src/
+ls -la $DOC/rss.xml
+$RSS4BOOK gen /Users/zoomq/Exercism/_sites/rustacean/book.toml
+ls -la $DOC/rss.xml
 
 NOW=`date "+%y%m%d %H:%M:%S"`
 git upd "re-build by mdbook AT{$NOW}"

@@ -2640,6 +2640,12 @@ But for now, I hope this was a helpful tour of various minimization technique th
 ## refer.
 > 关键参考
 
+后续值得细读的:
+
+- [Linking Rust Crates, Part 1 - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2022/05/12/linking-rust-crates/)
+- [Why I use a debugger - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2022/01/10/why-i-use-a-debugger/)
+- [Breaking News: Non-Lexical Lifetimes arrives for everyone - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2019/06/26/breaking-news-non-lexical-lifetimes-arrives-for-everyone/)
+- [Category: turbowish - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/categories/turbowish/)
 - ...
 
 ## logging

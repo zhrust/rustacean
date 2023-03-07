@@ -30,11 +30,13 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
 
 ## trace
 
-- [ ] 探索..决定方案
-- [ ] 架构基本框架
-- [ ] 实现核心功能
-- [ ] 清查发表 crate
-- [ ] 试用
+- [x] 探索..决定方案
+- [x] 架构基本框架
+- [x] 实现核心功能
+- [x] 清查发表 crate
+  - [rss4mdbook - crates.io: Rust Package Registry](https://crates.io/crates/rss4mdbook)
+- [x] 试用
+    - 囧了,竟然不好支持多站点...
 - [ ] 宣传
 - [ ] ...
 
