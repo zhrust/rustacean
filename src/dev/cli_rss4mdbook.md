@@ -37,8 +37,9 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
   - [rss4mdbook - crates.io: Rust Package Registry](https://crates.io/crates/rss4mdbook)
 - [x] 试用
     - 囧了,竟然不好支持多站点...
-- [ ] 宣传
-- [ ] ...
+    - 🌝 妥了 -> [Release RSS4mdBook v0.2.42 · zhrust/rss4mdbook](https://github.com/zhrust/rss4mdbook/releases/tag/v0.2.42)
+- [ ] 宣传?
+- [ ] ...无尽的维护
 
 
 
@@ -53,6 +54,7 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
 ## logging
 
 - ...🦀
+- 230308 ZQ publish ~>  [rss4mdbook - crates.io: Rust Package Registry](https://crates.io/crates/rss4mdbook)
 - 230306 ZQ init.
 
 

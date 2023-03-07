@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>cli_rss4mdbook.md</title><link>https://rs.101.so//dev/cli_rss4mdbook</link><pubDate>Wed, 08 Mar 2023 00:45:43 +0800</pubDate><content:encoded><![CDATA[# RSS for Mdbook
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>cli_rss4mdbook.md</title><link>https://rs.101.so//dev/cli_rss4mdbook</link><pubDate>Wed, 08 Mar 2023 01:41:51 +0800</pubDate><content:encoded><![CDATA[# RSS for Mdbook
 > 是的一个应该是常用的工具...
 
 
@@ -37,8 +37,9 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
   - [rss4mdbook - crates.io: Rust Package Registry](https://crates.io/crates/rss4mdbook)
 - [x] 试用
     - 囧了,竟然不好支持多站点...
-- [ ] 宣传
-- [ ] ...
+    - 🌝 妥了 -> [Release RSS4mdBook v0.2.42 · zhrust/rss4mdbook](https://github.com/zhrust/rss4mdbook/releases/tag/v0.2.42)
+- [ ] 宣传?
+- [ ] ...无尽的维护
 
 
 
@@ -53,6 +54,7 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
 ## logging
 
 - ...🦀
+- 230308 ZQ publish ~>  [rss4mdbook - crates.io: Rust Package Registry](https://crates.io/crates/rss4mdbook)
 - 230306 ZQ init.
 
 
@@ -68,7 +70,187 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
 ```
 
 
-]]></content:encoded></item><item><title>debug_rust_with_codelldb.md</title><link>https://rs.101.so//dev/debug_rust_with_codelldb</link><pubDate>Mon, 06 Mar 2023 23:49:54 +0800</pubDate><content:encoded><![CDATA[# CodeLLDB
+]]></content:encoded></item><item><title>dama-projects.md</title><link>https://rs.101.so//dev/dama-projects</link><pubDate>Wed, 08 Mar 2023 01:40:05 +0800</pubDate><content:encoded><![CDATA[# 实践作品
+
+## background
+学习一门新语言, 最高效的姿势就是拿来使用了
+
+## goal
+将当前日常要用的各种工具, 转化为 rust 版本的...
+
+## plan
+进展图例: 
+
+- 🌚 ~ 萌动
+- 🌘 ~ 开搞
+- 🌗 ~ 折腾
+- 🌖 ~ 可用
+- 🌝 ~ 发布
+
+
+- [ ] 🌖NNera ~ 牛妞纪元
+    - [x] CLI
+    - [ ] 发布
+- [x] 🌝bxmr ~ BXM 输入码表维护器
+    - [x] CLI
+    - [x] 发布
+- [x] 🌝 ferris ~ 吉祥物ASCII-art 生成器
+    - [x] CLI
+    - [x] crate
+- [x] 🌝[RSS4mdbook](/dev/cli_rss4mdbook.md) 自制 RSS 生成器
+- [ ] 🌚 yuzu ~ 柚子, 简陋的私用短址生成器
+    - [x] SUUID ~ 短 UUID 生成器; 组合标准的 UUID+Md5 就好
+        - [ ] 自制, 参考: [shortuuid/main.py at master · skorokithakis/shortuuid](https://github.com/skorokithakis/shortuuid/blob/master/shortuuid/main.py)
+        - [ ] crate
+    - [ ] CLI
+    - [ ] 发布
+        - [ ] RESTful ... etc
+- [ ] 🌚 Yazi ~ 睚眦 git 仓库行为分析器
+    - [ ] CLI
+    - [ ] 发布
+
+## trace
+> 追踪笔记
+
+掌握 rust 到什么程度就能给自己开始小工具了?
+
+- 目测嘦会用 RA 就可以了...呗?
+- ...
+
+### crate.io
+
+> cargo login 
+首先偶到的问题:
+
+```
+$ cargo login [自己的 crate.io token]
+error: crates-io is replaced with non-remote-registry source registry `tuna`;
+include `--registry crates-io` to use crates.io
+```
+
+意味着你的 Rust 包管理器 Cargo 正在使用一个名为 tuna 的本地 Rust 包源，而不是默认的远程源 crates.io。
+
+根据提示首次使用官方源:
+
+```
+$ cargo login [自己的 crate.io token] --registry crates-io -v
+    Updating crates.io index
+     Running `git fetch --force --update-head-ok 'https://github.com/rust-lang/crates.io-index' '+HEAD:refs/remotes/origin/HEAD'`
+       Login token for `crates-io` saved
+```
+
+追加上目标仓库 `--registry crates-io` 就可以完成了...
+(大约3分钟后)
+
+> cargo package
+
+```
+$ cargo package
+...
+   Compiling proc-macro2 v1.0.51
+   Compiling quote v1.0.23
+   Compiling unicode-ident v1.0.6
+   Compiling libc v0.2.139
+    ...
+   Compiling ferris-actor v0.1.42 (/path/2/../ferris-actor/target/package/ferris-actor-0.1.42)
+    Finished dev [unoptimized + debuginfo] target(s) in 20.85s
+    Packaged 12 files, 40.8KiB (13.1KiB compressed)
+```
+
+不错, 自动化完成所有
+
+> cargo publish --registry crates-io
+
+```
+$ cargo publish --registry crates-io
+    Updating crates.io index
+...
+   Compiling proc-macro2 v1.0.51
+   Compiling unicode-ident v1.0.6
+   Compiling quote v1.0.23
+   ...
+
+```
+同样, 必须追加上 `--registry crates-io` 目标仓库参数
+
+> LICENSES
+
+```
+...
+    Packaged 12 files, 40.9KiB (13.1KiB compressed)
+   Uploading ferris-actor v0.1.42 (/Users/zoomq/Exercism/proj/ferris-actor)
+error: failed to publish to registry at https://crates.io
+
+```
+无法完成发布, 原因竟然是 Caused by:
+
+-  the remote server responded with an error: unknown or invalid license expression; 
+   -  see http://opensource.org/licenses for options, 
+   -  and http://spdx.org/licenses/ for their identifiers
+
+对比其它 crate 修订 Cargo.toml 中的关键配置项目为:
+
+> license = "BSD-2-Clause"
+
+是的, 就少了 github 自动创建时后面的一个 `License` 就通过了:
+
+```
+$   cargo publish --registry crates-io
+    Updating crates.io index
+...
+     Waiting on `ferris-actor` to propagate to crates.io index (ctrl-c to wait asynchronously)
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+    Updating crates.io index
+```
+
+完成发布;-)
+
+
+## refer.
+> 各种相关参考...
+
+- [Command-Line Rust \[Book\]](https://www.oreilly.com/library/view/command-line-rust/9781098109424/)
+    - [Introducing the Determinate Nix Installer — Determinate Systems](https://determinate.systems/posts/determinate-nix-installer) ~ 实战案例, 从 bash 迁移为 rust...
+- [Rustacean.net: Home of Ferris the Crab](https://rustacean.net/)
+- ...
+
+
+### +Pg
+
+[From Zero to PostgreSQL extension in 3 hours with Rust - Postgres Conference](https://postgresconf.org/blog/posts/from-zero-to-postgresql-extension-in-3-hours-with-rust)
+
+- +Tokio ~ [How to Write a REST API Using Rust and Axum Framework | by Shanmukh Sista | Medium](https://shanmukhsista.com/real-world-rest-api-using-rust-axum-framework-with-request-validations-and-error-handling-75d4175cef96)
+- + SQLx ~ [Rust - Build a CRUD API with SQLX and PostgreSQL 2023](https://codevoweb.com/rust-build-a-crud-api-with-sqlx-and-postgresql/)
+    - [Axum と SQLx で Todo アプリを作る（DB は PostgreSQL）](https://zenn.dev/codemountains/articles/159a8a0323a56f)
+    - ...
+- [Creating a REST API in Rust with Persistence: Rust, Rocket and Diesel | by Gene Kuo | Medium](https://genekuo.medium.com/creating-a-rest-api-in-rust-with-persistence-rust-rocket-and-diesel-a4117d400104)
+- +actix ~ [Rust Web Development Tutorial: REST API | Cloudmaker](https://cloudmaker.dev/how-to-create-a-rest-api-in-rust/)
+- 
+
+
+## logging
+> 版本记要
+
+- ...
+- 230122 ZQ init.
+
+
+```
+       _~∽*^~_
+   () /  ◴ =  \ \/
+     '_   ⌄   _'
+     ( '--#--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>debug_rust_with_codelldb.md</title><link>https://rs.101.so//dev/debug_rust_with_codelldb</link><pubDate>Mon, 06 Mar 2023 23:49:54 +0800</pubDate><content:encoded><![CDATA[# CodeLLDB
 > VSCode 中的调试重武...
 
 
@@ -2796,147 +2978,4 @@ But for now, I hope this was a helpful tour of various minimization technique th
 
 
 
-]]></content:encoded></item><item><title>README.md</title><link>https://rs.101.so//101/README</link><pubDate>Mon, 06 Mar 2023 20:22:50 +0800</pubDate><content:encoded><![CDATA[# 学习
-> learnning ...
-
-
-## background
-> 可能背景
-
-和其它语言不同, Rust 有太多公开的秘密,如果不能快速先习惯一批,
-很难写出可以运行的软件来...
-
-## goal
-> 必要目标
-
-最常用的那 20% Rust 常识...以便解决 80% 应用场景
-
-## trace
-> 具体推进
-
-- [ ] 基本概念
-    - [ ] 所有权/借用/作用域
-    - [ ] Option
-    - [ ] Box
-    - [ ] ...
-- [ ] 核心数据结构,及其常用操作
-- [ ] 推荐工程结构 ~> [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
-    - [ ] crate 以及内部模块管理
-    - [x] logging
-        - tracing = "0.1"
-        - clia-tracing-config = "0.2"
-- [ ] 实用开发/调试流程
-    - [ ] MVP/ CLI 工程
-    - [ ] MVP/ web 工程
-    - [ ] MVP/ 微服务
-    - [ ] MVP/ 系统服务
-    - [ ] ...
-- [ ] 实效 TDD 流程
-- [ ] 底层调试技巧: gdb ...
-
-
-
-## refer.
-> 各种参考
-
-
-必刷练习:
-
-- [GitHub - rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings) ~ 官方大佬亲自编撰的...形式上也充分利用了 Cargo 工具链, 非常的锈...
-- [Rust Quiz #1](https://dtolnay.github.io/rust-quiz/1)
-- [Rust on Exercism](https://exercism.org/tracks/rust)
-- ...
-
-
-### 自锈路径
-
-- [I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
-- [Learn Rust\!](https://gist.github.com/noxasaxon/7bf5ebf930e281529161e51cd221cf8a)
-- [Learn Rust Programming Course – Interactive Rust Language Tutorial on Replit](https://www.freecodecamp.org/news/author/shaun/)
-- [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches)
-- ...
-- [Michael Yuan - 袁钧涛](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/) ~ 天体物理学博士, 早期 JBoss 成员, WEB3 专家...
-    - [The Top 8 Things I Learned From 4000 Rust Developers](https://www.freecodecamp.org/news/author/michael/)
-    - [How to Learn Rust Without Installing Any Software](https://www.freecodecamp.org/news/learn-rust-with-github-actions/) ~ 白嫖专家...
-        - [GitHub Codespaces – How to Code Right in Your Browser with Your Own Cloud Dev Environment](https://www.freecodecamp.org/news/learn-programming-in-your-browser-the-right-way/)
-    - [How to Create a Serverless Meme-as-a-Service](https://www.freecodecamp.org/news/create-a-serverless-meme-as-a-service/)
-    - [Edge Cloud Microservices – How to Build High Performance & Secure Apps with WasmEdge and Rust](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/)
-    - WASM/
-        - [How to use Rust + WebAssembly to Perform Serverless Machine Learning and Data Visualization in the Cloud](https://www.freecodecamp.org/news/rust-webassembly-serverless-tencent-cloud/)
-        - [How to Build a Personal Dev Server on a $5 Raspberry Pi](https://www.freecodecamp.org/news/build-a-personal-dev-server-on-a-5-dollar-raspberry-pi/)
-- ...
-
-### rustCC
-> 中文社区:
-
-- [程序设计训练（Rust）](https://lab.cs.tsinghua.edu.cn/rust/) ~2021-2022 年夏季学期起清华大学计算机系开设的《程序设计训练（Rust）》
-- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
-    - [Rust 中文文档 | Rust 文档网](https://rustwiki.org/docs/)
-    - [Rust 文档翻译指引 | Rust 文档网](https://rustwiki.org/wiki/translate/rust-translation-guide/#tong-yi-fan-yi-zhu-yu-he-gu-ding-yong-yu)
-    - [常见问题解答 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/faq.html#lifetimes)
-    - ...
-- ...
-
-
-### Youtube
-> 真的是什么都有
-
-- 各种劝解:
-    - [Rust Linz, June 2021 - Tim McNamara - How to learn Rust - YouTube](https://www.youtube.com/watch?v=sDtQaO5_SOw)
-- 110+[Rust 编程语言入门教程 \[2021\] \- YouTube](https://www.youtube.com/playlist?list=PL3azK8C0kje1DUJbaOqce19j3R_-tIc4_)
-    - 94+ [Rust - YouTube](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
-        - 专题:[rusqlite - YouTube](https://www.youtube.com/watch?v=xhU8KDzL0vA&list=PLVhhUNGAUIQRR7JheZsDaxF_Cd5Pf5slw)
-        - [SQL Cheat Sheet | Crazcalm](http://ogcrazcalm.blogspot.com/2015/11/sql-cheat-sheet.html)
-        - [SQLite - Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/database/sqlite.html#insert-and-select-data)
-        - [rusqlite - crates.io: Rust Package Registry](https://crates.io/crates/rusqlite)
-        - [File in std::fs - Rust](https://doc.rust-lang.org/std/fs/struct.File.html#examples)
-    - 42+[RUST PROGRAMMING TUTORIALS \- YouTube](https://www.youtube.com/playlist?list=PLVvjrrRCBy2JSHf9tGxGKJ-bYAN_uDCUL)
-    - 44+[Intro to Rust \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW)
-    - 14+[Rust For Starters \- YouTube](https://www.youtube.com/playlist?list=PLKkEWK6xRmes17LQUEA5bNjYISuCEOTXx)
-- 44+[The Rust Lang Book \- YouTube](https://www.youtube.com/playlist?list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8)
-- 25+[Rust Projects \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDD5vy2BuSHvFZU0a6RDmgb)
-    - 24+[50 RUST Projects \- YouTube](https://www.youtube.com/playlist?list=PL5dTjWUk_cPYuhHm9_QImW7_u4lr5d6zO)
-- [Jon Gjengset - YouTube](https://www.youtube.com/@jonhoo)
-    - 14+ [Crust of Rust - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
-    - 14+ [Rust live-coding - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFgY2faCIYjJZv_RluGkTlKt)
-- [Rust Talks \- YouTube](https://www.youtube.com/playlist?list=PLZaoyhMXgBzoM9bfb5pyUOT3zjnaDdSEP)
-    - 各种畅想...
-    - [Contributing to Rustc \- YouTube](https://www.youtube.com/playlist?list=PLnhCUtqrIE-zgfmf6hn6fLwhfR_hDSG9T) ~ 牛人直播如何为 Rust 编译器贡献特性...
-- [Rust - YouTube](https://www.youtube.com/watch?v=_jMSrMex6R0&list=PLFjq8z-aGyQ6t_LGp7wqHsHTYO-pDDx84)
-    - 各种前景分析
-    - [WebAssembly - YouTube](https://www.youtube.com/watch?v=qjwWF6K-7uE&list=PLFjq8z-aGyQ78CQu1G3C5CT9ieiNpsnbJ) ~ 各种实现应用
-- ...
-
-
-### free Books
-> 这个世界上免费好资源太多了...
-
-[free-programming-books/free-programming-books-langs.md at main · EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-langs.md#rust)
-
-- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
-- [Rust 中文文档 | Rust 文档网](https://github.com/rust-lang-cn/rustdoc-cn/fork)
-- [Rust 语言之旅 - Let's go on an adventure!](https://tourofrust.com/11_zh-cn.html)
-- [Y分钟速成X ~ 其中 X=Rust](https://learnxinyminutes.com/docs/zh-cn/rust-cn/)
-    - [Rust 备忘清单 & rust cheatsheet & Quick Reference](https://wangchujiang.com/rust-cn-document-for-docker/quick-reference/docs/rust.html)
-- [sger/RustBooks: List of Rust books](https://github.com/sger/RustBooks#advanced-books)
-    - [ctjhoa/rust-learning: A bunch of links to blog posts, articles, videos, etc for learning Rust](http://llogiq.github.io/2015/07/15/profiling.html)
-    - [Introduction - Learning Rust With Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/first.html)
-    - ...
-- ...
-
-
-## logging
-> 版本记要
-
-- ..
-- 221214 ZQ init.
-
-
-```
-            _~`|-~_
-        \) /  O =  \ ()
-          '_   ⏡   _'
-          | '-----' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item></channel></rss>
+]]></content:encoded></item></channel></rss>
