@@ -497,25 +497,82 @@ trait Ord: Eq {
     }
 }
 <span class="boring">}</span></code></pre></pre>
-<p>OOP-style polymorphism is ideal for heterogeneous containers, where each element has its own runtime type and its own implementation of the interfaces. But sort doesn’t work like that. You can’t sort a collection like [3, &quot;Hello&quot;, true]; there’s no reasonable ordering across all types.</p>
-<p>Instead, sort operates on homogeneous containers. All the elements have to match in type, so that they can be mutually compared. They don’t each need to have different implementations of the operations.</p>
-<p>Nevertheless, sort is still polymorphic. A sorting algorithm is the same for integers or strings, but comparing integers is a completely different operation than comparing strings. The sorting algorithm needs a way of invoking an operation on its items – the comparison operation – differently for different types, while still having the same overall structure of code.</p>
-<p>This can be done by injecting a comparison function, but many types have an intrinsic, default ordering, and sort should default to it. Thus, polymorphism – but not an OOP-friendly variety.</p>
-<p>See the contrivance Java goes through to define sort:</p>
-<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
-</span><span class="boring">fn main() {
-</span>static &lt;T extends Comparable&lt;? super T&gt;&gt; 
+<p>OOP-样 多态非常适合异构容器,
+其中每个元素都有自己的运行时类型和自己的接口实现;
+但是, sort 并不是那样工作的;
+你不能对类似 <code>[3, &quot;Hello&quot;, true]; </code> 这种集合进行排序;
+所有类型都没有合理的顺序;</p>
+<p>相反 sort 在同类容器上运行;
+所有元素的类型必须匹配, 以便可以相互比较;
+他们并不需要每种类型都要有不同的操作实现;</p>
+<p>尽管如此, 排序仍然是多态的;
+排序算法对于整数和字符串是相同的,
+但是, 比较整数和比较字符串是完全不同的操作;
+排序算法需要一种方法来调用对其项目的操作 --- 比较 --- 对于不同的类型必须不同,
+同时仍然得具有相同的整体代码结构;</p>
+<p>可以通过注入一个比较函数来完成,
+但是, 很多类型都有一个内在/默认的排序,
+而且, 就应该默认使用这个排序;
+因此, 多态 --- 并不是 OOP 友好的变体;</p>
+<p>请参考以下 Java 定义排序的声明:</p>
+<pre><code class="language-java">static &lt;T extends Comparable&lt;? super T&gt;&gt; 
 void sort(List&lt;T&gt; list)
-<span class="boring">}</span></code></pre></pre>
-<p>There is no simple trait that can require T to be comparable to other Ts, for T to be ordered. Instead, as far as the programming language is concerned, the idea that T is comparable to itself, rather than to any other random type, is only articulated as an accident to this method. Nothing is stopping someone from implementing the Comparable interface in an inconsistent way, like having Integer implement Comparable<String>.</p>
-<p>Additionally, when it actually looks up the implementation of Comparable, it decides what implementation to use based on the first argument of any comparison, not based on the type. Normally, they will all be the same type, but theoretically, this list could be heterogeneous, as long as all the objects “extend” T, and they could implement Comparable differently. The computer has to do extra work to indulge this possibility, even though it would certainly be a mistake.</p>
-<p>As we’re now drifting outside of the realm of semantics, and into the realm of performance, let’s discuss the performance implementations of this fully.</p>
-<p>The Java sort method, as we mentioned, requires every item in the collection to be a full object type, which means that instead of storing the values directly in the array, the values are stored in the heap, and references are stored in the array. This is unnecessary with a traits-based approach – the values can live directly in the array.</p>
-<p>This means that different arrays will have different element sizes, so this has to be handled by a trait as well. And it is: The size of the values is also parameterized via the Sized trait. The size does have to be consistent among all the items of the array, but this is enforceable because we can express that all the elements are actually the exact same type – unlike Java’s List<T> which only expresses that they’re of type T or some subtype of T.</p>
-<p>Rust’s sort method could have been implemented by passing the size information (from the Sized trait) and the ordering function (from the Ord trait) at runtime as an integer value and a function pointer. This is how typeclasses work in Haskell, which was the inspiration for Rust traits. This would still be more efficient than the Java, as there would be a single ordering function, rather than a different indirect lookup for every left side of the comparison, allowing indirect branch prediction to work in the processor.</p>
-<p>But Rust goes even further than that, and implements its traits instead via monomorphization. This is similar to C++ template instantiation, but semantically better constrained. The premise is that while sort is only one method semantically, in the outputted, compiled code, a different version of sort is outputted for every type T that it is called with.</p>
-<p>C++ templates create infamously bad error messages and are difficult to reason about, because they are essentially macros, and awkward ones. Even Rust cannot create great error messages with its macro system. But also, writing them requires expertise, and means that the programmer is forgoing many of the benefits of the type system – templates are often called, in my opinion rightly so, a form of compile time duck-typing. For these reasons, template programming in C++ is often considered more advanced (read as harder and less convenient rather than more powerful) than OOP-style polymorphism.</p>
-<p>In Rust, however, traits provide an organized and more coherent way of accessing similar technology, getting the performance benefits of templates while still giving the structure of a solid type system.</p>
+</code></pre>
+<p>并没有简单的 trait 能要求 T 和其它 T 具有可比性,
+以便对 T 进行排序;
+相反, 就编程语言而言, T 和其自身而不是任何其它随机类型可比的查清只是作为此方法的一个偶然事件而阐明;
+打有什么可以阻止某人以不一致的方式现实 Comparable 接口,
+例如让 Integer 实现 <code>Comparable&lt;String&gt;</code>;</p>
+<p>(译按: 作死小能手, 说的就是人类自身, 无论出于什么动机,代码只是文本,
+对文本当然可以进行任何修改;)</p>
+<p>此外, 当实际查找 Comparable 实现时,
+Rust 将会根据任何比较的第一个参数而不是类型来测定使用什么实现;
+通常,她们都是相同类型,
+得是不是, 理论上这个列表可以是异构的,
+嘦所有对象都 “extend” T,
+并且可以实现不同的 Comparable;
+计算机必须作额外工作来满足这种可能性,
+即便, 这肯定是一个错误;</p>
+<p>(译按: 特别是动态语言中, 将用户视为心理不够成熟的小朋友,
+尽可能友善/专业/高级/良好/...的猜测用户行为,
+并积极将所有异构数据进行合理转换, 以便完成排序...)</p>
+<p>由于现在我们已经在脱离语义领域，进入性能领域，
+让我们来全面讨论一下性能实现；</p>
+<p>正如我们提及的, Java 排序方法要求集合中的每个项目都是完整的对象类型,
+这意味着不是将值直接存储在数组中，而是在堆中,
+而引用存储在数组中;
+这奵基于 trait 的方法是不必要的---值可以直接存在于数组中;</p>
+<p>这意味着不同的数组将具有不同的元素大小,
+因此, 这也必须由 trait 来处理;
+也就是: 值的大小也通过 Size 的 trait 参数化;
+大小必须在数组的所有项目间保持一致,
+但是,这是可执行的,因为,我们可以表达所有元素实际上是完全相同类型
+---不像 Java 的 Linst<T> 只表达它们是 T 类型或是 T 的某些子类型;</p>
+<p>Rust 的排序方法可以通过在运行时将大小信息(来者 Sized 的 trait)
+和排序函数(来自 Ord trait)作为整数值和函数指针传递来实现;
+这就是类型类在 Haskell 中的工作方式,
+这是 Rust trait 本身灵感来源;
+这俨然比 Java 更有效,
+因为,只有一个排序函数,而不是对比较的每个左进行不同的间接查找,
+从而允许间接分支预测在处理器中能工作;</p>
+<p>但是, Rust 比这更进一步, 通过单态化来实现 trait;
+这类似 C++ 中模板实例化,
+但是, 在语义上受到更好的约束;
+前提是虽然 sort 在语义上只是一种方法,
+但是,在输出的编译代码中,
+将为调用她的每个类型 T 输出不同版本的 sort;</p>
+<p>C++ 模板会创建臭名昭著的错误消息,
+并且难以推理, 因为, 丫们本质上是宏,
+而且是笨拙的宏;
+即便是 Rust 也不能用自己的宏系统创建很好的错误消息;
+而且,编写宏需要专业知识,
+这意味着程序员将放弃类型系统的很多处 --- 在我看来,
+模板通常被称为编译时 duck 类型的一种形式;
+由于这些原因, C++ 中的模板编程通常被认为比 OOP 样式的多态更高级
+(也就是说, 读起来更难/更不方便, 而不是更强大);</p>
+<p>然而, 在 Rust 中, trait 提供了一种有组织且更连贯的方式来访问类似技术,
+获得模板的性能优势,
+同时仍然提供可靠类型系统的结构;</p>
 <h3 id="alternative-3-dynamic-trait-objects"><a class="header" href="#alternative-3-dynamic-trait-objects">Alternative #3: Dynamic Trait Objects</a></h3>
 <p>Sometimes, however, you do need full run-time polymorphism. You have the opposite of the scenario with the enum: You have a closed set of operations that can be performed on a value, but what those operations actually do will change dynamically in a way that cannot be bounded ahead of time.</p>
 <p>In such situations, Rust has you covered with the dyn keyword. Please don’t overuse it, though. In almost all situations where I’ve thought it might be appropriate, static polymorphism combined with other design elements have worked out better.</p>

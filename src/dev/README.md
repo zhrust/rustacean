@@ -91,6 +91,14 @@ MVP ~ 最小可行工程能力?
     - ...
 - ...
 
+### 关键工具:
+
+- [diff.rs](https://diff.rs/ "diff.rs")
+    - [xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.](https://github.com/xfbs/diff.rs "xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.")
+    - 可以在线对应所有 crate 各种版本间所有文件的差异, 快速观察到改进思路...
+- ...
+
+
 ## logging
 > 版本记要
 

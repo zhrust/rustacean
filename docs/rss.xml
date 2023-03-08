@@ -1,4 +1,1432 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>cli_rss4mdbook.md</title><link>https://rs.101.so//dev/cli_rss4mdbook</link><pubDate>Wed, 08 Mar 2023 01:41:51 +0800</pubDate><content:encoded><![CDATA[# RSS for Mdbook
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>oop-2-polymorphism.md</title><link>https://rs.101.so//tip/oop-2-polymorphism</link><pubDate>Wed, 08 Mar 2023 22:38:06 +0800</pubDate><content:encoded><![CDATA[# Rust 超越面向对象,第2部分
+原文:[Rust Is Beyond Object-Oriented, Part 2: Polymorphism :: The Coded Message](https://www.thecodedmessage.com/posts/oop-2-polymorphism/)
+
+
+## 快译
+
+在这篇文章中, 通过讨论 OOP 三大传统支柱中的第二个: 多态,
+继续系列文章:关于 Rust 和传统 OOP 范式的不同;
+
+多态性是面向对象编程中的一个特别重要的话题，
+也许是其三大支柱中最重要的一个;
+关于多态性是什么, 各种编程语言如何实现(在 OOP 世界内外---是的,多态性也存在于 OOP 宇宙之外),
+如何有效的使用, 以及更加关键的何时嫑使用;
+可以写一些关于如何单独使用多态的 Rust 版本的书了;
+
+不幸的是, 这只是一篇 blog,所以,
+我无法像我想的那样详细或是多样性的介绍多态;
+相反,我将特别关注 Rust 和 OOP 概念的不同之处;
+我将从描述其在 OOP 中的工作方式开始,
+然后, 讨论如何在 Rust 中实现相同的目标;
+
+在 OOP 中,多态性就是一切;
+试图采取所有决策(或是尽可能多的决策)并将其统一在一个通用的狭义机制中:
+运行时多态;
+但是, 不幸的是, 并不是任意运行时多态, 而是一种特定的/狭义的运行时多态形式,
+受到 OOP 哲学和实现如何工作细节的限制:
+
+- 间接需求: 每个对象通常都必须存储在堆上,才能使运行时多态生效, 因为,不同的"运行时类型"具有不同的尺寸; 这鼓励了可变对象的别名使用;不仅如此,要真正调用一个方法,必须穿过三层间接:
+    - 解引用对象引用
+    - 解引用类指针或是 “vtable” 指针
+    - 最后完成间接函数调用
+- 排斥优化: 除了间接函数调用的内在成本之外, 调用是间接的这一事实, 意味着内联是不可能的；通常,多态方法很小,甚至于微不足道,例如返回常量/设置字段或是重新排列参数并调用另一个方法, 因此, 内联会很有用; 内联对于允许优化跨内联边界也很重要;
+- 仅能在单一参数上多态: 特殊的接收者参数,称为 self 或是 this, 是运行时多态也的并上通常可能通过的唯一参数; 其它参数的多态可以用那些类型中的辅助方式来模拟, 这就很尴尬, 而且, 返回类型的多态也是不可能的;
+- 每个值都是独立多态的: 在运行时多态中, 通常没有办法说集合的所有元素都属于实现相同接口/interface 的某种类型 T,但是, 该类型是什么又应该在运行时能确定;
+- 和其它 OOP 特性纠缠在一起: 在 C++ 中,运行时多态和继承紧密耦合；　在很多 OOP 语言中, 多态仅适用于类的类型, 正如我在上篇 blog 中讨论的那样, 类类型是一种受约束的模块形式;
+
+其实我完全可以针对以上每条吐糟单独写一大篇文章 --- 也许有一天真的会;
+
+不过,尽管有这么多限制, 多态仍然被视为使用 OOP 语言进行决策的首选方式,
+并且, 特别直观且易于访问;
+受过训练的程序员, 嘦可能就一定使用此工具,
+无论是否是手上决策是最佳工具, 即便当前不需要用多态进行运行时决策;
+有些编程语言,例如 Smalltalk 甚至折叠了 "if-then" 逻辑,
+并循环到 this 这个奇怪的特定决策结构中,
+通过多态方法(如: ifTrue:idFalse)最终实现,
+这些方法将在 True 和 False 类中以不同方式再实现
+(和 therefore 在 true 以及 false 对象上配套);
+
+需要明确的是, 拥有基于 vtable 的运行时多态性机制本身并不是一件坏事儿 --- Rust 甚至有也一个
+(和上述 OOP 版本相似,但是,并不完全对等);
+但是, Rust 版本只用以相对罕见的情况, 在这种情况中,
+该机制最适合整个儿 palette 机制;
+在 OOP 中, 将这种严格约束且忾和用低下的决策制定形式提升到所有其它形式之上,
+以及使用多态是表达程序注释和业务编辑的最佳方式以及最直观方式的哲学断言,
+本身就是个问题;
+
+事实证明,当你选择最适合手头情况的工具时, 编程更加吻合人体工程学 --- 而 OOP 运行时多态性,
+只是偶尔才是最合适完成当前工作的实效工具;
+
+因此, 让我们看看在 OOP 使用运行时多态性时, 可以使用的 Rust 版四种替代方案;
+
+
+
+
+### 备选方案#0：枚举
+
+不仅有其它形式的多态性, 而且具有更少的严格约束
+(例如 Haskell 的类型类)或一组不同的权衡
+(例如 Rust 的 trait,主要基于 Haskell 类型类),
+Rust 中还有另外一个决策系统, 即:代数数据类型(ADTs, algebraic data types)
+或曰求合/sum 类型,
+也能接管 OOP 样式多态的很多应用程序;
+
+在 Rust 中, 这些被称为 枚举/enums;
+很多编程语言中的枚举是存储在整数尺寸类型中的常量列表,
+有时以类型安全的方式实现(比如在 Java 中),
+有时不是(比如在 C 中),
+有时可以使用任何一种选项(比如,在 C++ 中枚举和枚举类之间就有区别);
+
+Rust 枚举支持这种熟悉的用例, 而且具有类型安全:
+
+
+```rust
+pub enum Visibility {
+    Visible,
+    Invisible,
+}
+```
+
+但是, 还支持和每个选项关联的附加字段,
+创建类型理论中称为"总和类型"(sum type)的东西,
+但在 C 或是 C++ 程序员中更加广为人知识的叫"联合标记"(tagged union)
+--- 不同之处在于, Rust 中, 编译器知道并能强制执行标记;
+
+以下是一些枚举声明的示例:
+
+
+```rust
+pub enum UserId {
+    Username(String),
+    Anonymous(IpAddress),
+    // ^^ This isn't supposed to be a real network type,
+    // just an example.
+}
+
+let user1 = User::Username("foo".to_string());
+let user2 = User::Anonymous(parse_ip("127.0.0.1")?);
+
+pub enum HostIdentifier {
+    Dns(DomainName),
+    Ipv4Addr(Ipv4Addr),
+    Ipv6Addr(Ipv6Addr),
+}
+
+pub enum Location {
+    Nowhere,
+    Address(Address),
+    Coordinates {
+        lat: f64,
+        long: f64,
+    }
+}
+
+let loc1 = Location::Nowhere;
+let loc2 = Location::Coordinates {
+    lat: 80.0,
+    long: 40.0,
+};
+```
+
+你可能会问,这些`联合标记`和多态有什么关系?
+好吧, 大多数 OOP 语言对于这些 求合类型/sum type 没什么好办法,
+但是, 她们确实有强大的运行时多态机制,
+所以, 你会看到运行时多态用 Rust 枚举实现也是一样的适合
+(我可能进一步争辩: 更加合适):
+每当有一些小关于如何协商会议值的选项, 但是,这些选项又包含不同细节时;
+
+比如, 这是一种使用继承和运行时多态在 Java 中表示 UserId 类型的方法 --- 当我还是学生时, 
+肯定会这么来(将每个类放在不同的文件中):
+
+
+```java
+class UserId {
+}
+
+class Username extends UserId {
+    private String username;
+    public Username(String username) {
+        this.username = username;
+    }
+
+    // ... getters, setters, etc.
+}
+
+class AnonymousUser extends UserId {
+    private Ipv4Address ipAddress;
+    
+    // ... constructor, getters, setters, etc.
+}
+
+UserId user1 = new Username("foo");
+UserId user2 = new AnonymousUser(new Ipv4Address("127.0.0.1"));
+```
+
+重要的是, 就像在枚举示例中一样,
+我们可以将 user1 和 user2 给定相同类型的变量,
+并将她们得狮给相同类型的函数, 并通常对她们执行相同的操作;
+
+现在这些 OOP 风格的类看起来轻飘到飞溅的程度,
+但是, 这主要是因为我们没有为这种情况添加任何真正的操作代码 --- 只有数据和结构, 
+以及一些变量定义和模板;
+让我们考虑一下, 如果我们真的对用户 ID 尝试进行任何操作时会怎么样?
+
+例如,我们可能想确认她们是否为管理员;
+在我们的假设中, 假设匿名用户永远不是管理员,
+而拥有用户名的用户只有在用户名以字符串 admin_ 开头时,才是位管理员;
+
+理论上认可的 OOP 方法是添加一个方法,
+比如: administrator;
+为了让这个方法起作用, 我们必须将其追加到所有三个类: 基数以及两个子类:
+
+```java
+class UserId {
+    // ...
+    public abstract bool isAdministrator();
+}
+
+class Username extends UserId {
+    // ...
+    public bool isAdministrator() {
+        return username.startsWith("admin_");
+    }
+}
+
+class AnonymousUser extends UserId {
+    // ...
+    public bool isAdminstrator() {
+        return false;
+    }
+}
+```
+
+因此, 为了在 Java 中为这种类型添加这种简单的操作,如此简单的能力,
+我们却必须使用三个类,
+而且必须存储在三个文件中;
+丫们每个对象都包含一个方法来作一些简单的事儿,
+但是, 在任何羌族都看不到谁是管理员, 又或者不是管理员的完整逻辑 --- 有人可能会很不合时宜的问出这个问题;
+
+Rust 则为这种操作使用 match,
+将有关所有信息放在一个地方完成判定:
+
+
+```rust
+fn is_administrator(user: &UserId) -> bool {
+    match user {
+        UserId::Username(name) => name.starts_with("admin_"),
+        UserId::AnonymousUser(_) => false,
+    }
+}
+```
+
+诚然, 这将产生更加复杂的单个函数,
+但是,具有明确的所有逻辑;
+让编辑明显而不是隐含在继承屡次结构中, 
+这就违反了 OOP 原则, 
+在 OOP 宇宙中, 方法应该简单, 多态性用于隐含的表达逻辑;
+但是,这并不能保证任何事儿, 只是将其扫到地毯下而已:
+事实证明, 隐藏复杂性会令其更难应对, 而不是相反;
+
+让的我们来看另外一个例子;
+我们已经用了一段时间的 UserId 代码,
+你的任务是为这个系统编写一个新的 Web 前端;
+你需要某种方式, 以 HTML 格式显示用户信息,
+要么是指向用户配置文件的链接(对于指定用户),
+要么是将 IP 地址字符串化为红色(对于匿名用户);
+因此, 你决定为这个小型类型追加一个新操作 toHTML,
+将输出新前端的专用 DOM 类型;
+(也许 Java 被编译为 WebAssembly 呢? 我也不确定,不过细节不重要;-)
+
+
+你逈后端核心库深入的 UserId 类屡次结构的维护者提交了 pull request;
+然后, 他们拒绝了;
+
+事实上, 他们有很好的理由, 你必须勉强承认;
+他们说:"这是一种荒谬的关注点分离";
+此外, 公司也无法从你的前端获得此核心库处理类型;
+
+所以, 你叹了口气, 写了个 Rust 匹配表达式的等价物, 但是用的是 Java
+(请原谅我荒谬的假设有个 HTML 库):
+
+
+```java
+Html userIdToHtml(UserId userId) {
+    if (userId instanceof Username) {
+        Username username = (Username)userId;
+        String usernameString = username.getUsername();
+        Url url = ProfileHandler.getProfileForUsername(usernameString);
+        return Link.createTextLink(url, username.getUsername());
+    } else if (userId instanceof AnonymousUser) {
+        AnonymousUser anonymousUser = (AnonymousUser)userId;
+        return Span.createColoredText(anonymousUser.getIp().formatString(), "red");
+    } else {
+        throw new RuntimeException("IDK, man");
+    }
+}
+```
+
+你的老板们在代码审查时拒绝了这段代码,
+你你使用了 instanceof 反模式,
+但是, 后来在你让他们和不接受你的其它补丁的核心库维护者争论之后,
+丫们勉强接受了这段代码;
+
+但是, 看看那坨 instanceof 代码有多难看!
+难怪 Java 程序员认为这是一种反模式!
+但是, 在这种情况中, 已经是最合理的事儿了,
+实际上, 是除了实施观察者东西方或是访问者模式又或是其它相当于基础设施的东西之外,
+唯一可能的实现, 只是用来创造具有控制反转的实例而已;
+
+当操作集有界(或是接近有限)并且该类的子类数量可能以意想不到的方式增长时,
+通过向每个子类追加一个方法来实现操作是有意义的;
+可是,通常情况中, 操作的数量又会以意想不到的方式增长,
+而子类的数量总是有限的(又或是接近有限);
+
+对于后一种情况, 这种情况比 OOP 拥护者想象的更加常见,
+Rust 枚举 --- 以及一般的 求和类型 --- 是完美的;
+一但你习惯了她们, 你就会发现自己一直在使用;
+
+我要郑重声明,
+在所有面向对象的编程语言中,都没有这么糟糕;
+在某些情况中, 你可以按任何顺序编写任意类方法组合,
+因此,如果你愿意, 可以将所有三个实现写在一个地方;
+Smalltalk 传统上允许你在一个特殊的浏览器中游览代码库,
+你可以在其中看到一个类实现的方法列表,
+或者一个接受给定"消息"的类列表,
+正如 Smalltalk 所说的那样,
+这样你就可以随心所欲的操弄对象了;
+
+(译按: 当然, 你必须在 Salltalk 对应解释器的 IDE 环境中, 一但出了这个对象镜像, 将失去一切观察能力, 这导致 Smalltalk 没办法使用其它传统 IDE)
+
+
+
+### 备选方案 #1: 闭包
+> Alternative #1: Closures
+
+有时, 一个 OOP 接口或是多态决策只涉及一个实际操作;
+在这种情况中,只能使用闭包;
+
+我不想在这方面花太多时间,
+因为, 大多数 OOP 程序员已经意识到这点,
+并且, 自从他们的 OOP 语言已经赶上了函数式语言,
+并获得了 lambda 语法 --- Java 中的 Java 8 ,
+C++ 中的, C++11;
+因此, 像 Java 的 Comparator 这种愚蠢的单一方法接口 ---
+幸运的是 --- 基本上已经都感染过去式了;
+
+此外, Rust 中的闭包在技术上涉及 traits,
+因此,使用和接下来的两个替代方案相同的机制来竀,
+所以,也有人可能会争辩说这在 Rust 中并不是真正的独立选项;
+然而,在我看来 lambda/闭包和
+FnMut/FnOnce/Fn 等 trait 们在美学上和情境上都非常特别,
+值得花点时间掌握;
+
+因此, 我将花些时时间来说明这点:
+如果你发现自己只使用一种方法编写 trait 
+(Java 接口或是 C++ 类),
+请考虑你是否应该改用某种闭包或是 lambda 类型;
+毕竟只有你自己才能防止过度设计;
+
+### 备选方案#2: 具有Traits的多态
+
+就像 Rust 有个比 OOP 类概念更加灵活/强大的封装版本,
+正如在上篇文章中讨论的那样,
+Rust 有一个比 OOP 假设更加强大的多态版本: trait;
+
+trait 就像来自 Java 的接口
+(又或是 C++ 中的全抽象超类),
+但是,并没有我在文章开头指出的大部分限制;
+trait 即没有语义约束, 也没有性能约束;
+trait 在语义和原理方面深受 C++ 模板的启发;
+C++ 程序员可以将其视为带有concepts/概念的模板
+(除非设计的,从一开始就融入编程语言,
+而且不必要处理所有不使用它的代码;)
+
+让我们从语义开始:
+你可以使用 trait 完成那些无法使用纯 OOP 完成的,
+即便你将世界上所有的间接调用都丢给她?
+好吧, 在纯粹的 OOP 术语中,
+是无法编写像 Rust Eq 和 Ord 这样的接口,
+这里给出了非常简单的定义
+(Eq 和 Ord 的真正定义在于拓展了其它允许不同类型之间的部分等价和排序的类,
+但是, 像这种简化定义,
+非部分 Eq 和 Ord 的 Rust 标准库版本确定涵盖了相同类型值之间的等价和排序):
+
+
+```rust
+trait Eq {
+    fn eq(self, other: &Self) -> bool;
+}
+
+pub enum Ordering {
+    Less,
+    Equal,
+    Greater,
+}
+
+trait Ord: Eq {
+    fn cmp(&self, other: &Self) -> Ordering;
+}
+```
+
+看看发生了什么?
+就像在 OOP 风格的接口中一样,
+这些无法采用 Self 类型的“接受者”类型,
+一个 self 秋粮 -- 也就是说,任何实现 trait 的具体类型
+(技术上这里是对 Self 或 &Self 的引用);
+但是, 和 OOP 风格的接口不同,
+这里还能采用另外一个 &Self 类型的参数;
+为了实现 Eq 和 Ord,
+类型 T 提供了一个函数,
+该函数接受对 T 的两个引用;
+字面上的意思是: 对 T 的两个引用, 而不是对 T 的一个引用和对 T 或是任何子类的一个引用
+(这样的事情在 Rust 中并不存在),
+不是对 T 的一个引用和对实现 Eq 的任何其它值的一个引用,
+而是对同一具体类型的两个真正的非异构引用,
+然后，函数就可以比较她们是否相等(或是进行排序);
+
+这点很就将要,因为,
+我们想用这种能力来实现像排序这类方法:
+
+```rust
+impl Vec<T> {
+    pub fn sort(&mut self) where T: Ord {
+        // ...
+    }
+}
+```
+
+OOP-样 多态非常适合异构容器,
+其中每个元素都有自己的运行时类型和自己的接口实现;
+但是, sort 并不是那样工作的;
+你不能对类似 `[3, "Hello", true]; ` 这种集合进行排序;
+所有类型都没有合理的顺序;
+
+相反 sort 在同类容器上运行;
+所有元素的类型必须匹配, 以便可以相互比较;
+他们并不需要每种类型都要有不同的操作实现;
+
+尽管如此, 排序仍然是多态的;
+排序算法对于整数和字符串是相同的,
+但是, 比较整数和比较字符串是完全不同的操作;
+排序算法需要一种方法来调用对其项目的操作 --- 比较 --- 对于不同的类型必须不同,
+同时仍然得具有相同的整体代码结构;
+
+可以通过注入一个比较函数来完成,
+但是, 很多类型都有一个内在/默认的排序,
+而且, 就应该默认使用这个排序;
+因此, 多态 --- 并不是 OOP 友好的变体;
+
+请参考以下 Java 定义排序的声明:
+
+
+```java
+static <T extends Comparable<? super T>> 
+void sort(List<T> list)
+```
+
+并没有简单的 trait 能要求 T 和其它 T 具有可比性,
+以便对 T 进行排序;
+相反, 就编程语言而言, T 和其自身而不是任何其它随机类型可比的查清只是作为此方法的一个偶然事件而阐明;
+打有什么可以阻止某人以不一致的方式现实 Comparable 接口,
+例如让 Integer 实现 `Comparable<String>`;
+
+(译按: 作死小能手, 说的就是人类自身, 无论出于什么动机,代码只是文本,
+对文本当然可以进行任何修改;)
+
+此外, 当实际查找 Comparable 实现时,
+Rust 将会根据任何比较的第一个参数而不是类型来测定使用什么实现;
+通常,她们都是相同类型,
+得是不是, 理论上这个列表可以是异构的,
+嘦所有对象都 “extend” T,
+并且可以实现不同的 Comparable;
+计算机必须作额外工作来满足这种可能性,
+即便, 这肯定是一个错误;
+
+(译按: 特别是动态语言中, 将用户视为心理不够成熟的小朋友,
+尽可能友善/专业/高级/良好/...的猜测用户行为,
+并积极将所有异构数据进行合理转换, 以便完成排序...)
+
+由于现在我们已经在脱离语义领域，进入性能领域，
+让我们来全面讨论一下性能实现；
+
+正如我们提及的, Java 排序方法要求集合中的每个项目都是完整的对象类型,
+这意味着不是将值直接存储在数组中，而是在堆中,
+而引用存储在数组中;
+这奵基于 trait 的方法是不必要的---值可以直接存在于数组中;
+
+这意味着不同的数组将具有不同的元素大小,
+因此, 这也必须由 trait 来处理;
+也就是: 值的大小也通过 Size 的 trait 参数化;
+大小必须在数组的所有项目间保持一致,
+但是,这是可执行的,因为,我们可以表达所有元素实际上是完全相同类型
+---不像 Java 的 Linst<T> 只表达它们是 T 类型或是 T 的某些子类型;
+
+Rust 的排序方法可以通过在运行时将大小信息(来者 Sized 的 trait)
+和排序函数(来自 Ord trait)作为整数值和函数指针传递来实现;
+这就是类型类在 Haskell 中的工作方式,
+这是 Rust trait 本身灵感来源;
+这俨然比 Java 更有效,
+因为,只有一个排序函数,而不是对比较的每个左进行不同的间接查找,
+从而允许间接分支预测在处理器中能工作;
+
+但是, Rust 比这更进一步, 通过单态化来实现 trait;
+这类似 C++ 中模板实例化,
+但是, 在语义上受到更好的约束;
+前提是虽然 sort 在语义上只是一种方法,
+但是,在输出的编译代码中,
+将为调用她的每个类型 T 输出不同版本的 sort;
+
+C++ 模板会创建臭名昭著的错误消息,
+并且难以推理, 因为, 丫们本质上是宏,
+而且是笨拙的宏;
+即便是 Rust 也不能用自己的宏系统创建很好的错误消息;
+而且,编写宏需要专业知识,
+这意味着程序员将放弃类型系统的很多处 --- 在我看来,
+模板通常被称为编译时 duck 类型的一种形式;
+由于这些原因, C++ 中的模板编程通常被认为比 OOP 样式的多态更高级
+(也就是说, 读起来更难/更不方便, 而不是更强大);
+
+然而, 在 Rust 中, trait 提供了一种有组织且更连贯的方式来访问类似技术,
+获得模板的性能优势,
+同时仍然提供可靠类型系统的结构;
+
+
+
+### Alternative #3: Dynamic Trait Objects
+Sometimes, however, you do need full run-time polymorphism. You have the opposite of the scenario with the enum: You have a closed set of operations that can be performed on a value, but what those operations actually do will change dynamically in a way that cannot be bounded ahead of time.
+
+In such situations, Rust has you covered with the dyn keyword. Please don’t overuse it, though. In almost all situations where I’ve thought it might be appropriate, static polymorphism combined with other design elements have worked out better.
+
+Legitimate use cases for dyn tend to come up in situations involving inversion of control, where a framework library takes on a main loop, and the client code says how to handle various events. In network programming, the framework library says how to juggle all the sockets and register them with the operating system, but the application needs to say what to actually do with the data. In GUI programming, the framework code can say what widget was being clicked on, but very different things happen if that widget is a button versus a text box versus a custom widget you invented for this particular app.
+
+Now, you don’t strictly need run-time polymorphism for this. You could use closures (or even raw function pointers) instead, creating struct of closures (or function pointers) if multiple operations are called for – which amounts to basically doing what dyn does the hard way by hand. For example, I fully expected tokio to use Rust’s run-time polymorphism feature internally to handle this inversion of control in task scheduling. Instead, for what I imagine are performance reasons, tokio implements dyn by hand, even calling its struct of function pointers Vtable.
+
+But dyn does all of this work for you, for your trait. The only requirement is that your trait be object-safe, and the list of requirements may seem familiar, especially when it comes to the requirements for an associated function (e.g. a method) to be “dispatchable”:
+
+------
+
+- Not have any type parameters (although lifetime parameters are allowed),
+- Be a method that does not use Self except in the type of the receiver.
+- Have a receiver with one of the following types:
+    - &Self (i.e. &self)
+    - &mut Self (i.e &mut self)
+    - Box<Self>
+    - Rc<Self>
+    - Arc<Self>
+    - Pin<P> where P is one of the types above
+- Does not have a where Self: Sized bound (receiver type of Self (i.e. self) implies this).
+
+------
+
+
+
+That is to say, it can be polymorphic in exactly one parameter, and that parameter must be by reference – more or less the exact requirements for methods to support run-time polymorphism in OOP.
+
+This is of course because dyn uses almost exactly the same mechanism as OOP to implement run-time polymorphism: the “vtable.” Box<dyn Foo> really contains two pointers rather than one, one to the object in question, and the pointer to the “vtable,” the automatically-generated structure of function pointers for that type. The one-parameter requirement is because that is the parameter whose vtable is used to look up which concrete implementation of a method to call, and the indirection requirement is because the concrete type might be different sizes, with the size only known at run-time.
+
+To be clear, these are limitations on one particular implementation strategy for run-time polymorphism. Alternative strategies exist that fully decouple the vtable from individual values of the type, as in Haskell.
+
+There are still a few advantages of Rust’s version of run-time polymorphism with traits as opposed to OOP-style interfaces.
+
+Performance-wise, it’s something done alongside a type, rather than intrinsic to the type. Normal values don’t store a vtable, spreading the cost of this throughout the program, but rather, the vtables are only referenced when a dyn pointer is created. If you never create a dyn pointer to a value of a given type, that type’s vtable doesn’t even have to be created. Certainly, you don’t have 8 bytes of extra gunk in every allocation for all the vtable pointers! This also means there’s one fewer level of indirection.
+
+Semantically, it’s also a good thing that it’s just one option among many, and that it’s not the strongly preferred option that the entire programming language is trying to push you towards. Often, even usually, static polymorphism, enums, or even just good old-fashioned closures more accurately represent the problem at hand, and should be used instead.
+
+Finally, the fact that run-time and static polymorphism in Rust both use traits makes it easier to transition from one system to another. If you find yourself using dyn for a trait, you don’t have to use it everywhere that trait is used. You can use the mechanisms of static polymorphism (like type parameters and impl Trait) instead, freely mixing and matching with the same traits.
+
+Unlike in C++, you don’t have to learn two completely different sets of syntax for concepts vs parent classes, and vastly different semantics. Really, in Rust, dynamic polymorphism is just a special case of static polymorphism, and the only differences are the things that actually are different.
+
+
+## logging
+
+- 230215 ZQ init.
+
+
+
+```
+         _~^&∽~_
+     \/ /  O ^  \ \/
+       '_   v   _'
+       / '--#--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>chatgpt101.md</title><link>https://rs.101.so//101/chatgpt101</link><pubDate>Wed, 08 Mar 2023 15:32:57 +0800</pubDate><content:encoded><![CDATA[# 伴学ChatGPT
+> chatting for debugging ...
+
+## background
+
+通过网络中各种免费教程/图书学习时,
+作者文字背后的思考过程无法交流...
+
+## goal
+
+合理使用 ChatGPT 进行提示工程style 学习
+
+## trace
+> 记录各种舒服的姿势:
+
+
+### CLI 测试姿势
+```rust
+se assert_cmd::Command;
+use predicates::prelude::*;
+use std::fs;
+
+type TestResult = Result<(), Box<dyn std::error::Error>>;
+
+#[test]
+fn dies_no_args() -> TestResult {
+    let mut cmd = Command::cargo_bin("echor")?; 
+    cmd.assert()
+        .failure()
+        .stderr(predicate::str::contains("USAGE"));
+    Ok(()) 
+}
+
+#[test]
+fn hello1() -> TestResult {
+    let expected = fs::read_to_string("tests/expected/hello1.txt")?;
+    let mut cmd = Command::cargo_bin("echor")?;
+    cmd.arg("Hello there").assert().success().stdout(expected);
+    Ok(())
+}
+```
+
+> Q:
+
+以上代码中, 为什么要专门定义 TestResult 类型?
+
+> GPT:
+
+在 Rust 中，测试函数必须返回 Result<(), Box<dyn std::error::Error>> 类型。这是因为测试框架需要处理测试函数中可能出现的错误，并将这些错误转换为测试结果。如果测试函数返回的是一个普通的错误类型，测试框架无法对其进行处理，因此需要使用 Result 类型。TestResult 类型只是为了更清晰地表明这是一个测试函数返回的结果类型，并没有特殊的含义。
+
+> Q:
+
+Result<(), Box<dyn std::error::Error>> 这一类型, 具体有什么要求?
+
+> GPT:
+
+Result<(), Box<dyn std::error::Error>> 是 Rust 中测试函数的标准返回类型。具体要求如下：
+
+- 返回类型为 Result，表示测试函数可以返回成功或失败的结果。
+- () 表示测试函数不返回任何值，因为测试函数的目的是验证代码的行为是否正确，而不是生成有用的输出。
+- Box<dyn std::error::Error> 表示测试函数返回的错误类型可以是任何实现了 std::error::Error trait 的类型，而且这个类型被包装在 Box 中。这是因为测试框架需要能够处理各种可能的错误类型，包括编译错误、运行时错误等等。使用 Box<dyn std::error::Error> 可以使测试函数返回任何实现了 std::error::Error trait 的错误类型，同时又能够在测试框架中方便地处理这些错误。
+
+总之，Result<(), Box<dyn std::error::Error>> 表示测试函数可以返回成功或失败的结果，不返回任何值，但是可以返回任何实现了 std::error::Error trait 的错误类型。
+
+> Q:
+
+任何实现了 std::error::Error trait 的错误类型 一般有什么类型包含这种 trait? 能举例说明嘛?
+
+> GPT:
+
+任何实现了 std::error::Error trait 的类型都可以作为测试函数返回的错误类型。在 Rust 中，标准库中的很多错误类型都实现了 std::error::Error trait，例如：
+
+- std::io::Error：表示 I/O 操作中可能出现的错误，如文件读写错误、网络通信错误等。
+- std::num::ParseIntError：表示将字符串转换为数字时可能出现的错误，如字符串不符合数字格式等。
+- std::env::VarError：表示获取环境变量时可能出现的错误，如环境变量不存在等。
+- serde_json::Error：表示处理 JSON 数据时可能出现的错误，如 JSON 数据格式错误等。
+
+这些类型都实现了 std::error::Error trait，因此可以作为测试函数返回的错误类型。在测试函数中，如果某个操作出现了这些错误，可以将错误包装成 Box<dyn std::error::Error> 类型返回，这样测试框架就可以处理这些错误并将其视为测试失败。
+
+> Q:
+
+如果要为自定义新数据类型追加这种 trait 有哪些可行方案? 举例说明一下?
+
+> GPT:
+
+如果要为自定义的新数据类型追加 std::error::Error trait，有以下几种可行的方案：
+
+
+- 实现 std::error::Error trait：在新数据类型的实现代码中手动实现 std::error::Error trait，包括实现 description 方法和 source 方法。这样就可以将新数据类型作为测试函数的错误类型返回。例如：
+
+
+```rust
+use std::error::Error;
+
+#[derive(Debug)]
+struct MyError {
+    message: String,
+}
+
+impl std::fmt::Display for MyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
+impl Error for MyError {
+    fn description(&self) -> &str {
+        &self.message
+    }
+
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let result = Err(MyError {
+        message: "An error occurred".to_owned(),
+    });
+    result.map_err(Box::new)?;
+    Ok(())
+}
+```
+
+- 使用 thiserror crate：thiserror 是一个 Rust crate，它提供了一种更简单的方法来实现 std::error::Error trait。使用 thiserror crate 可以通过宏来自动生成错误类型的实现代码，包括实现 std::error::Error trait。例如：
+
+```rust
+use std::error::Error;
+use thiserror::Error;
+
+#[derive(Debug, Error)]
+#[error("An error occurred: {message}")]
+struct MyError {
+    message: String,
+}
+
+fn main() -> Result<(), Box<dyn Error>> {
+    let result = Err(MyError {
+        message: "An error occurred".to_owned(),
+    });
+    result.map_err(Box::new)?;
+    Ok(())
+}
+
+```
+... 在上面的代码中，使用 thiserror crate 定义了一个 MyError 类型，通过 #[derive(Error)] 宏自动生成了实现 std::error::Error trait 的代码。此时，MyError 类型就可以作为测试函数的错误类型返回了。
+
+无论使用哪种方法，一旦为新数据类型追加了 std::error::Error trait，就可以将其作为测试函数的错误类型返回了。例如，下面是使用自定义错误类型进行测试的示例：
+
+```rust
+use std::error::Error;
+
+#[derive(Debug)]
+struct MyError {
+    message: String,
+}
+
+impl std::fmt::Display for MyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.message)
+    }
+}
+
+impl Error for MyError {
+    fn description(&self) -> &str {
+        &self.message
+    }
+
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+fn foo() -> Result<(), Box<dyn Error>> {
+    Err(MyError {
+        message: "An error occurred".to_owned(),
+    })
+}
+
+#[test]
+fn test_foo() -> Result<(), Box<dyn Error>> {
+    let result = foo();
+    assert!(result.is_err());
+    Ok(())
+}
+```
+
+
+### crate 思路
+
+> Q:
+
+如何将一个 CLI 工具项目发布为一个 crate? 要进行哪些改造? 以及要注意什么?
+
+> GPT:
+
+
+要将一个 CLI 工具项目发布为一个 crate，你需要进行以下步骤：
+
+- 将你的 CLI 工具项目打包成一个库。在 Rust 中，库文件通常以 lib.rs 文件为入口点，并将 CLI 代码重构为函数或结构体方法。这样可以将你的代码解耦，并使其更易于测试和重用。
+- 在你的项目根目录中创建一个 Cargo.toml 文件，其中包含以下信息：
+    - 包的名称、版本号和作者信息。
+    - 项目的描述信息。
+    - 项目的依赖项和其版本要求。
+    - 包的类型，例如库或二进制文件。
+    - 包的许可证类型。
+- 将你的代码上传到 crates.io。首先，你需要创建一个 crates.io 帐户。然后，你可以使用 cargo login 命令登录并上传你的代码。在上传前，确保你的代码已经完成了测试，并且包含了合适的文档和许可证信息。
+- 给你的 crate 添加文档。Rust 社区非常注重代码文档，因此你需要确保你的 crate 包含了适当的文档和注释。你可以使用 Rust 内置的文档工具来生成文档，并将其上传到 crates.io。
+- 更新你的项目文档和 README。在将你的 crate 发布到 crates.io 后，你需要更新你的项目文档和 README 文件，以便其他开发者可以使用你的 crate。
+
+
+在发布你的 crate 前，你需要注意以下几点：
+
+- 你需要确保你的代码质量和可靠性。这包括确保你的代码通过了单元测试和集成测试，并尽可能避免使用未经测试的依赖项。
+- 你需要确保你的代码符合 Rust 社区的代码规范和最佳实践。
+- 你需要确保你的 crate 包含了适当的许可证信息，并确保你有权发布你的代码。
+- 你需要确保你的 crate 包含了合适的文档和注释，以便其他开发者可以轻松地使用你的代码。
+
+总之，将一个 CLI 工具项目发布为一个 crate 需要对代码进行一些改造，确保代码质量和可靠性，并且遵循 Rust 社区的最佳实践和规范。发布前，你需要确保你的代码包含了适当的文档和许可证信息，并更新你的项目文档和 README 文件。
+
+### .toml 作为配置
+
+> Q:
+
+rudt 中读写 .toml 文件, 最推荐的 create 是哪个? 如何使用?
+
+> GPT:
+
+如果你需要在 Rust 中读写 TOML 文件，可以使用 toml crate。这个 crate 可以在 Cargo.toml 文件中添加以下依赖来使用：
+
+```toml
+[dependencies]
+toml = "0.5.8"
+```
+
+以下是一个简单的示例代码，演示如何使用 toml crate 读取一个名为 "config.toml" 的 TOML 文件：
+
+```rust
+use std::fs;
+use toml::Value;
+
+fn main() {
+    // 读取文件
+    let contents = fs::read_to_string("config.toml")
+        .expect("Something went wrong reading the file");
+
+    // 解析 TOML
+    let parsed_toml: Value = toml::from_str(&contents).unwrap();
+
+    // 访问值
+    let title = parsed_toml["title"].as_str().unwrap();
+    let subtitle = parsed_toml["subtitle"].as_str().unwrap();
+
+    println!("{}: {}", title, subtitle);
+}
+```
+
+在上面的代码中，首先使用 fs::read_to_string 函数读取 TOML 文件的内容。然后，使用 toml::from_str 函数将内容解析为 toml::Value 类型的值。接下来，可以访问解析后的 TOML 值，例如 parsed_toml["title"].as_str().unwrap() 用于获取 TOML 文件中的 "title" 值。最后，将这些值打印到控制台。
+
+如果你需要将数据写入 TOML 文件，则可以使用 toml crate 的 to_string 函数将 toml::Value 类型的值转换为 TOML 格式的字符串，然后使用 fs::write 函数将字符串写入文件。
+
+以下是一个简单的示例代码，演示如何使用 toml crate 写入一个名为 "config.toml" 的 TOML 文件：
+
+```rust
+use std::fs;
+use toml::Value;
+
+fn main() {
+    // 创建一个 `toml::Value` 类型的值
+    let mut toml_value = Value::new();
+    toml_value["title"] = "My Title".into();
+    toml_value["subtitle"] = "My Subtitle".into();
+
+    // 将值转换为 TOML 格式的字符串
+    let toml_str = toml::to_string(&toml_value).unwrap();
+
+    // 写入文件
+    fs::write("config.toml", toml_str).expect("Something went wrong writing the file");
+}
+
+```
+在上面的代码中，首先创建一个 toml::Value 类型的值，该值包含要写入 TOML 文件的数据。然后，使用 toml::to_string 函数将该值转换为 TOML 格式的字符串。最后，使用 fs::write 函数将字符串写入文件。
+
+
+### 展开 BufReader
+
+> Q:
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let f = File::open("log.txt")?;
+    let mut reader = BufReader::new(f);
+
+    let mut line = String::new();
+    let len = reader.read_line(&mut line)?;
+    println!("First line is {} bytes long", len);
+    Ok(())
+}
+```
+
+如何将这段代码修改为循环将指定文件所有行内容逐一输出?
+
+> PS: 从 [std::io::BufReader - Rust](https://doc.rust-lang.org/1.39.0/std/io/struct.BufReader.html#examples) 抄的
+
+> GPT:
+
+要循环输出文件的所有行内容，您可以在一个循环中使用BufReader的read_line方法。每次迭代时，该方法会读取文件中的一行，并将其存储在给定的字符串变量中。当没有更多的行可以读取时，该方法将返回一个长度为0的结果，这是跳出循环的信号。
+
+以下是修改后的代码示例：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let f = File::open("log.txt")?;
+    let reader = BufReader::new(f);
+
+    for line in reader.lines() {
+        println!("{}", line?);
+    }
+    Ok(())
+}
+```
+
+在这个例子中，我们使用了reader.lines()方法，它返回一个std::io::Lines迭代器。每次迭代时，该迭代器都会读取文件中的一行，并将其包装在一个std::io::Result<String>中返回。我们可以使用?操作符来解包这个结果，如果读取失败，它会将错误传播到main函数的调用方。
+
+通过这种方式，我们可以逐行读取文件并将每一行内容输出到控制台。
+
+> Q:
+std::io::prelude 是什么库? 引用了什么进来? 用在哪儿了?
+
+> GPT:
+
+`std::io::prelude` 是一个模块，包含了一些常见的 I/O trait 和类型的预定义导入。这些预定义导入使得开发者能够轻松地使用 Rust 标准库中的 I/O 功能，同时也减少了大量的代码重复。
+
+在 Rust 代码中，通过引入std::io::prelude模块来使用预定义导入，通常会出现在处理 I/O 相关操作的代码中。这个模块包含了以下几个 trait 的预定义导入：
+
+- Read: 用于读取数据的 trait。
+- BufRead: 用于读取缓冲区的 trait。
+- Write: 用于写入数据的 trait。
+
+这些 trait 都被用于在 Rust 中进行 I/O 操作，因此它们经常会被其他的 I/O 模块或库使用。例如，在上面提供的示例代码中，我们使用了std::io::prelude来导入Read trait，从而使用BufReader的read_line方法读取文件中的每一行内容。
+
+
+> A: 
+如何对循环中的 line 进行类似 contains 的判定呢?
+
+> GPT:
+
+要对读取的每一行内容进行包含（contains）的判定，您可以在for循环内使用if语句，对每一行进行检查。以下是示例代码：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+
+fn main() -> std::io::Result<()> {
+    let f = File::open("log.txt")?;
+    let reader = BufReader::new(f);
+
+    for line in reader.lines() {
+        let line_content = line?;
+        if line_content.contains("Error") {
+            println!("{}", line_content);
+        }
+    }
+    Ok(())
+}
+```
+在这个例子中，我们使用contains方法检查每一行内容是否包含字符串"Error"。如果是，我们将该行内容打印到控制台。否则，我们将跳过该行并继续读取文件的下一行。
+
+> Q:
+
+对应代码修改为:
+
+```rust
+    let f = File::open(&args.path)
+        .expect("could NOT read the file");
+    let reader = BufReader::new(f);
+
+    let mut line = String::new();
+    for line in reader.lines() {
+            let line_content = line?;
+            if line_content.contains("Error") {
+                println!("{}", line_content);
+            }
+        }
+```
+但是报错:
+```
+error[E0277]: the `?` operator can only be used in a function that returns `Result` or `Option` (or another type that implements `FromResidual`)
+  --> src/main.rs:66:36
+   |
+24 | fn main() {
+   | --------- this function should return `Result` or `Option` to accept `?`
+...
+66 |             let line_content = line?;
+   |                                    ^ cannot use the `?` operator in a function that returns `()`
+   |
+   = help: the trait `FromResidual<Result<Infallible, std::io::Error>>` is not implemented for `()`
+
+For more information about this error, try `rustc --explain E0277`.
+```
+应该如何解决?
+
+
+> GPT:
+
+该错误是因为在main函数中，我们不能在循环中使用?操作符。?操作符只能用于返回Result或Option的函数或方法中，它会在发生错误时自动将错误返回给调用者。
+
+在main函数中，我们必须手动处理错误并决定如何处理它们。在这种情况下，我们可以简单地将错误打印到控制台。以下是示例代码：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        println!("Usage: {} <path_to_file>", args[0]);
+        return;
+    }
+
+    let f = File::open(&args[1]).expect("Could not read file");
+    let reader = BufReader::new(f);
+
+    for line in reader.lines() {
+        if let Ok(line_content) = line {
+            if line_content.contains("Error") {
+                println!("{}", line_content);
+            }
+        } else {
+            eprintln!("Error while reading file");
+            return;
+        }
+    }
+}
+```
+在这个例子中，我们使用if let语句检查读取每一行是否成功。如果成功，我们检查行内容是否包含字符串"Error"，如果是则将其打印到控制台。如果读取行时发生错误，我们将错误打印到标准错误流（stderr），并退出程序。
+
+> Q:
+
+看起来这里有多层 if 不是很 rusty, 有其它方案来达成相同效果嘛?
+
+> GPT:
+
+您可以使用match语句来代替嵌套的if let语句，以避免多层嵌套和提高代码可读性。以下是使用match语句重写的示例代码：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        println!("Usage: {} <path_to_file>", args[0]);
+        return;
+    }
+
+    let f = File::open(&args[1]).expect("Could not read file");
+    let reader = BufReader::new(f);
+
+    for line in reader.lines() {
+        match line {
+            Ok(line_content) => {
+                if line_content.contains("Error") {
+                    println!("{}", line_content);
+                }
+            }
+            Err(_) => {
+                eprintln!("Error while reading file");
+                return;
+            }
+        }
+    }
+}
+```
+
+在这个例子中，我们使用match语句匹配line的值。如果读取行成功，我们使用Ok(line_content)分支来处理行内容，如果行内容包含字符串"Error"，则将其打印到控制台。如果读取行时出现错误，我们使用Err(_)分支来处理错误，并将错误打印到标准错误流（stderr），并退出程序。
+
+相比使用嵌套的if let语句，match语句更加清晰和简洁。
+
+> Q:
+
+没错, match 看起来优雅多了, 不过, 还有其它方案嘛?
+
+> GPT:
+
+是的，除了使用match语句，还有一种更简洁的方法来实现类似的效果。可以使用filter_map方法和std::result::Result::ok函数来过滤行并将它们转换为可选的字符串。然后，您可以使用for循环迭代这些字符串并将它们打印出来。以下是使用filter_map和std::result::Result::ok函数的示例代码：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        println!("Usage: {} <path_to_file>", args[0]);
+        return;
+    }
+
+    let f = File::open(&args[1]).expect("Could not read file");
+    let reader = BufReader::new(f);
+
+    for line in reader.lines().filter_map(Result::ok).filter(|line| line.contains("Error")) {
+        println!("{}", line);
+    }
+}
+
+```
+
+在这个例子中，我们首先调用filter_map方法来过滤掉那些读取行时返回错误的行，并将其转换为可选的字符串。然后，我们使用filter方法来过滤掉那些不包含字符串"Error"的行。最后，我们使用for循环迭代这些字符串，并将它们打印到控制台。
+
+相比使用match语句和嵌套的if let语句，这种方法更加简洁和优雅。
+
+> Q:
+
+还有更加优雅的方案嘛?
+
+> GPT:
+当然，Rust 的标准库提供了非常强大的迭代器和函数式编程工具箱，可以让代码更加简洁和优雅。
+
+在这个例子中，您可以使用filter方法和闭包来过滤掉不包含"Error"的行，然后使用map方法和unwrap函数将可选的行转换为字符串并将其打印到控制台上。这是代码的示例：
+
+```rust
+use std::io::prelude::*;
+use std::io::BufReader;
+use std::fs::File;
+use std::env;
+
+fn main() {
+    let args: Vec<String> = env::args().collect();
+    if args.len() != 2 {
+        println!("Usage: {} <path_to_file>", args[0]);
+        return;
+    }
+
+    let f = File::open(&args[1]).expect("Could not read file");
+    let reader = BufReader::new(f);
+
+    reader.lines()
+          .filter(|line| line.as_ref().map(|s| s.contains("Error")).unwrap_or(false))
+          .map(|line| line.unwrap())
+          .for_each(|line| println!("{}", line));
+}
+```
+
+在这个例子中，我们首先调用filter方法来过滤掉那些不包含字符串"Error"的行。由于lines方法返回的是一个包含Result<Option<String>>的迭代器，我们需要在闭包中使用as_ref方法来将Result<Option<String>>转换为Option<&String>。然后，我们使用map方法和unwrap函数来将可选的行转换为字符串，并将其打印到控制台上。
+
+使用这种方法，我们可以将代码进一步简化，并更加清晰地表达我们的意图。
+
+
+> Q:
+
+没错, 这样又简洁,又整齐,而且意义明确;
+看起来 迭代器和函数式工具有很多, 类似 filter 和 map 的内置工具还有哪些? 分别有什么优雅的实用案例?
+
+> GPT:
+
+Rust 的标准库提供了丰富的迭代器和函数式编程工具，包括：
+
+- map：将一个迭代器中的每个元素转换为另一种类型的元素，通常用于数据类型转换和计算。
+    - 示例：
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let squares: Vec<i32> = numbers.iter().map(|n| n * n).collect();
+// squares is [1, 4, 9, 16, 25]
+```
+
+- filter：根据某个条件过滤出迭代器中的元素，通常用于数据过滤和筛选。
+    - 示例：
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let evens: Vec<i32> = numbers.iter().filter(|n| n % 2 == 0).collect();
+// evens is [2, 4]
+```
+
+- fold：使用某种累加器（初始值）和一个闭包来聚合迭代器中的元素，通常用于求和、平均值和字符串拼接等操作。
+    - 示例：计算一个数字向量中所有元素的和。
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let sum: i32 = numbers.iter().fold(0, |acc, n| acc + n);
+// sum is 15
+```
+
+- flat_map：将一个迭代器中的每个元素转换为另一个迭代器，然后将所有的迭代器合并为一个迭代器。
+    - 示例：
+
+```rust
+let words = vec!["hello world", "foo bar", "baz qux"];
+let letters: Vec<char> = words.iter().flat_map(|s| s.chars()).collect();
+// letters is ['h', 'e', 'l', 'l', 'o', ' ', 'w', 'o', 'r', 'l', 'd', 'f', 'o', 'o', ' ', 'b', 'a', 'r', 'b', 'a', 'z', ' ', 'q', 'u', 'x']
+```
+
+- any 和 all：检查迭代器中是否存在任意元素或所有元素都满足某个条件。
+    - 示例：
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let any_odd = numbers.iter().any(|n| n % 2 == 1);
+let all_even = numbers.iter().all(|n| n % 2 == 0);
+// any_odd is true, all_even is false
+```
+
+
+- enumerate: 枚举迭代器中的元素，并将元素索引和值组成一个元组返回。
+    - 示例：遍历一个字符串向量并打印每个元素的索引和值。
+
+```rust
+let v = vec!["foo", "bar", "baz"];
+for (i, s) in v.iter().enumerate() {
+    println!("{}: {}", i, s);
+}
+
+```
+
+
+- zip：将两个迭代器合并为一个元素对的迭代器。
+    - 示例：从两个向量中取出对应位置的元素并组成一个新的向量
+
+
+```rust
+let numbers = vec![1, 2, 3];
+let letters = vec!['a', 'b', 'c'];
+let pairs: Vec<(i32, char)> = numbers.iter().zip(letters.iter()).collect();
+// pairs is [(1, 'a'), (2, 'b'), (3, 'c')]
+
+```
+
+当使用迭代器处理数据时，有时需要对数据进行分段处理。在这种情况下，可以使用 take 和 skip 方法。
+
+- take：从一个集合中取出前几个元素。例如，从一个包含所有人的向量中取出前 10 个人。
+    - take(n) 方法会创建一个新的迭代器，它只包含原始迭代器的前 n 个元素。例如：
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let first_three = numbers.iter().take(3);
+for number in first_three {
+    println!("{}", number);
+}
+// 输出:
+// 1
+// 2
+// 3
+```
+
+- skip：跳过一个集合中的前几个元素。例如，从一个包含所有人的向量中跳过前 10 个人，然后返回剩余的所有人。
+    - skip(n) 方法会创建一个新的迭代器，它跳过原始迭代器的前 n 个元素，然后迭代其余的元素。例如：
+
+```rust
+let numbers = vec![1, 2, 3, 4, 5];
+let last_two = numbers.iter().skip(3);
+for number in last_two {
+    println!("{}", number);
+}
+// 输出:
+// 4
+// 5
+
+```
+
+- chain：将两个集合连接在一起，然后返回一个新的集合。例如，将一个包含所有男性的向量和一个包含所有女性的向量连接在一起，然后返回一个包含所有人的向量。
+    - 另一个常见的迭代器方法是 chain 方法。它接收另一个迭代器作为参数，将其添加到当前迭代器的末尾，并返回一个新的迭代器。例如：
+
+```rust
+let numbers1 = vec![1, 2, 3];
+let numbers2 = vec![4, 5, 6];
+let all_numbers = numbers1.iter().chain(numbers2.iter());
+for number in all_numbers {
+    println!("{}", number);
+}
+// 输出:
+// 1
+// 2
+// 3
+// 4
+// 5
+// 6
+
+```
+在上面的示例中，我们首先创建了两个向量 numbers1 和 numbers2，然后将它们合并为一个新的迭代器 all_numbers。最后，我们遍历 all_numbers 并输出其中的所有元素。
+
+
+
+这些是 Rust 中一些常见的迭代器方法和函数式工具，您可以根据自己的需要来选择使用它们。在 Rust 中，迭代器和函数式编程被广泛应用于各种场景，例如处理集合、过滤和排序数据、处理文本等等。通过使用这些工具，您可以编写更加简洁、优雅、高效和安全的代码。
+
+
+> Q:
+
+发现还有 try_fold 之类带有 try_ 的迭代器,一般是用在什么场景中的?
+
+
+> GPT:
+
+try_fold 方法是一个带有 try_ 前缀的迭代器方法，它类似于 fold 方法，但是它允许在迭代器处理过程中发生错误，并将错误传递给调用方进行处理。try_fold 方法的使用场景通常是处理可能会失败的操作的迭代器元素序列，例如网络请求或文件 I/O 操作。
+
+try_fold 方法有两个参数：一个初始累加器和一个闭包，闭包将当前累加器的值和迭代器的下一个元素作为参数，并返回一个 Result 值。如果闭包返回一个 Ok 值，则 try_fold 方法会继续迭代。如果闭包返回一个 Err 值，则 try_fold 方法会立即停止迭代并将错误传递给调用方。
+
+以下是一个简单的示例，演示如何使用 try_fold 方法来计算向量中所有元素的和，其中每个元素都是 Result<i32, String> 类型：
+
+```rust
+fn main() {
+    let vec = vec![Ok(1), Ok(2), Err("failed".to_string()), Ok(3)];
+    let sum = vec
+        .into_iter()
+        .try_fold(0, |acc, x| x.map(|n| acc + n));
+    match sum {
+        Ok(result) => println!("Sum is {}", result),
+        Err(error) => println!("Error: {}", error),
+    }
+}
+```
+在上面的代码中，我们首先创建了一个向量 vec，其中包含三个 Ok 值和一个 Err 值。然后我们使用 into_iter 方法将向量转换为迭代器，使用 try_fold 方法来计算所有元素的和，其中使用 map 方法将 Ok 值映射到它们的整数值，并忽略 Err 值。最后，我们使用 match 来处理可能的错误和结果。
+
+
+
+## refer.
+> 其实官方的文档吃透, 基本可以平趟 80% 的日常开发了...
+
+- 🌝🦀 [sigoden/aichat: Chat with ChatGPT-3.5 in the terminal.](https://github.com/sigoden/aichat "sigoden/aichat: Chat with ChatGPT-3.5 in the terminal.")
+    - [f/awesome-chatgpt-prompts: This repo includes ChatGPT prompt curation to use ChatGPT better.](https://github.com/f/awesome-chatgpt-prompts) ~ 提示工程师技巧...
+    - [加入 Beta 版“AssisChat” - TestFlight - Apple](https://testflight.apple.com/join/IIfv6RIc "加入 Beta 版“AssisChat” - TestFlight - Apple") ~ 官方移动支持...
+    - ...
+- std::
+    - [Iterator in std::iter - Rust](https://doc.rust-lang.org/std/iter/trait.Iterator.html#)
+    - ...
+- ...
+
+
+## logging
+> 版本记要
+
+- ..
+- 230224 ZQ init.
+
+
+
+
+```
+          _~^~`~_
+      () /  - ◶  \ \/
+        '_   ⏝   _'
+        > '--+--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>README.md</title><link>https://rs.101.so//dev/README</link><pubDate>Wed, 08 Mar 2023 14:31:43 +0800</pubDate><content:encoded><![CDATA[# 开发
+> projects ...
+
+
+## background
+> 无奈背景
+
+开发语言学习, 不用来开发真实项目, 基本是表演学习行为了...
+
+## goal
+> 必要目标
+
+一组日常要用工具, 原创/再制/...
+
+关键是积累一组可用作品, 打底儿.
+
+## trace
+> 具体推进
+
+MVP ~ 最小可行工程能力?
+
+- [ ] 工程结构
+    - [ ] crate/library/pakage/workspace/project 划分和使用
+        - [x] package ~ cargo new 出来的东西
+        - [x] crate ~ src/*.rs 
+            - 二进制包
+                - `src/main.rs` 
+                - `src/bin/*.rs` 
+        - [x] library ~ src/lib.rs
+        - [x] module ~ mod 圈定的代码块
+                - 绝对/相对引用路径
+                - self/super/crate/... ~> [super 和 self - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/mod/split.html)
+                - rustc 1.30+ 要求:
+                    - 同级目录创建 mod 名同名目录
+                    - 在其中创建子模块.rs 文件
+                    - 此时才能在 mod 名同名 .rs 中使用 mod 来引用
+                - lib.rs ~ 检索更方便
+                - crates.rs ~ 下载最稳定
+        - [x] use 和可见性...
+            - 结构体和枚举的可见性...[结构体的可见性 - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/mod/struct_visibility.html#%E5%8F%82%E8%A7%81)
+            - 优先使用最细粒度(引入函数、结构体等)的引用方式，如果引起了某种麻烦(例如前面两种情况)，再使用引入模块的方式
+            - 不同模块同名 as 别名引用
+            - use xxx::{self, yyy}; ~ 集成引用
+            - use std::collections::*; ~ 只用来引入 tests
+            - pub use ~ 引入后再导出(所有权无处不在...)
+            - pub(in crate::a) ... 限制可见性语法
+                - pub 意味着可见性无任何限制
+                - pub(crate) 表示在当前包可见
+                - pub(self) 在当前模块可见
+                - pub(super) 在父模块可见
+                - pub(in <path>) 表示在某个路径代表的模块中可见，其中 `path` 必须是父模块或者祖先模块
+              - ~> [使用 use 引入模块及受限可见性 - Rust语言圣经(Rust Course)](https://course.rs/basic/crate-module/use.html#%E9%99%90%E5%88%B6%E5%8F%AF%E8%A7%81%E6%80%A7%E8%AF%AD%E6%B3%95)
+        - [ ] workspace
+        - [ ] project
+    - [ ] 模块切分/命名..艺术?
+    - [x] [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
+- [ ] 基本应用
+    - [x] 基本调试循环 ~ 配合 tracing 和 log 目录...
+    - [ ] 基本单元测试
+    - [x] 基本编译发行 ~ cargo build
+- [ ] 分布式
+    - [ ] 调试/追踪
+    - [ ] CI/CD
+    - [ ] ...
+- [ ] 核心概念/技能
+    - [ ] 内建数据类型
+    - [ ] 智能指针
+    - [ ] 所有权和借用
+    - [ ] 泛型
+    - [ ] trait
+    - [ ] 生命周期
+- [ ] 高级工程技巧
+    - [ ] 宏
+    - [ ] GDB
+    - [ ] ...
+- [ ] 嵌入式
+    - [ ] 基本工具箱
+    - [ ] Pico
+    - [ ] ...
+
+## refer.
+> 关键参考
+
+[贡献者公约/Contributor Covenant:](https://www.contributor-covenant.org/zh-cn/version/2/1/code_of_conduct/)
+
+- [介绍 - Rust 的绅士介绍](https://llever.com/gentle-intro/readme.zh.html)
+- [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
+- [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
+- 各种值得尝试的作品类型:
+    - SSG: [Tutorial: Building a Blog in Rust \- Static File Server \- YouTube](https://www.youtube.com/watch?v=9uAy8skUVsc)
+    - ...
+- ...
+
+### 关键工具:
+
+- [diff.rs](https://diff.rs/ "diff.rs")
+    - [xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.](https://github.com/xfbs/diff.rs "xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.")
+    - 可以在线对应所有 crate 各种版本间所有文件的差异, 快速观察到改进思路...
+- ...
+
+
+## logging
+> 版本记要
+
+- ..
+- 230228 ZQ ++🦀🦀🦀
+- 221023 ZQ init.
+
+
+```
+           _~`+~~_
+       () /  ♡ ◷  \ \/
+         '_   V   _'
+         \ '--~--' |
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+]]></content:encoded></item><item><title>cli_rss4mdbook.md</title><link>https://rs.101.so//dev/cli_rss4mdbook</link><pubDate>Wed, 08 Mar 2023 01:41:51 +0800</pubDate><content:encoded><![CDATA[# RSS for Mdbook
 > 是的一个应该是常用的工具...
 
 
@@ -68,2914 +1496,6 @@ mdbook 非常好, 吻合以往想用 Markdown 快速发布网站的所有期待:
 
 ...act by ferris-actor v0.2.4 (built on 23.0303.201916)
 ```
-
-
-]]></content:encoded></item><item><title>dama-projects.md</title><link>https://rs.101.so//dev/dama-projects</link><pubDate>Wed, 08 Mar 2023 01:40:05 +0800</pubDate><content:encoded><![CDATA[# 实践作品
-
-## background
-学习一门新语言, 最高效的姿势就是拿来使用了
-
-## goal
-将当前日常要用的各种工具, 转化为 rust 版本的...
-
-## plan
-进展图例: 
-
-- 🌚 ~ 萌动
-- 🌘 ~ 开搞
-- 🌗 ~ 折腾
-- 🌖 ~ 可用
-- 🌝 ~ 发布
-
-
-- [ ] 🌖NNera ~ 牛妞纪元
-    - [x] CLI
-    - [ ] 发布
-- [x] 🌝bxmr ~ BXM 输入码表维护器
-    - [x] CLI
-    - [x] 发布
-- [x] 🌝 ferris ~ 吉祥物ASCII-art 生成器
-    - [x] CLI
-    - [x] crate
-- [x] 🌝[RSS4mdbook](/dev/cli_rss4mdbook.md) 自制 RSS 生成器
-- [ ] 🌚 yuzu ~ 柚子, 简陋的私用短址生成器
-    - [x] SUUID ~ 短 UUID 生成器; 组合标准的 UUID+Md5 就好
-        - [ ] 自制, 参考: [shortuuid/main.py at master · skorokithakis/shortuuid](https://github.com/skorokithakis/shortuuid/blob/master/shortuuid/main.py)
-        - [ ] crate
-    - [ ] CLI
-    - [ ] 发布
-        - [ ] RESTful ... etc
-- [ ] 🌚 Yazi ~ 睚眦 git 仓库行为分析器
-    - [ ] CLI
-    - [ ] 发布
-
-## trace
-> 追踪笔记
-
-掌握 rust 到什么程度就能给自己开始小工具了?
-
-- 目测嘦会用 RA 就可以了...呗?
-- ...
-
-### crate.io
-
-> cargo login 
-首先偶到的问题:
-
-```
-$ cargo login [自己的 crate.io token]
-error: crates-io is replaced with non-remote-registry source registry `tuna`;
-include `--registry crates-io` to use crates.io
-```
-
-意味着你的 Rust 包管理器 Cargo 正在使用一个名为 tuna 的本地 Rust 包源，而不是默认的远程源 crates.io。
-
-根据提示首次使用官方源:
-
-```
-$ cargo login [自己的 crate.io token] --registry crates-io -v
-    Updating crates.io index
-     Running `git fetch --force --update-head-ok 'https://github.com/rust-lang/crates.io-index' '+HEAD:refs/remotes/origin/HEAD'`
-       Login token for `crates-io` saved
-```
-
-追加上目标仓库 `--registry crates-io` 就可以完成了...
-(大约3分钟后)
-
-> cargo package
-
-```
-$ cargo package
-...
-   Compiling proc-macro2 v1.0.51
-   Compiling quote v1.0.23
-   Compiling unicode-ident v1.0.6
-   Compiling libc v0.2.139
-    ...
-   Compiling ferris-actor v0.1.42 (/path/2/../ferris-actor/target/package/ferris-actor-0.1.42)
-    Finished dev [unoptimized + debuginfo] target(s) in 20.85s
-    Packaged 12 files, 40.8KiB (13.1KiB compressed)
-```
-
-不错, 自动化完成所有
-
-> cargo publish --registry crates-io
-
-```
-$ cargo publish --registry crates-io
-    Updating crates.io index
-...
-   Compiling proc-macro2 v1.0.51
-   Compiling unicode-ident v1.0.6
-   Compiling quote v1.0.23
-   ...
-
-```
-同样, 必须追加上 `--registry crates-io` 目标仓库参数
-
-> LICENSES
-
-```
-...
-    Packaged 12 files, 40.9KiB (13.1KiB compressed)
-   Uploading ferris-actor v0.1.42 (/Users/zoomq/Exercism/proj/ferris-actor)
-error: failed to publish to registry at https://crates.io
-
-```
-无法完成发布, 原因竟然是 Caused by:
-
--  the remote server responded with an error: unknown or invalid license expression; 
-   -  see http://opensource.org/licenses for options, 
-   -  and http://spdx.org/licenses/ for their identifiers
-
-对比其它 crate 修订 Cargo.toml 中的关键配置项目为:
-
-> license = "BSD-2-Clause"
-
-是的, 就少了 github 自动创建时后面的一个 `License` 就通过了:
-
-```
-$   cargo publish --registry crates-io
-    Updating crates.io index
-...
-     Waiting on `ferris-actor` to propagate to crates.io index (ctrl-c to wait asynchronously)
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-    Updating crates.io index
-```
-
-完成发布;-)
-
-
-## refer.
-> 各种相关参考...
-
-- [Command-Line Rust \[Book\]](https://www.oreilly.com/library/view/command-line-rust/9781098109424/)
-    - [Introducing the Determinate Nix Installer — Determinate Systems](https://determinate.systems/posts/determinate-nix-installer) ~ 实战案例, 从 bash 迁移为 rust...
-- [Rustacean.net: Home of Ferris the Crab](https://rustacean.net/)
-- ...
-
-
-### +Pg
-
-[From Zero to PostgreSQL extension in 3 hours with Rust - Postgres Conference](https://postgresconf.org/blog/posts/from-zero-to-postgresql-extension-in-3-hours-with-rust)
-
-- +Tokio ~ [How to Write a REST API Using Rust and Axum Framework | by Shanmukh Sista | Medium](https://shanmukhsista.com/real-world-rest-api-using-rust-axum-framework-with-request-validations-and-error-handling-75d4175cef96)
-- + SQLx ~ [Rust - Build a CRUD API with SQLX and PostgreSQL 2023](https://codevoweb.com/rust-build-a-crud-api-with-sqlx-and-postgresql/)
-    - [Axum と SQLx で Todo アプリを作る（DB は PostgreSQL）](https://zenn.dev/codemountains/articles/159a8a0323a56f)
-    - ...
-- [Creating a REST API in Rust with Persistence: Rust, Rocket and Diesel | by Gene Kuo | Medium](https://genekuo.medium.com/creating-a-rest-api-in-rust-with-persistence-rust-rocket-and-diesel-a4117d400104)
-- +actix ~ [Rust Web Development Tutorial: REST API | Cloudmaker](https://cloudmaker.dev/how-to-create-a-rest-api-in-rust/)
-- 
-
-
-## logging
-> 版本记要
-
-- ...
-- 230122 ZQ init.
-
-
-```
-       _~∽*^~_
-   () /  ◴ =  \ \/
-     '_   ⌄   _'
-     ( '--#--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>debug_rust_with_codelldb.md</title><link>https://rs.101.so//dev/debug_rust_with_codelldb</link><pubDate>Mon, 06 Mar 2023 23:49:54 +0800</pubDate><content:encoded><![CDATA[# CodeLLDB
-> VSCode 中的调试重武...
-
-
-## backgroung
-作为一名工程师, 总是想对运行时应用进行无限层次的探察哪...
-
-## goal
-
-CodeLLDB 或是 GDB/LLDB CLI 指令, 基本使用...
-
-足以辅助探查,理解关键语法的真实行为.
-
-## trace
-
-- 最早是 手工维护
-- 后来用 Python 写了个脚本, 自动转化为 Nginx 配置
-- 现在, 轮到 Rust 来重构了...
-
-
-## refer.
-
-[The LLVM Compiler Infrastructure Project](https://llvm.org/)
-
-- [LLDB Homepage — The LLDB Debugger](https://lldb.llvm.org/)
-    - [Tutorial — The LLDB Debugger](https://lldb.llvm.org/use/tutorial.html#id1)
-    - [GDB to LLDB command map — The LLDB Debugger](https://lldb.llvm.org/use/map.html#id1)
-    - [Symbols on macOS — The LLDB Debugger](https://lldb.llvm.org/use/symbols.html)
-    - ...
-- [CodeLLDB - Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
-    - [Tutorial — The LLDB Debugger](https://lldb.llvm.org/use/tutorial.html)
-    - [Debugging in Visual Studio Code](https://code.visualstudio.com/docs/editor/debugging)
-    - [Troubleshooting · vadimcn/vscode-lldb Wiki](https://github.com/vadimcn/vscode-lldb/wiki/Troubleshooting)
-    - [vadimcn/vscode-lldb · Discussions · GitHub](https://marketplace.visualstudio.com/items?itemName=vadimcn.vscode-lldb)
-    - ...
-- [Debugging Rust with VS Code - DEV Community](https://dev.to/rogertorres/debugging-rust-with-vs-code-11dj)
-- [How to debug Rust with VS Code - LogRocket Blog](https://blog.logrocket.com/how-debug-rust-vs-code/)
-- [How to Debug Rust with Visual Studio Code](https://www.forrestthewoods.com/blog/how-to-debug-rust-with-visual-studio-code/)
-- [VSCodeでRustのテストコードをデバッグできない問題 | 割り箸ポテチ](https://chopschips.net/blog/2020/03/03/rust-lldb-workaround/)
-- ...
-
-## logging
-
-- ...
-- ...🦀
-- 230307 ZQ init.
-
-
-
-
-
-```
-       _~∽*^~_
-   () /  o ◶  \ (/
-     '_   ⌄   _'
-     ( '--#--' /
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```
-
-]]></content:encoded></item><item><title>rust_min_bug_patterns.md</title><link>https://rs.101.so//tip/rust_min_bug_patterns</link><pubDate>Mon, 06 Mar 2023 20:29:06 +0800</pubDate><content:encoded><![CDATA[# BMP:最小bug模式
-原文: [Rust Bug Minimization Patterns - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2019/11/18/rust-bug-minimization-patterns/)
-
-> Update 19 November 2019: fixed miscellaneous typos and a bug in the invariance example pointed out by readers both privately and on reddit thread. I also added a section near the beginning to draw attention to techniques that are somewhat Rust-specific and may not be broadly known.
-
-> 快译:
-
-Hey there again!
-
-I have been pretty busy with Rust compiler tasks, so no there has not been a blog post for a few months. But now, here we are!
-
-While I was working some particularly nasty bugs recently, I put a lot of effort into bug minimization: the process of taking a large test case and finding ways to remove code from the test while preserving the test’s ability to expose the same bug.
-
-As I worked, I realized that I was following a somewhat mechanical process. I was using regular patterns for code transformation. At some point, I said “you know, I’m not sure if everyone is aware of these patterns. I only remember some of them while I am in the middle of a bug minimization session.”
-
-Since the Rust compiler team always wants to help newcomers learn ways they can contribute to the project, I realized this could be the ideal subject for a blog post.
-
-And, to try to keep things concrete, I’m going to try to drive the presentation by showing an actual bug being minimized. (Or rather, I’m going to recreate the minimization that I already did. So if it seems like I am rather conveniently picking transformations that always seem to work: You’re right! I’m cheating and not telling you about all the false paths I went down during my first minimization odyssey on this bug.
-
-## The Rust specifics
-Oh, and one other thing: A lot of the ideas here are applicable to many languages, and so its possible readers have already heard about them or discovered them independently.
-
-However, a few of the techniques leverage features that are not universal to languages outside of Rust.
-
-Specifically:
-
-- “cfgmenting” makes use of Rust’s attribute system to remove items in a lightway fashion.
-- “loopification” makes use of the fact that the Rust allows the divergent expression loop { } to be assigned any type.
-- “loopification” via pretty-printer leverages the compiler’s (unstable) ability to inject loop { } for all function bodies.
-- Bisecting the module tree makes use of Rust’s support for a mix of inline and out-of-line modules to allow one to quickly swap code in and out.
-
-So, without further ado: here is the odyssey of my minimization of rust-lang/rust#65774
-
-------
-## Philosophical meandering
-### What does “minimal” mean anyway?
-The objective of a “minimal” test case could mean minimize lines of code; or the number of characters. It is also good to minimize the number of source files: one file, cut-and-pastable into play.rust-lang.org, is especially desirable.
-
-> One could even argue that the number of nodes in the abstract syntax tree is a better metric to use than text-oriented metrics when minimizing.
-
-Minimizing the source test in this way can yield a good candidate for a regression test to add to the compiler test suite when the bug is (hopefully) eventually fixed.
-
-But those syntactic metrics of minimality overlook something: My own end goal when minimizing the code for a bug is a better understanding of the bug: a better understanding for myself, and for other developers who are reading the test case.
-
-> I am writing this post from the viewpoint of a rustc developer. So I may have a slightly skewed view on what is useful or minimal.And for such understanding, there are other metrics to keep in mind:
-
-- Minimize the amount of time the compiler runs before it hits the bug.
-
-Minimizing the compiler’s execution time before failure serves two purposes:
-
-1. It makes every future run of this test faster, which can accelerate your pace of minimization.
-2. When the rustc developers themselves examine the behavior of the compiler on the test, they will be grateful to have a shorter execution trace of the compiler to analyze.
-
-(Such time reduction often occurs anyway when you remove lines of code and/or dependencies; I just want to point out that it has value in its own right.)
-
-> As a concrete example of how reducing imports may help expose a bug’s root cause: some people will have a bug that occurs with some combination of #[derive(Debug)] and a call to format! or write, and the test showing the problem may be only a few lines long. But it hides a lot of complexity behind those uses of derive, macros, and std::io trait machinery; a longer test that defines its own trait, a local impl of that trait, and a small function illustrating the same bug, may make the bug more immediately apparent to a rustc developer.
-
-- Minimize dependencies: reduce the number of language features in use and the number of imports your test uses from other crates (including the std library!).
-
-This can help expose the essential cause of the bug, potentially making it immediately apparent what is occurring.
-
-- Minimize your jumping around in the source code.
-
-If you can fit all the code needed to recreate the bug onto your monitor screen at once, by any means necessary, that is a serious accomplishment. Less time spent scrolling through a file or switching editor windows is more time you can spend thinking about the bug itself.
-
-To be clear: Often a minimum amount of code needed for understanding does correlate with a minimum amount of code needed for reproduction. (This explains why using lines-of-code or the size of the syntax tree as a metric can be useful when reporting a bug.)
-
-The over-arching goal in minification is to remove all distractions: to reduce the problematic input (in this case, Rust source code) to its essence: a minimal amount necessary to understand the problem.
-
-### Why not build it up from scratch?
-Its worth pointing out that at some point, maybe even at the outset, you may have a sufficiently rich understanding of the bug that you can go straight to building up a minimal example from scratch. And that’s great , go for it!
-
-However, this post is dedicated to the problem of what you can do when you haven’t hit that level of understanding. When you’re looking at a set of files that make up over 90,000 lines of code, you want a set of semi-mechanical techniques to take that test input and strip it down to its essence.
-
-To be honest, the most effective methodology is going to use a blend of build-up and tear-down. As you are tearing down the 90,000 lines of code, there should be a voice in the back of your head asking “can we now try what we’ve learned to try to build up a minimal example?”
-
-------
-## Assumptions and Conventions
-
-> Some of the techniques may also be applicable to cases where the compiler is accepting code that it should be rejecting; but I am little wary of advertising these tools for use in that context, which is why you’re reading this in the margin and not the main text.
-
-The tests I am talking about minimizing in this post are cases where the compiler itself fails in some way: an ICE, a link failure, or rejecting code that it should be accepting. Bugs that are witnessed by actually running the generated code are, for the most part, not covered by the patterns here. In particular: many of the patterns presented here rely on making semantic changes to the input: changing values, or replacing complex expressions with something trivial like loop { }.
-
-I named each transformation, usually with absurd made-up words like “unusedification”. They are all in explicit quotation marks to try to make it clear that I am speaking nonsense, deliberately.
-
-> I had originally planned to structure this post so that all transformations for a given theme would be present together, so that you’d see all the transformations for that theme at once. But as I wrote, it became clear over the course of actually doing a reduction, then we often bounce around between transformations, and it usually does not end up being nicely grouped with all transformations for one theme colocated in time. So rather than using that hierarchical presentation, I am instead just going to try to mention the grouping by marking each as transformation being part of a “theme”.Several of the transformations serve similar goals, like “delete the unnecessary”. I have attempted to categorize the different tranformations according to what purpose they serve in the minimization process. Over the course of documenting these transformations, I identified the following themes:
-
-- Simplify Workflow: Make your own life easier.
-    - Enable Incremental Steps
-- Delete the Unnecessary: Remove items not related to bug!
-- Identify the Unnecessary: Eliminate accidental necessity.
-- Trivialize Content: Turn complex expressions to trivial ones.
-- Eliminate Coupling: Break links between items.
-
-
-## Notes on Notation
-In this post, I follow typical notation by using ... as a placeholder for (possibly relevant) code that will be kept approximately the same (modulo mechanical updates like alpha-renaming) by a transformation. However, I also use the non-standard notation of ---- for irrelevant code that removed via a transformation. This is meant to draw attention to the distinct kinds of code, so that you can more easily tell which code is being removed by a particular transformation.
-
-Sometimes I will show an explicit regexp that I am feeding to a tool to do the transformation, but usually I will stick to informal patterns with the aforementioned ... and ---- placeholders.
-
-When a given item or expression can appear within the context of a middle of a sequence (e.g. consider { ... THING ... }), I often use the standard shorthand of just writing { THING ... } or { ... THING }, to simplify the textual presentation and focus attention on the transformation itself.
-
-> theme: Simplify Workflow
-
-## Record your steps
-Before you do any reduction, move the test case into its own local git repository (or whatever versioning tool you prefer: SVN, RCS, etc). Being able to backtrack through previous reduction steps is an incredibly important option when doing this kind of of work.
-
-> theme: Simplify Workflow
-
-## Continuously test the test.
-Finally: A crucial part of reduction is to continuously double-check that the bug still reproduces after every reduction step. I’ll show the command line invocation on occasion, but not every command line build invocation (the output is usually the same on every run, so it would just clog up the flow of the presentation here). But even though I don’t show every invocation, you can believe that I was doing the runs. (And in the cases where I tried to skip doing a run, I usually regretted it and had to backtrace my steps to the state before an attempted reduction.)
-
-Make it easy to do your runs. Use your IDE. I use emacs, so I make a M-x compile invocation that runs the compiler with the right arguments, and then you can hit g in the *compilation* buffer to re-run the compile.
-
-------
-## The test case
-As I mentioned at the start: The presentation here will be driven by referencing a concrete test case that I reduced recently: we have been given a crate graph, and we can observe a bug when we build as follows:
-
-```
-
-% ( cd tock/boards/arty-e21/ && \
-    RUSTFLAGS="-C link-arg=-Tlayout.ld" \
-    cargo build --target riscv32imac-unknown-none-elf )
-   Compiling tock-registers v0.4.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-register-interface)
-   Compiling tock-cells v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-cells)
-   Compiling tock_rt0 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-rt0)
-   Compiling enum_primitive v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/enum_primitive)
-   Compiling kernel v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/kernel)
-   Compiling riscv-csr v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/riscv-csr)
-   Compiling rv32i v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/arch/rv32i)
-   Compiling capsules v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/capsules)
-   Compiling sifive v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/chips/sifive)
-   Compiling arty_e21 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/chips/arty_e21)
-   Compiling components v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/boards/components)
-   Compiling arty-e21 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/boards/arty-e21)
-error: internal compiler error: src/librustc/traits/codegen/mod.rs:127: Encountered errors `[FulfillmentError(Obligation(predicate=Binder(TraitPredicate(<() as core::fmt::Display>)), depth=1),Unimplemented)]` resolving bounds after type-checking
-```
-
-In reality the command line was a little more complicated:
-
-```shell
-
-% ( cd tock/boards/arty-e21/ && \
-    RUSTFLAGS="-C link-arg=-Tlayout.ld -C linker=rust-lld -C linker-flavor=ld.lld -C relocation-model=dynamic-no-pic -C link-arg=-zmax-page-size=512" \
-    cargo build --target riscv32imac-unknown-none-elf   )
-...
-error: internal compiler error: src/librustc/traits/codegen/mod.rs:127: Encountered errors `[FulfillmentError(Obligation(predicate=Binder(TraitPredicate(<() as core::fmt::Display>)), depth=1),Unimplemented)]` resolving bounds after type-checking
-```
-
-> An eagle-eyed reader might look at that ICE message and immediately consider grepping the source code, such as uses of the trait bound core::fmt::Display. A fine idea, but intuitive jumping to an answer is not what I’m focusing on here.
-
-but for the purposes of the experiments presented in this blog post I will use the simplified invocation. (The difference only matters once we hit cases where the bug goes away.)
-
-Remember that 90,000 lines of code number that I mentioned a few paragraphs ago? It didn’t come out of nowhere:
-
-```shell
-% find tock/ -name *.rs | xargs wc
-...
-   91958  317229 3150451 total
-
-```
-So this is an excellent example of an input that we really want to reduce down to something smaller.
-
-------
-> theme: Simplify Workflow
-
-## Tactic: Reduce the driving code first
-We have many input files, and they make up a crate graph with at least 13 crates in it.
-
-We know from our command line invocation that it is the build of boards/arty-e21 that is exposing the ICE. It would be good to remove unnecessary crates from the crate graph for boards/arty-e21. But to do that most effectively, we need to first discard as many imports as possible from boards/arty-e21, and then work our way backwards through the dependency chain.
-
-So, will start by reducing the boards/arty-e21 crate to the minimum necessary to reproduce the bug.
-
-This single crate is a much easier thing to work with:
-
-
-```shell
-% find tock/boards/arty-e21/ -name '*.rs' | xargs wc
-       4       6     124 tock/boards/arty-e21//build.rs
-      27      68     565 tock/boards/arty-e21//src/timer_test.rs
-      40     101     959 tock/boards/arty-e21//src/io.rs
-     279     667    9135 tock/boards/arty-e21//src/main.rs
-     350     842   10783 total
-
-```
-
-However, we still want to reduce it as much as we can: Every import we can remove from arty-e21 represents swaths of code that we might be able to remove in the rest of the crate graph.
-
-------
-> theme: Simplify Workflow
-
-## Technique: “mod-inlining”
-This technique may surprise some: I like to reduce the number of files involved early in the game, if I can. An easy way to do this is to replace the out-of-line mod foo; item with its inline counterpart: mod foo { ... }. Here the out-of-line module file content has been cut-and-pasted into an inline mod item.
-
-Strictly speaking, moving from mod foo; to mod foo { ... }does not reduce the input: You still have all the same content that you started with, the compiler has to do the same amount of work, et cetera.
-
-However, I still prefer to do it, because I find that it helps with later reduction steps if I can do my transformations on a single file.
-
-There two techniques I use for “mod-inlining”:
-
-1. Manually cut-and-paste: take each instance of mod foo; in the root file, and find that module’s contents. Then replace the ; with { and }, and finally paste the contents in between the curly brackets you just added. You don’t even have to re-indent it if you don’t want to.
-
-> Its not like this is Python!
-
-For a small module tree, such as we find in boards/arty-e21, manually cut-and-pasting is entirely reasonable. But if you have a large module tree, with many directories and files, it can become tedious and error-prone.
-
-
-2. Alternative: use rustc to expand the module-tree. You can add --verbose to the cargo build invocation to see the actual rustc command line invocation cargo is using, and then you can add -Z unstable-options --pretty=expanded to that rustc invocation, piping the output to a new rust source
-
-> Warning: this will not only expand the module tree: it will also expand all the macro invocations, including #[derive] attributes. This can be a bit overwhelming. (I am continually tempted to add a new unstable --pretty variant that just expands the module tree but does not expand the macros otherwise.)
-
-I will show a concrete example of using rustc in this way later in the blog post. But for now I will just manually cut-and-paste the contents of boards/arty-e21/src/timer_test.rs and boards/arty-e21/src/io.rs into main.rs
-
-After doing the inline, make sure the bug reproduces.
-
-It is up to you whether you want to delete the out-of-line module files. Today, Rust does not treat their presence as some sort of conflict with the inline definition. You will see later in the post cases where keeping them around on the file-system can be useful. But for the case of boards/arty-e21, I will go ahead and delete them.
-
-> Checking for unused out-of-line module files might be a nice lint for someone to add to rustc.
-
-```shell
-% find tock/boards/arty-e21/ -name *.rs | xargs wc
-       4       6     124 tock/boards/arty-e21//build.rs
-     348     840   10665 tock/boards/arty-e21//src/main.rs
-     352     846   10789 total
-
-```
-As expected, this didn’t reduce the line count. But it did make it so we can work with a single file at the leaf. That simplifies my own workflow.
-
-------
-> theme: Delete the Unnecessary
-
-## Tactic: “Decommentification”
-This may be obvious, but it is a step that I often forget to do at the outset of test reduction, even though it is easy and pays off handsomely.
-
-Comments in code are typically there to explain or justify some detail of the implementation. When diagnosing compiler bugs, the purpose of the original code is usually not relevant. You are better off increasing the number of lines of actual code that you can fit on your screen at once.
-
-In short, the transformation looks like this:
-
-```rust
-^        //...$
-
-```
-
-to <empty-string>
-
-In this case, I have used ^ and $ as markers for the beginning and end of lines (just like in regexps).
-
-Or, as an Emacs M-x query-replace-regexp input: ^ *//.*^J* (and empty string as replacement text).
-
-> The ^J there is a carriage-return inserted via M-x quoted-insert (aka C-q) in Emacs.
-
->> Why I use M-x query-replace-regexp: it previews the matches, I verify a few by eye, and then hit ! to do all the remaining replacements.
-
-Another related transformation: get rid of the other blank lines that are not preceded by comments. I leave that regexp as an exercise for the reader.
-
-In the case of boards/arty-e21, this got rid of 53 lines of comments (and blank lines succeeding them):
-
-```shell
-% wc tock/boards/arty-e21/src/main.rs
-     295     575    8551 tock/boards/arty-e21/src/main.rs
-
-```
-
-------
-> theme: Trivialize Content
-
-## Tactic: “Body Loopification”
-> see also: “none-defaulting”“Loopification” 
-
-removes the body of a given function or method item, replacing it with loop { }.
-
-Change:
-
-```rust
-fn foo(...) -> ReturnType { ---- }
-
-```
-to:
-
-```rust
-fn foo(...) -> ReturnType { loop { } }
-
-```
-
-> You might choose to use alternatives like unimplemented!(). I personally like loop { } because its something you almost never see in other people’s code, so its easy to search for and be pretty certain that it was introduced as part of reduction. Also loop { } relies on less machinery from the core library than unimplemented! does.
-
-
-The use of loop { } is deliberate: since loop { } is known by the compiler to diverge, it can be assigned any type at all. So this transformation can be performed blindly.
-
-- Note that this does not work for const fn; the compiler currently rejects const fn foo() { loop { } } as invaild syntax.
-- Also, it generally will not work for impl Trait in return position: the compiler needs a concrete type to assign to the impl Trait, and loop { } will not suffice for that unless you ascribed it a non-! type in some manner.
-
-When it comes to replacing a function body with loop { }, you may be able to get help from your IDE. In my own case, I have often used Emacs M-x kill-sexp to delete the { ---- } block in fn foo { ---- }
-
-> More specifically, I have used Emacs to define a keyboard macro (via C-x () that: 1. searches for the next occurrence of fn, 2. searches forward from there for the first {, which often (but not always) corresponds to the start of the function’s body, 3. runs M-x kill-sexp to delete the { ---- } and 4. types in { loop { } }, replacing the method body. This is incredibly satisfying to watch in action.
-
-If you want to take a risk, you can ask rustc to do the replacement of fn bodies with loop { } for you as part of pretty-printing via the -Z unpretty=everybody_loops flag. I’ll speak more on that later.
-
-Once the body has been removed, you can optionally replace all of the formal parameters with _:
-
-Change:
-
-```rust
-fn foo(a: A, b: B, ...) -> ReturnType { loop { } }
-
-```
-
-to:
-
-```rust
-fn foo(_: A, _: B, ...) -> ReturnType { loop { } }
-```
-
-> These explicit marks can be useful as hints for future reduction steps; see “genertrification”)
-
-This is essentially a special case of “unusedification”; we do not delete the parameters outright yet (see “param-elimination” for that), but we mark them as completely useless by writing them as _: ParamType.
-
-In the case of board/argy-e21/main.rs, there was one const fn, and you cannot “loopify” that. For the other fn’s, I was able to replace all but the last fn body with loop { }. (Replacing the last one made the bug go away.)
-
-- In practice, the ICE diangostic often gives me some hint about which fn is the problem, and therefore I can blindly replace the other fn bodies with loop { }.
-- But even without such a hint, once can often bisect over the set of fn’s to try to identify a maximal subset that can have their bodies replaced with loop { }. We will talk more about how to do such bisection later.
-
-
-```rust
-% wc tock/boards/arty-e21/src/main.rs
-     262     523    7584 tock/boards/arty-e21/src/main.rs
-
-```
-
-(Okay, only removing 33 lines of code might not be very impressive. The technique will pay off more as we move further along.)
-
-------
-> theme: Trivialize Content
-
-## Tactic: “Expr-elimination”
-Even if you were not able to replace a whole fn body with loop { }, you can usually simplify the fn bodies that remain now.
-
-> themes: Trivialize Content, Identify the Unnecessary
-
-### Technique: Suffix-bisection
-In this case, I recommend a form of bisection where you first comment out the bottom half of the original fn-body, and see if the problem reproduces.
-
-- Why comment out the latter half? Well, if you comment out the top half, you’re almost certainly going to comment out let-bindings that the bottom half relies on. The top half very rarely relies on items in the bottom half.
-- If the fn in question has a return type, then you can usually use a loop { } as a tail-expression at the end of the fn-body to satisfy the return-type; a natural variant of “loopification”.
-
-If it does reproduce without the bottom half, then you can delete that half, and recursively process the top half.
-
-If it doesn’t reproduce, then the bug relies on something in the bottom half. If you’re lucky, it only relies on stuff in the latter half, and you can try deleting the top half now. But even if you’re “unlucky” and the bottom half relies on stuff in the top half, you leave the top half in place (at least for now) and recursively process the bottom half, narrowing the code until you can identify a single statement whose presence or absence is the line between triggering the ICE or not.
-
-If the fn is too large for fit on one screen, then I use M-x forward-sexp to identify the start and end of the fn-body. Then I jump to a line in the middle, and search around for the start of a statment in the body, and then comment out everything from that statement forward in /* ... */
-
-In the case of boards/arty-e21/src/main.rs, this meant commenting out from line 191 through 263.
-
-
-```rust
-/*
-    let gpio_pins = static_init!(
-    ...
-
-    board_kernel.kernel_loop(&artye21, chip, None, &main_loop_cap);
-*/
-
-```
-
-And, “darn”: It didn’t work. The bug disappeared. But: This is okay! We still have learned something: Something in the latter half is causing the bug. So bisect that latter half (again, favoring commenting out second halves).
-
-Eventually, by recursively processing the suffix statements, we identify that the bug does not reproduce with this code:
-
-```rust
-{
-    ...
-/*
-    kernel::procs::load_processes(
-        board_kernel,
-        chip,
-        &_sapps as *const u8,
-        &mut APP_MEMORY,
-        &mut PROCESSES,
-        FAULT_RESPONSE,
-        &process_mgmt_cap,
-    );
-
-    board_kernel.kernel_loop(&artye21, chip, None, &main_loop_cap);
-*/
-}
-
-```
-but does reproduce with this code:
-
-```rust
-{
-    ...
-    kernel::procs::load_processes(
-        board_kernel,
-        chip,
-        &_sapps as *const u8,
-        &mut APP_MEMORY,
-        &mut PROCESSES,
-        FAULT_RESPONSE,
-        &process_mgmt_cap,
-    );
-
-/*
-    board_kernel.kernel_loop(&artye21, chip, None, &main_loop_cap);
-*/
-}
-
-```
-
-
-So, now we have identified a function call to load_processes that seems to be intimately related to the bug.
-
-Unfortunately, load_processes is an item defined in an external crate. (We will deal with that eventually.)
-
-Now that we’ve identified this function call to load_processes as part of the cause of the bug, the new goal is to simplify the earlier part of the function to the bare minimum necessary to support this function call.
-
-> In all of these cases, if an otherwise unused statement or expression influences the type-inference for the body, you may need to keep it around, or some variant of it.
-
-- Get rid of all non-binding statements. (We should not need any side-effecting computations to reproduce the bug.)
-- Initialize things to their default values (see “Defaultification” below).
-- Eliminate unused lets (see “Unusedification” below).
-
-After applying those steps repeatedly, and further “decommentification”, we are left with this:
-
-```rust
-#[no_mangle]
-pub unsafe fn reset_handler() {
-    let chip = static_init!(arty_e21::chip::ArtyExx, arty_e21::chip::ArtyExx::new());
-    let process_mgmt_cap = create_capability!(capabilities::ProcessManagementCapability);
-    let board_kernel = static_init!(kernel::Kernel, kernel::Kernel::new(&PROCESSES));
-
-    kernel::procs::load_processes(
-        board_kernel,
-        chip,
-        &0u8 as *const u8,
-        &mut [0; 8192], // APP_MEMORY,
-        &mut PROCESSES,
-        kernel::procs::FaultResponse::Panic,
-        &process_mgmt_cap,
-    );
-
-}
-
-```
-
-Just checking: the bug still reproduces, and we now have:
-
-```shell
-% wc tock/boards/arty-e21/src/main.rs
-     111     289    2807 tock/boards/arty-e21/src/main.rs
-
-```
-
-Its not 100% minimized yet, but its about as far as we can go in changes to fn reset_handler without making changes to crates upstream in dependency graph.
-
-------
-> theme: Delete the Unnecessary
-
-## Tactic: “Unusedification”
-Another way to remove distractions: remove them.
-
-```rust
-non_pub_locally_unused_item(----) { ---- }
-
-```
-
-to <empty-string>
-
-At this point, after our initial round of “loopification”, we should have a lot of unused stuff: variables, struct fields, imports, etc. And even better, the compiler is probably already telling you about all of them!
-
-In the specific case of arty-e21, I am currently seeing 25 warnings: 13 unused import warnings, 4 unused variable warnings, 2 static item is never used warnings, 1 constant item is never used warning, and 5 field is never used warnings.
-
-If you’re doing the compilation runs in your IDE, then you should be able to just jump to each unused item and remove it in some way.
-
-- In the case of fn parameters, you can replace it with _ as previously discussed.
-- ADT contents (struct and enum fields) may require more subtlety; see “ADT-reduction” below. For now, you can prefix their names with _.
-- Warning: Items with attributes like #[no_mangle] or #[link_section] may also want special treatment: you may be able to remove them without causing the bug to go away, but once the bug does go away, their absence may cause a confusing linker error.
-
-
-Make sure to check periodically that the bug still reproduces (Sometimes supposedly unused things still matter)!
-
-This got boards/arty-e21 down to 95 lines:
-
-```rust
-% wc tock/boards/arty-e21/src/main.rs
-      95     254    2382 tock/boards/arty-e21/src/main.rs
-```
-
-Again, not so impressive yet. But as with optimizations, sometimes the effect of these techniques only becomes apparent when they are combined together.
-
-------
-> theme: Delete the Unnecessary
-
-## Technique: “Cfgments”
-As a note: As a test run, you can easilly preview the effects of “unusedification” and “demodulification” (discussed below) transformations without actually deleting code. (After all, you may quickly discover that you need to put it back.) One classic approach for this is a comment block:
-
-```rust
-/*
-non_pub_locally_unused_item(----) { ---- }
-*/
-
-```
-
-
-But it not always easy to toggle such comments on and off, since you need add and remove the /* and matching */ each time you want to toggle it. Some IDEs help with this, but I still prefer to use more local changed if I can.
-
-A less used option that is more specific to Rust (and that I use all the time), is to use a #[cfg] attribute to temporarily remove the code:
-
-Change:
-
-```rust
-unused_or_little_used_item { ---- }
-
-```
-
-to:
-
-```rust
-#[cfg(not_now)]
-unused_or_little_used_item { ---- }
-
-```
-
-> No, I do not know how to pronounce “cfgment”; I have only typed it, never uttered it. Iä! Sheol-Nugganoth!I call this “cfgmenting” out code (as opposed to “commenting out code”).
-
-Whether or not you choose to use comments, “cfgments”, or just delete code outright is up to you, (though I do recommend you eventually delete the lines in question, as discussed in “decommentification”).
-
-
-------
-> theme: Delete the Unnecessary
-
-## Tactic: “Demodulification”
-In addition to “unusedifying” each identified unused item, you might try this: You may also be lucky enough to be able to just remove whole modules from this crate at this point. If the compiler is telling you that a lot of the items in a given module are unused, maybe you can get rid of the whole module. Go ahead and try it!
-
-There can be a bit of guesswork involved here. For various reasons the compiler’s lints do not identify some definitions as unused even though it may seem obvious that they are not used.
-
-- This can be a consequence of the impls in the source; see “Deimplification” below.
-- Also some cases are only identified after doing “depublification” of the contents of such modules, which is also discussed below.
-
-In the case of boards/arty-e21 I was able to identify mod timer_test as entirely unsed.
-
-After “cfgmenting” it out and further “decommentification”, we have this:
-
-```shell
-% wc tock/boards/arty-e21/src/main.rs
-      73     191    1967 tock/boards/arty-e21/src/main.rs
-```
-
-(For now we have to keep the mod io { ... }; it defines a panic-handler, and we won’t be able to get rid of that until we do more reduction elsewhere.)
-
-------
-> theme: Delete the Unnecessary
-
-## Technique: “ADT-reduction”
-What more is there to reduce here? Well, there is a struct ArtyE21 all of whose fields are unused:
-
-```rust
-struct ArtyE21 {
-    _console: &'static capsules::console::Console<'static>,
-    _gpio: &'static capsules::gpio::GPIO<'static>,
-    _alarm: &'static capsules::alarm::AlarmDriver<
-        'static,
-        VirtualMuxAlarm<'static, rv32i::machine_timer::MachineTimer<'static>>,
-    >,
-    _led: &'static capsules::led::LED<'static>,
-    _button: &'static capsules::button::Button<'static>,
-}
-
-```
-
-We got lucky here: This struct has no lifetime or type parameters, so we can just do a trivial replacement, like so:
-
-Change:
-
-```rust
-struct S { ---- }
-
-```
-
-to:
-
-
-```rust
-struct S { }
-
-```
-This, combined with “unusedification” of a now-unused import, leaves us with:
-
-
-```shell
-% wc tock/boards/arty-e21/src/main.rs
-      63     170    1549 tock/boards/arty-e21/src/main.rs
-
-```
-
-### “ADT-reduction” in general
-In the general case, if there is a generic parameter on the struct, you will need it to retain a field (to allow the compiler to compute the variance of the parameter).
-
-Usually lifetime parameters are (co)variant, in which case this suffices:
-
-Change:
-
-```rust
-struct S<'a>{ ---- }
-
-```
-
-to:
-
-```rust
-struct S<'a>{ _inner: &'a () }
-
-```
-
-> struct S<'a>(Cell<&'a ()) is another option for encoding invariance, note it imports std::cell::Cell.
-
-If you need an invariant lifetime parameter to reproduce the bug, then you can do it this way:
-
-Change:
-
-```rust
-struct S<'a>{ ---- }
-
-```
-
-to:
-
-```rust
-struct S<'a>{ _inner: &'a mut &'a () }
-
-```
-
-Likewise, type parameters can usually be encoded like so:
-
-Change:
-
-```rust
-struct S<T> { ---- }
-
-```
-
-to:
-
-```rust
-struct S<T> { _inner: Option<T> }
-
-```
-
-
-If the type parameter has the ?Sized (anti)bound, then you can use this variant:
-
-Change:
-
-```rust
-struct S<T: ?Sized> { ---- }
-
-```
-
-to:
-
-```rust
-struct S<T> { _inner: Option<Box<T>> }
-```
-
-Often if there is both a lifetime and a type parameter, then I will combine them into one field:
-
-Change:
-
-```rust
-struct S<'a, T> { ---- }
-
-```
-
-to:
-
-```rust
-struct S<'a, T> { _inner: Option<&'a T> }
-
-```
-
-
-but in general that might not reflect the contentsfor example, it implicitly requires that T outlive 'a, which may not have been the case originaly of the original struct, and thus may cause the original bug to be masked. So in general you may have to do:
-
-Change:
-
-```rust
-struct S<'a, T> { ---- }
-
-```
-to:
-
-```rust
-struct S<'a, T> { _inner1: &'a (), _inner2: Option<T> }
-
-```
-
-or some variation thereof.
-
-Having said that, its pretty rare that struct S<'a, T> { _inner: Option<&'a T> } doesn’t suffice.
-
-------
-> themes: Delete the Unnecessary, Identify the Unnecessary
-
-## Tactic: “Deimplificiation”
-After “loopification”, often whole impl blocks can be eliminated.
-
-In the case of arty-e21, we have this:
-
-```rust
-impl Write for Writer {
-    fn write_str(&mut self, _: &str) -> ::core::fmt::Result { loop { } }
-}
-
-```
-
-which is entirely unused.
-
-So we can “cfgment” it out, and now the compiler identifies two unused imports (since this impl-block was their only use); more importantly, it now also identifies that the struct Writer is never constructed. (Which we already knew since we were able to revise its fields at will during “ADT-reduction”; but the point is that we couldn’t have removed its definition without first removing all of its associated impl blocks. Thus, “deimplification” is an important step in our reduction odysssey.
-
-That, plus more “unusedification” gets us to 55 lines:
-
-```shell
-% wc tock/boards/arty-e21/src/main.rs
-      55     146    1396 tock/boards/arty-e21/src/main.rs
-
-```
-
-
-### Fine-grained “deimplification”
-In general you may not be able to remove the whole impl block. But you can still try to remove individual items from it, like so:
-
-Change:
-
-```rust
-impl Foo {
-   fn method(----) { ---- }
-   ...
-}
-
-```
-
-to:
-
-```rust
-impl Foo {
-   ...
-}
-
-```
-
-
-#### Technique: “split-impls”
-> aka Regroup fn items in inherent impls.
-
-I sometimes like to employ As a special technique to remove individual methods from an inherent impl: Rust lets you define multiple inherent impls for a given type. So rather than deleting code or using “cfgments” for each item, I will instead take an impl and break it into two, where one of them is “cfgmented” out:
-
-Change:
-
-```rust
-impl Foo {
-    fn method1(----) { ---- }
-    fn method2(...) { ... }
-    fn method3(...) { ... }
-}
-
-```
-
-
-to:
-
-
-```rust
-#[cfg(not_now)]
-impl Foo {
-    fn method1(----) { ---- }
-}
-impl Foo {
-    fn method2(...) { ... }
-    fn method3(...) { ... }
-}
-
-```
-
-Here, you can now move items freely between the “cfgmented”-out impl and the still present impl. It has a similar effect to “cfgmenting” out the individual items, but in practice it feels a lot more like an easy bisection process, at least for my fingers.
-
-- Especially since you can start with the whole impl “cfgmented”-out, and let the compiler tell you which methods you need to put back (e.g. due to downstream uses.)
-
-
-You can also sometimes do this impl as a way to make more fine-grained impl-blocks that have looser constraints, like so:
-
-Change:
-
-
-```rust
-impl<X: Bound> Foo<X> {
-    fn method1(...) { ... }
-    fn method2(...) { ... }
-    fn method3(...) { ... }
-}
-
-```
-
-to:
-
-
-```rust
-impl<X: Bound> Foo {
-    fn method1(...) { ... }
-}
-impl<X> Foo<X> {
-    fn method2(...) { ... }
-    fn method3(...) { ... }
-}
-
-```
-(where here we assume method2 and method3 do not require the X: Bound).
-
-------
-## A pause
-This is about as far as we can usefully get in reducing arty-e21 on its own.
-
-To make further progress, we need to start making changes to upstream dependencies.
-
-Lets look at the situation there.
-
-------
-> theme: Identify the Unnecessary
-
-### Tactic: “dep-reduction”
->> aka “eliminate upstream dependencies”
-
-We have not yet changed anything about the crate graph as a whole. Technicaly, building arty-e21 still builds 12 crates before starting on arty-e21. (Maybe cargo has some flag to inform you about unused dependencies?)
-
-In any case, from inspecting arty-e21, we can see that it directly uses only two dependencies now: kernel and chips/arty_e21.
-
-We can remove other dependencies from the Cargo.toml and see where it gets us:
-
-```toml
-[dependencies]
-kernel = { path = "../../kernel" }
-arty_e21 = { path = "../../chips/arty_e21" }
-
-```
-
-
-A build after a cargo clean now shows just nine crates being built before arty-e21
-
-
-```shell
-   Compiling tock-registers v0.4.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-register-interface)
-   Compiling tock-cells v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-cells)
-   Compiling tock_rt0 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/tock-rt0)
-   Compiling arty-e21 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/boards/arty-e21)
-   Compiling riscv-csr v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/libraries/riscv-csr)
-   Compiling kernel v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/kernel)
-   Compiling rv32i v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/arch/rv32i)
-   Compiling sifive v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/chips/sifive)
-   Compiling arty_e21 v0.1.0 (/Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/chips/arty_e21)
-```
-
-If we want to make more progress here, we’ll need to start working on upstream crates.
-
-Looking at chips/arty_e21/Cargo.toml, we can see it also depends on the kernel crate:
-
-```toml
-[dependencies]
-sifive = { path = "../sifive" }
-rv32i = { path = "../../arch/rv32i" }
-kernel = { path = "../../kernel" }
-
-```
-
-So this gives us a hint where to go next: Simplify chips/arty_e21 as much as we can, before we tackle trying to simplify the (hopefully root) kernel crate.
-
-So lets see what we need from chips/arty_e21. It has a very small lib.rs file:
-
-```rust
-//! Drivers and chip support for the E21 soft core.
-
-#![feature(asm, concat_idents, const_fn)]
-#![feature(exclusive_range_pattern)]
-#![no_std]
-#![crate_name = "arty_e21"]
-#![crate_type = "rlib"]
-
-mod interrupts;
-
-pub mod chip;
-pub mod gpio;
-pub mod uart;
-
-```
-
-
-Now I have a choice: do I go ahead and inline these module defintions like we did with boards/arty-e21? Well, lets figure out if we can first isolate its exports to a bare minimum before doing that.
-
-------
-> theme: Identify the Unnecessary
-
-### Tactic: “Depublification”
-As I already mentioned, the compiler is probably already tellling you about some of these (see “unusedification”).
-
-But if you want to maximize the set of unused things that the compiler will identify for you, you might need to help it along the way by removing pub annotations, like so:
-
-Change:
-
-```rust
-pub mod foo { ... }
-```
-
-to:
-
-```rust
-mod foo { ... }
-```
-
-or
-
-Change:
-
-```rust
-pub use foo;
-```
-
-to:
-
-```rust
-use foo;
-```
-
-or struct, enum, type, trait, fn, etc; basically any pub item.
-
-This can help compiler see that items or imports are in fact not used outside of the current crate, and thus can be eliminated.
-
-For chips/arty_e21, I was able to successfully do this replacement:
-
-Change:
-
-```rust
-pub mod chip;
-pub mod gpio;
-pub mod uart;
-
-```
-to:
-
-```rust
-pub mod chip;
-mod gpio;
-mod uart;
-
-```
-
-and everything still built.
-
-After this point, I attempted blind “demodulification” each of mod interrupts, mod gpio, and mod uart (since its so easy to try when they are declared as out-of-line modules). Unfortunately, pub mod chip; currently depends on all of them being present.
-
-So that’s when I went ahead and inlined the module definitions, leaving me with a 371-line lib.rs for chips/arty_e21:
-
-```shell
-% wc tock/chips/arty_e21/src/lib.rs
-     371    1354   12137 tock/chips/arty_e21/src/lib.rs
-```
-
->> Maybe this argues for a strategy where one should attempt targetted “loopification” on your reachable (pub) modules in the crate, and then do subsequent “demodulification” of the out-of-line modules before jumping into “mod-inlining”. I have not tried that workflow too seriously yet, though; its not that hard to “demodulify” a module, since its just a matter of “cfgmenting” out the mod declaration.
-
-Then I “loopified” it; in this case, I was lucky and was able to loopify everything in chips/arty_e21, and the bug still reproduces.
-
-After “loopification”, I was able to successfully “demodulify” all of mod interrupts, mod gpio, and mod uart.
-
-Finally, I did some “deimplification”, and managed to remove everything except for a impl kernel::Chip for ArtyExx { ... } and one inherent method on struct ArtyExx.
-
-Those steps, plus “decommentification”, removed about 320 lines.
-
-```shell
-% wc tock/chips/arty_e21/src/lib.rs
-      52     163    1180 tock/chips/arty_e21/src/lib.rs
-```
-
-Perhaps most importantly, it got the source code to the point where it fits on a screen.
-
-------
-> themes: Enable Incremental Steps, Identify the Unnecessary
-
-### Tactic: “simpl-impl”
->> aka use trait defaults
-
-I did just mention that I had to keep an impl kernel::Chip for ArtyExx { ... }.
-
-In general, the impl blocks we are trying to eliminate may be trait impls rather than inherent ones. In those cases, we cannot just remove methods from the impls willy-nilly, as that would cause the compiler to reject the trait implementation.
-
->> Did you see this coming?
-
-So, you have to keep that impl entirely intact… unless you do some work up front …
-
-Here’s the trick around that. First add a trait default implementation:
-
-Change:
-
-```rust
-trait Tr { ... fn m(); }
-
-```
-
-to:
-
-```rust
-trait Tr { ... fn m() { loop { } } }
-
-```
-
-This enables the subsequent transformation:
-
-Change:
-
-```rust
-impl Tr for C { ... fn m() { ---- } }
-
-```
-to:
-
-```rust
-impl Tr for C { ... }
-
-```
-
-Thats right, you can turn a non-default trait method into a “loopified” default trait method, and that enables you to freely remove instances of that method from all of that trait’s impls. You can do this transformation piecewise, or for the whole trait definition, as you like.
-
-And (I think) you can do it pretty much as freely as you like: you should not need to worry about changing a trait method to a “loopified” default causing breakage elsewhere when compiling the crate graph (unless there is some potential interaction with specialization that I have not considered).
-
-If you apply the transformation repeatedly, it can often result in
-
-```rust
-trait Tr { ---- } // all methods loopified
-impl Tr for C { }
-
-```
-which is simply awesome.
-
-In our specific case, the trait in question is upstream: impl kernel::Chip for ArtyExx { ... }
-
-So we are going to make an exception to our earler rule about trying to work at the leaves first: Here, we are justified in jumping upstream, to kernel/src/platform/mod.rs, and changing the definition of kernel::Chip, doing M-x query-replace of ; with { loop { } } to easily jump through the fn-items and add a “loopified” body to each one.
-
-(In my case, I’m going to decommentify the relevant file first too.)
-
-After adding “loopified” default methods to the traits in kernel::platform, we can return to chips/arty_e21 and further simplify the impl there to this:
-
-
-```rust
-impl kernel::Chip for ArtyExx {
-    type MPU = ();
-    type UserspaceKernelBoundary = rv32i::syscall::SysCall;
-    type SysTick = ();
-}
-
-```
-
-Now we need to apply a bit of artistry.
-
-----
-> theme: Trivialize Content
-
-### Tactic: “Type-trivialization”
-This associated type in impl kernel::Chip for ArtyExx is forcing dependency on rv32i:
-
-```rust
-type UserspaceKernelBoundary = rv32i::syscall::SysCall;
-
-```
-
-But we have removed all the methods! Chances are actually quite good that there is no longer anyone that relies on that type defintion. (Its not a certainty, of course; clients of the trait might be extracting the type directly, and the associated may have trait bounds that will force us to use a non-trivial type there.)
-
-But lets try it and see:
-
-```rust
-impl kernel::Chip for ArtyExx {
-    type MPU = ();
-    type UserspaceKernelBoundary = ();
-    type SysTick = ();
-}
-
-```
-
-yields:
-
-```rust
-error[E0277]: the trait bound `(): kernel::syscall::UserspaceKernelBoundary` is not satisfied
-  --> /Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/chips/arty_e21/src/lib.rs:22:6
-   |
-22 | impl kernel::Chip for ArtyExx {
-   |      ^^^^^^^^^^^^ the trait `kernel::syscall::UserspaceKernelBoundary` is not implemented for `()`
-
-error: aborting due to previous error
-
-```
-
-So, what to do about this?
-
-Honestly, I figure this is another case where we are justified in going upstream and removing the bound in question, just to see what happens:
-
-
-```diff
-diff --git a/tock/kernel/src/platform/mod.rs b/tock/kernel/src/platform/mod.rs
-index 9544899..dd107dd 100644
---- a/tock/kernel/src/platform/mod.rs
-+++ b/tock/kernel/src/platform/mod.rs
-@@ -13,7 +13,7 @@ pub trait Platform {
- pub trait Chip {
-     type MPU: mpu::MPU;
-
--    type UserspaceKernelBoundary: syscall::UserspaceKernelBoundary;
-+    type UserspaceKernelBoundary;
-
-     type SysTick: systick::SysTick;
-
-```
-
-And the answer is:
-
-
-```
-error[E0277]: the trait bound `<C as platform::Chip>::UserspaceKernelBoundary: syscall::UserspaceKernelBoundary` is not satisfied
-   --> /Users/felixklock/Dev/Mozilla/issue65774/demo-minimization/tock/kernel/src/process.rs:468:5
-    |
-468 | /     stored_state:
-469 | |         Cell<<<C as Chip>::UserspaceKernelBoundary as UserspaceKernelBoundary>::StoredState>,
-    | |____________________________________________________________________________________________^ the trait `syscall::UserspaceKernelBoundary` is not implemented for `<C as platform::Chip>::UserspaceKernelBoundary`
-    |
-    = help: consider adding a `where <C as platform::Chip>::UserspaceKernelBoundary: syscall::UserspaceKernelBoundary` bound
-
-error: aborting due to previous error
-
-```
-
-Darn. (We could take the compilers advice and add the aforementioned where clause, but that stands a good chance of just shifting the blame around without actually helping us make progress on reduction itself.)
-
-You might think: “Lets try removing that field from the struct”; but note that the struct Process lives in the kernel crate, and that code has not yet been “loopified.” So there’s a good chance that there’s existing code that relies on that field being there, and we have to get rid of that code first.
-
-Well, we did a good job getting chips/arty_e21 as small as we did. Let us take this as a sign that we should keep moving up, to now focus on reducing the kernel crate.
-
-------
-> theme: Simplify Workflow
-
-### Technique: “mod-inlining” and “loopification” via pretty-printer
-I want to simplify the kernel crate.
-
-However, its module hierarchy is a bit larger than the other two crates we’ve looked at so far:
-
-
-
-```
-% find tock/kernel -name '*.rs'
-tock/kernel/src/tbfheader.rs
-tock/kernel/src/ipc.rs
-tock/kernel/src/memop.rs
-tock/kernel/src/lib.rs
-tock/kernel/src/platform/mod.rs
-tock/kernel/src/platform/systick.rs
-tock/kernel/src/platform/mpu.rs
-tock/kernel/src/callback.rs
-tock/kernel/src/common/static_ref.rs
-tock/kernel/src/common/list.rs
-tock/kernel/src/common/peripherals.rs
-tock/kernel/src/common/queue.rs
-tock/kernel/src/common/ring_buffer.rs
-tock/kernel/src/common/dynamic_deferred_call.rs
-tock/kernel/src/common/mod.rs
-tock/kernel/src/common/math.rs
-tock/kernel/src/common/deferred_call.rs
-tock/kernel/src/common/utils.rs
-tock/kernel/src/hil/symmetric_encryption.rs
-tock/kernel/src/hil/dac.rs
-tock/kernel/src/hil/rng.rs
-tock/kernel/src/hil/i2c.rs
-tock/kernel/src/hil/pwm.rs
-tock/kernel/src/hil/sensors.rs
-tock/kernel/src/hil/watchdog.rs
-tock/kernel/src/hil/led.rs
-tock/kernel/src/hil/time.rs
-tock/kernel/src/hil/crc.rs
-tock/kernel/src/hil/ninedof.rs
-tock/kernel/src/hil/entropy.rs
-tock/kernel/src/hil/spi.rs
-tock/kernel/src/hil/nonvolatile_storage.rs
-tock/kernel/src/hil/mod.rs
-tock/kernel/src/hil/usb.rs
-tock/kernel/src/hil/adc.rs
-tock/kernel/src/hil/gpio_async.rs
-tock/kernel/src/hil/analog_comparator.rs
-tock/kernel/src/hil/gpio.rs
-tock/kernel/src/hil/radio.rs
-tock/kernel/src/hil/eic.rs
-tock/kernel/src/hil/flash.rs
-tock/kernel/src/hil/uart.rs
-tock/kernel/src/hil/ble_advertising.rs
-tock/kernel/src/driver.rs
-tock/kernel/src/component.rs
-tock/kernel/src/sched.rs
-tock/kernel/src/introspection.rs
-tock/kernel/src/debug.rs
-tock/kernel/src/process.rs
-tock/kernel/src/syscall.rs
-tock/kernel/src/returncode.rs
-tock/kernel/src/grant.rs
-tock/kernel/src/capabilities.rs
-tock/kernel/src/mem.rs
-```
-
-I don’t want to manually-inline all those modules into kernel.
-
-I’m also not too eager to manually “loopify” it (though that would be easier if the “mod-inlining” were done).
-
-Luckily, we can leverage the compiler here.
-
-------
->theme: Simplify Workflow
-
-### “mod-inlining” via pretty-printer
-As mentioned earlier, we can add -Z unstable-options --pretty=expanded to the relevant rustc invocation (in ths case, the one compiling kernel/src/lib.rs) to get the content of the crate as one module tree.
-
-- (Unfortunately for our immediate purposes, the macros in it are also expanded. But since macros could expand into mod-declarations, this is tough to avoid in the general case for solving this problem.)
-
-Pipe that output to a file, copy that file to tock/kernel/src/lib.rs, and you’re don- … well, no; you’re not done yet.
-
-If you try to compile that as is, you get a slew of errors. Because some of the macros that expanded came from Rust’s core library, and make use of features that are not available in stable Rust. So you have to add feature-gates to enable each one. Luckily, the nightly compiler tells us which gates to add, so I was able to get away with adding this line to the top of the generated file:
-
-```rust
-#![feature(derive_clone_copy, compiler_builtins_lib, fmt_internals, core_panic, derive_eq)]
-
-```
-Then the compilation of this expanded kernel worked, and the downstream problem continued to reproduce. Success!
-
-At least, success if your definition of success is this:
-
-```
-% wc tock/kernel/src/lib.rs
-   10238   40254  540987 tock/kernel/src/lib.rs
-
-```
-
-Yikes, 10K lines.
-
-------
-> theme: Simplify Workflow
-
-### “loopification” via pretty-printer
->> aka -Z everybody_loops
-
-
-Well, that’s okay: There are some steps we haven’t taken yet. Specifically, we haven’t done “loopification.”
-
-Now, its not so much fun to “loopify” a file like this by hand. The keyboard macro I described above isn’t tha robust; it can end up really messing up the code if you apply it blindly.
-
-But luckily, we have another option:
-
-rustc -Z unpretty=everybody_loops is your friend.
-
-Basically, take the command line we used up above for macro-expanding pretty-printing, but replace the --pretty=expanded with -Zunpretty=everybody_loops.
-
-As before, pipe the output to a temporary file, and then copy that over to kernel/src/lib.rs.
-
-And then we build … and … oh. The bug didn’t replicate.
-
-- This is okay. It is not a disaster.
-
-It in fact motivates another technique: bisecting “loopification”.
-
-### Bisecting the module tree
-Warning: this technique may seem… strange. But I love it so.
-
-The three steps are as follows:
-
-1. Unify modules into a single source file (which we did up above, via the pretty-printer). But in particular, leave leave the original source files for the mod tree in place. (You’ll see why in a moment.)
-2. Replace all function bodies with loop { }(which we just did, again via the pretty-printer).
-
->> If after doing this, you still get the same failure again, then congratulations: You have a single file (with a potentially huge module tree) and all of its function bodies are trivial loop { }. But of course, in our case of kernel, we know that we are not in this scenario. 
-
-3. Finally, swap modules in and out via “cfgmenting”.
-
-Remember up above when I suggested leaving the source files in place? This is where that comes into play.
-
-A relatively tiny (and easily mechanized) change to the source code readily reverts individual modules back to their prior form:
-
-Change:
-
-```rust
-mod child_mod_1 {
-    use import::stuff;
-    fn some_function() -> ReturnType {
-        loop { }
-    }
-
-    mod even_more_inner {
-       ...
-    }
-}
-
-```
-
-to:
-
-```rust
-mod child_mod_1;
-
-#[cfg(commented_out_for_bisection)]
-mod child_mod_1 {
-    use import::stuff;
-    fn some_function() -> ReturnType {
-        loop { }
-    }
-
-    mod even_more_inner {
-       ...
-    }
-}
-```
-
-This effectively puts back in the original code for child_mod_1.
-
-You can search through your single lib.rs (or main.rs) file that holds the whole module tree (where function bodies are replaced with loop { }), and then choose a subset of these modules and apply the above transformation to point them at their original source file.
-
-You can do this for, e.g., the first half the modules, and then re-run the compiler to see if the failure re-arises. If so, huzzah!
-
-I successfully used this methodology to identify which mod in kernel we needed to keep in non-loopified form in order to reproduce the bug: mod process;.
-
-And that gets us down to:
-
-
-```
-wc tock/kernel/src/lib.rs
-    3253   11085  112858 tock/kernel/src/lib.rs
-
-```
-
-Yeah, still 3K lines. But that’s a lot better than 10K, and there’s plenty more stuff to remove.
-
-First, lets see if we can further narrow down which methods in mod process are the ones that we need for replicating the bug. For this, we can do bisection over the fn items within the (still out-of-line) mod process.
-
-------
-### Reduction via Bisection
-Sometimes you cannot simply remove all (or all but one) of the method bodies. For one reason or another (e.g. impl Trait in return position) you need to preserve the bodies of one or more methods that are not directly relevant to the bug at hand.
-
-In this scenario, it can stil be useful to use the techniques above to eliminate irrelevant details in the other methods. But what is the best way to identify which methods are relevant and which aren’t? Well, that’s a fine segue to our original topic.
-
-(… a significant amount of time has passed.)
-
-Okay: after spending a lot of time doing pseudo-bisection, I managed to isolate three methods in process.rs that are necessary to reproduce the issue.
-
-Part of my own process here (not process, ha ha) was to switch mindset away from trying to bisect to find the “one fn body” that causes the faiure. Instead, I had to focus on identifying a minimal subset of bodies that are necessary to cause it to arise.
-
-That is, starting with N fn items, I’d “loopify” N/2 of them, and if the bug went away on that half, I’d put back in the previous bodies, cut that set in in half, and repeat until the bug came back. This tended to narrow things down to one fn item that, when “loopified”, made the bug go away.
-
-Then I’d mark that one fn as strictly necessary, and repeat the process on the N-1 fn-items that still remained.
-
-To be clear: this switch in mindset changes so-called “bisection” from a O(log n) process to an O(n log n) one: because you are going to do a separate O(log n) bisection step on O(n) fn-items. But on the plus side, its still a pretty mindless process (and probably could be mechanically automated).
-
-Eventually, this led me to identify the three functions in process.rs whose non-“loopified” definitions are needed to witness the bug:
-
-- load_processes
-- <Process as ProcessType>::process_detail_fmt, and
-- Process::create.
-
-With that done, I redid the “mod-inlining” of mod process into kernel.
-
-## Popping the stack
-Now, as a reminder: the reason we dived into kernel was to see if we could remove the stored_state field from struct Process:
-
-```
-stored_state:
-    Cell<<<C as Chip>::UserspaceKernelBoundary as UserspaceKernelBoundary>::StoredState>,
-```
-
-The answer is unfortuately still no: two of the three methods we kept from mod process refer to that field.
-
-But we can do some directed editing to see if the bug repreoduces after removing those references:
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -3067,12 +3067,6 @@ impl<C: Chip> ProcessType for Process<'a, C> {
-             flash_start
-         ));
-
--        self.chip.userspace_kernel_boundary().process_detail_fmt(
--            self.sp(),
--            &self.stored_state.get(),
--            writer,
--        );
--
-         self.mpu_config.map(|config| {
-             let _ = writer.write_fmt(format_args!("{}", config));
-         });
-@@ -3205,7 +3199,7 @@ impl<C: 'static + Chip> Process<'a, C> {
-
-             process.flash = slice::from_raw_parts(app_flash_address, app_flash_size);
-
--            process.stored_state = Cell::new(Default::default());
-+            // process.stored_state = Cell::new(Default::default());
-             process.state = Cell::new(State::Unstarted);
-             process.fault_response = fault_response;
-
-@@ -3246,6 +3240,7 @@ impl<C: 'static + Chip> Process<'a, C> {
-                 }));
-             });
-
-+            /*
-             let mut stored_state = process.stored_state.get();
-             match chip.userspace_kernel_boundary().initialize_new_process(
-                 process.sp(),
-@@ -3263,6 +3258,7 @@ impl<C: 'static + Chip> Process<'a, C> {
-                     return (None, app_flash_size, 0);
-                 }
-             };
-+             */
-```
-
-
-And the answer is: YES. The bug reproduces!
-
-And now we can move forward with removing that field… YES, still reproduces:
-
-```diff
-
---- a/tock/kernel/src/lib.rs
-+++ b/tock/kernel/src/lib.rs
-@@ -2809,9 +2809,6 @@ pub struct Process<'a, C: 'static + Chip> {
-
-     header: tbfheader::TbfHeader,
-
--    stored_state:
--        Cell<<<C as Chip>::UserspaceKernelBoundary as UserspaceKernelBoundary>::StoredState>,
--
-     state: Cell<State>,
-
-     fault_response: FaultResponse,
-
-```
-
-And then see about removed the bound on the associated type that sent us on this path… YES
-
-```diff
---- a/tock/kernel/src/lib.rs
-+++ b/tock/kernel/src/lib.rs
-@@ -2525,7 +2525,7 @@ mod platform {
-         type
-         MPU: mpu::MPU;
-         type
--        UserspaceKernelBoundary: syscall::UserspaceKernelBoundary;
-+        UserspaceKernelBoundary;
-         type
-         SysTick: systick::SysTick;
-         fn service_pending_interrupts(&self) { loop  { } }
-
-```
-
-
-So now we can pop our stack: We can go back to chips/arty_e21, and apply “type-trivialization”:
-
-```diff
-
---- a/tock/chips/arty_e21/src/lib.rs
-+++ b/tock/chips/arty_e21/src/lib.rs
-@@ -21,7 +21,7 @@ impl ArtyExx {
-
- impl kernel::Chip for ArtyExx {
-     type MPU = ();
--    type UserspaceKernelBoundary = rv32i::syscall::SysCall;
-+    type UserspaceKernelBoundary = ();
-     type SysTick = ();
- }
-```
-
-We did it!
-
-With that in place, we can do more “dep-reduction”, by removing the rv32i dependency from chips/arty_e21.
-
-At this point, we could continue with the above transformations to further reduce kernel.
-
-But I want to switch to showing a different kind of minimization transformation, one that will let us make further simplifications to boards/arty-e21.
-
-------
-### Simplfying the existing code
-
-Looking again at boards/arty-e21, we have this method body:
-
-```rust
-
-#[no_mangle]
-pub unsafe fn reset_handler() {
-    let chip = static_init!(arty_e21::chip::ArtyExx, arty_e21::chip::ArtyExx::new());
-    let process_mgmt_cap = create_capability!(capabilities::ProcessManagementCapability);
-    let board_kernel = static_init!(kernel::Kernel, kernel::Kernel::new(&PROCESSES));
-
-    kernel::procs::load_processes(
-        board_kernel,
-        chip,
-        &0u8 as *const u8,
-        &mut [0; 8192], // APP_MEMORY,
-        &mut PROCESSES,
-        kernel::procs::FaultResponse::Panic,
-        &process_mgmt_cap,
-    );
-}
-```
-
-It would be nice to figure out which parts of this are actually relevant.
-
-Unfortunately, kernel::procs::load_processes was one of the functions where we could not apply “loopification” without masking the rustc bug.
-
-Let us see if we can at least simplfify the API of load_processes itself.
-
-It currently looks like this:
-
-
-```rust
-pub fn load_processes<C: Chip>(
-    kernel: &'static Kernel,
-    chip: &'static C,
-    start_of_flash: *const u8,
-    app_memory: &mut [u8],
-    procs: &'static mut [Option<&'static dyn ProcessType>],
-    fault_response: FaultResponse,
-    _capability: &dyn ProcessManagementCapability,
-) {
-    let mut apps_in_flash_ptr = start_of_flash;
-    let mut app_memory_ptr = app_memory.as_mut_ptr();
-    let mut app_memory_size = app_memory.len();
-    for i in 0..procs.len() {
-        unsafe {
-            let (process, flash_offset, memory_offset) = Process::create(
-                kernel,
-                chip,
-                apps_in_flash_ptr,
-                app_memory_ptr,
-                app_memory_size,
-                fault_response,
-                i,
-            );
-
-            if process.is_none() {
-                if flash_offset == 0 && memory_offset == 0 {
-                    break;
-                }
-            } else {
-                procs[i] = process;
-            }
-
-            apps_in_flash_ptr = apps_in_flash_ptr.add(flash_offset);
-            app_memory_ptr = app_memory_ptr.add(memory_offset);
-            app_memory_size -= memory_offset;
-        }
-    }
-}
-```
-
-
-The fact that Process::create was another function that we could not “loopify” gives us a hint has to how to simplfy this further: can we reduce this method body to just a Process::create call, and see if the bug persists?
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2586,31 +2586,17 @@ pub fn load_processes<C: Chip>(
-     let mut apps_in_flash_ptr = start_of_flash;
-     let mut app_memory_ptr = app_memory.as_mut_ptr();
-     let mut app_memory_size = app_memory.len();
--    for i in 0..procs.len() {
-         unsafe {
--            let (process, flash_offset, memory_offset) = Process::create(
-+            Process::create(
-                 kernel,
-                 chip,
-                 apps_in_flash_ptr,
-                 app_memory_ptr,
-                 app_memory_size,
-                 fault_response,
--                i,
-+                0,
-             );
--
--            if process.is_none() {
--                if flash_offset == 0 && memory_offset == 0 {
--                    break;
--                }
--            } else {
--                procs[i] = process;
--            }
--
--            apps_in_flash_ptr = apps_in_flash_ptr.add(flash_offset);
--            app_memory_ptr = app_memory_ptr.add(memory_offset);
--            app_memory_size -= memory_offset;
-         }
--    }
- }
-```
-
-
-And yes, the bug still reproduces.
-
-------
-> theme: Simplify Workflow
-
-### Tactic: “RHS-inlining”
-This is just the classic transformation of taking the right-hand side of a let or const and copying it into the usage sites for the variable defined by the let or const. Once all uses of the variable have been replaced, you can try removing the let or const itself (i.e. “unusedification”)
-
-In our specific case, we can apply this to load_processes:
-
-```diff
---- a/tock/kernel/src/lib.rs
-+++ b/tock/kernel/src/lib.rs
-@@ -2583,16 +2583,13 @@ pub fn load_processes<C: Chip>(
-     fault_response: FaultResponse,
-     _capability: &dyn ProcessManagementCapability,
- ) {
--    let mut apps_in_flash_ptr = start_of_flash;
--    let mut app_memory_ptr = app_memory.as_mut_ptr();
--    let mut app_memory_size = app_memory.len();
-         unsafe {
-             Process::create(
-                 kernel,
-                 chip,
--                apps_in_flash_ptr,
--                app_memory_ptr,
--                app_memory_size,
-+                start_of_flash,
-+                app_memory.as_mut_ptr(),
-+                app_memory.len(),
-                 fault_response,
-                 0,
-             );
-
-```
-
-However, this technique on its own does not tend to actually reduce the problem at hand, in terms of making it possible for us to remove imports or simplify fn API signatures.
-
-------
-> theme: Trivialize Content
-
-### Tactic: “Defaultification”
->> aka “Scalars Gotta Scale”
-
-If you really want to simplify, then you should replace the occurences of the variable with some “obvious” value based on its type.
-
-(This is the obvious alternative to “loopification” when it comes to simplifying const fn.)
-
-More specifically: frequently, the return type of a const fn (or the type of a const item) is some scalar type (like u32, f64, or bool). These all have “obvious” values that you can just plug in (respectively 0, 0.0, or false).
-
-Change:
-
-```rust
-const fn cfoo(----) -> u32 { ---- }
-
-```
-to:
-
-```rust
-const fn cfoo(----) -> u32 { 0 }
-
-```
-In the case of load_processes, “defaultification” yields this:
-
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2587,9 +2587,9 @@ pub fn load_processes<C: Chip>(
-             Process::create(
-                 kernel,
-                 chip,
--                start_of_flash,
--                app_memory.as_mut_ptr(),
--                app_memory.len(),
-+                0 as *const u8,
-+                (&mut []).as_mut_ptr(),
-+                0,
-                 fault_response,
-                 0,
-             );
-```
-
-That means we’ve gotten rid of the uses of three fn parameters in the body of load_processes. Lets see what that can buy us for further reduction.
-
-------
-> theme: Trivialize Content
-
-### Technique: “Genertrification”
->> aka “Type Freedom”
-
-Once you remove all uses of parameter (which is readily identifiable via either lint diagnostics or if the parameter has just _: ParamType for its declaration), you can “genertrify” it to get rid of the use of ParamType.
-
-Change:
-
-```rust
-fn foo(_: ParamType, ----) -> ReturnType { loop { } }
-
-```
-to:
-
-
-```rust
-fn foo<A>(_: A, ----) -> ReturnType { loop { } }
-
-```
-or even more simply (in terms of locality of the transformation):
-
-```rust
-fn foo(_: impl Sized, ----) -> ReturnType { loop { } }
-
-```
-
-The beauty of this is that it can almost always be applied even if there remain uses of foo elsewhere in the code.
-
-Therefore, I tend to recommend it over “param-elimination”, described below.
-
-- However, this transformation does not work if fn foo must not carry any generic type parameters; e.g., if fn foo needs to be object-safe, then you cannot add the type parameteter A.
-- The other case where it cannot be applied is when an existing use is relying on the existing type for inference purposes. We will see an example of this below.
-
-In the case of load_processes, “genertrification” allows this change:
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2577,11 +2577,11 @@ use core::cmp::max;
- pub fn load_processes<C: Chip>(
-     kernel: &'static Kernel,
-     chip: &'static C,
--    start_of_flash: *const u8,
--    app_memory: &mut [u8],
--    procs: &'static mut [Option<&'static dyn ProcessType>],
-+    _: impl Sized,
-+    _: impl Sized,
-+    _: impl Sized,
-     fault_response: FaultResponse,
--    _capability: &dyn ProcessManagementCapability,
-+    _: impl Sized,
- ) {
-         unsafe {
-             Process::create(
-```
-
-
-And once we do that, we can revise any calls to load_processes and pass any value we like for the impl Sized arguments. So we’ve opened up new opportunities for “expr-elimination”:
-
-```diff
---- INDEX/tock/boards/arty-e21/src/main.rs
-+++ WORKDIR/tock/boards/arty-e21/src/main.rs
-@@ -39,17 +39,16 @@ impl Platform for ArtyE21 {
- #[no_mangle]
- pub unsafe fn reset_handler() {
-     let chip = static_init!(arty_e21::chip::ArtyExx, arty_e21::chip::ArtyExx::new());
--    let process_mgmt_cap = create_capability!(capabilities::ProcessManagementCapability);
-     let board_kernel = static_init!(kernel::Kernel, kernel::Kernel::new(&PROCESSES));
-
-     kernel::procs::load_processes(
-         board_kernel,
-         chip,
--        &0u8 as *const u8,
--        &mut [0; 8192], // APP_MEMORY,
--        &mut PROCESSES,
-+        (),
-+        (),
-+        (),
-         kernel::procs::FaultResponse::Panic,
--        &process_mgmt_cap,
-+        (),
-     );
-
- }
-```
-
-We would like to continue simplifying the APIs by applying “genertrification” elsewhere. For example, load_processes calls Process::create, so it would be useful to simplify its API.
-
-The body of Process::create is currently over 150 lines of code. But after bisection-based “expr-elimination”, coupled with “RHS-inlining”, “defaultification”, and “unusedification”, we can get the body down to this far more managable 20 lines:
-
-```rust
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        kernel: &'static Kernel,
-        chip: &'static C,
-        app_flash_address: *const u8,
-        remaining_app_memory: *mut u8,
-        remaining_app_memory_size: usize,
-        fault_response: FaultResponse,
-        index: usize,
-    ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-            let mut process: &mut Process<C> =
-                &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
-            process.debug = MapCell::new(ProcessDebug {
-                app_heap_start_pointer: None,
-                app_stack_start_pointer: None,
-                min_stack_pointer: 0 as *const u8,
-                syscall_count: 0,
-                last_syscall: None,
-                dropped_callback_count: 0,
-                restart_count: 0,
-                timeslice_expiration_count: 0,
-            });
-
-            return (
-                Some(process),
-                0usize,
-                0usize,
-            );
-    }
-    ...
-}
-```
-
-And now we can apply “genertrification”:
-
-
-```diff
-
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -3065,13 +3065,13 @@ fn exceeded_check(size: usize, allocated: usize) -> &'static str { loop { } }
- impl<C: 'static + Chip> Process<'a, C> {
-     #[allow(clippy::cast_ptr_alignment)]
-     crate unsafe fn create(
--        kernel: &'static Kernel,
-+        kernel: impl Sized,
-         chip: &'static C,
--        app_flash_address: *const u8,
-+        app_flash_address: impl Sized,
-         remaining_app_memory: *mut u8,
--        remaining_app_memory_size: usize,
--        fault_response: FaultResponse,
--        index: usize,
-+        remaining_app_memory_size: impl Sized,
-+        fault_response: impl Sized,
-+        index: impl Sized,
-     ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-             let mut process: &mut Process<C> =
-                 &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-```
-
-#### “you can’t always genertrify what you want”
-Unfortunately, I was not able to “genertrify” the remaining_app_memory formal parameter, even though it is unused in the function body. Why is this? Because the current call-site is relying on the type of the formal parameter for inference purposes. So in this case, we need to update the API in tandem with the call site:
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2588,7 +2588,7 @@ pub fn load_processes<C: Chip>(
-                 (),
-                 chip,
-                 (),
--                (&mut []).as_mut_ptr(),
-+                (),
-                 0,
-                 (),
-                 0,
-@@ -3068,7 +3068,7 @@ impl<C: 'static + Chip> Process<'a, C> {
-         kernel: impl Sized,
-         chip: &'static C,
-         app_flash_address: impl Sized,
--        remaining_app_memory: *mut u8,
-+        remaining_app_memory: impl Sized,
-         remaining_app_memory_size: impl Sized,
-         fault_response: impl Sized,
-         index: impl Sized,
-```
-
-
-This allows further “expr-elimination”:
-
-```diff
-
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -3076,17 +3076,6 @@ impl<C: 'static + Chip> Process<'a, C> {
-             let mut process: &mut Process<C> =
-                 &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
--            process.debug = MapCell::new(ProcessDebug {
--                app_heap_start_pointer: None,
--                app_stack_start_pointer: None,
--                min_stack_pointer: 0 as *const u8,
--                syscall_count: 0,
--                last_syscall: None,
--                dropped_callback_count: 0,
--                restart_count: 0,
--                timeslice_expiration_count: 0,
--            });
--
-             return (
-                 Some(process),
-                 0usize,
-```
-
-and we bave gotten Process::create down to something that actually is close to minimal, at least with given the transformations we have covered so far:
-
-
-```rust
-
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        kernel: impl Sized,
-        chip: &'static C,
-        app_flash_address: impl Sized,
-        remaining_app_memory: impl Sized,
-        remaining_app_memory_size: impl Sized,
-        fault_response: impl Sized,
-        index: impl Sized,
-    ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-            let mut process: &mut Process<C> =
-                &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
-            return (
-                Some(process),
-                0usize,
-                0usize,
-            );
-    }
-...
-}
-```
-
-But of course, we can go further!
-
-### Once all the code is gone …
-The applicability of many of the remaining patterns depends on whether you have successfully trivialized all or most method bodies. That is, if you have gotten rid of most of the complex expressions in the program, then you can usually remove things like struct field declarations or any “interesting” types on formal parameters.
-
-So, lets see if we can further reduce the complexity of our example by simplifying the APIs of the functions involved.
-
-------
-> theme: Trivialize Content
-
-### Technique: “Param-elimination”
-If you have successfully eliminated all uses of a method foo, then you can apply this transformation:
-
-Change:
-
-```rust
-fn foo(_: ArgType, ----) -> ReturnType { loop { } }
-
-```
-
-to:
-
-```rust
-fn foo(----) -> ReturnType { loop { } }
-
-```
-
-In some rare cases, the compiler bug will requires a method signature to keep the same number of arguments; for that scenario, you can instead use “type-trivialization” for the parameter:
-
-Change:
-
-```rust
-fn foo(_: ArgType, ----) -> ReturnType { loop { } }
-
-```
-to:
-
-```rust
-fn foo(_: (), ----) -> ReturnType { loop { } }
-
-```
-
-Either way, these transformations can only be applied if all uses of foo have been eliminated via trivialization of bodies as described above (or if you are willing to update them all accordingly). Thus, I tend to recommend applying “genertrification” instead: that transformation can be applied without concern about the usage sites.
-
-Of course, if you have already applied “genertrification” and also updated all call sites to pass something trivial like (), then you can readily apply either “param-elimination” or “type-trivialization”: it really should be easy to update the call-sites in that scenario.
-
-In our particular case of Process::create, we currently have a fn-signature that looks like:
-
-
-```rust
-crate unsafe fn create(
-    kernel: impl Sized,
-    chip: &'static C,
-    app_flash_address: impl Sized,
-    remaining_app_memory: impl Sized,
-    remaining_app_memory_size: impl Sized,
-    fault_response: impl Sized,
-    index: impl Sized,
-) -> (Option<&'static dyn ProcessType>, usize, usize) {
-```
-
-And we already updated the single call-site to pass () or 0 for each of the parameters of type impl Sized, so now we can just remove them entirely:
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2585,13 +2585,7 @@ pub fn load_processes<C: Chip>(
- ) {
-         unsafe {
-             Process::create(
--                (),
-                 chip,
--                (),
--                (),
--                0,
--                (),
--                0,
-             );
-         }
- }
-@@ -3065,13 +3059,7 @@ fn exceeded_check(size: usize, allocated: usize) -> &'static str { loop { } }
- impl<C: 'static + Chip> Process<'a, C> {
-     #[allow(clippy::cast_ptr_alignment)]
-     crate unsafe fn create(
--        kernel: impl Sized,
-         chip: &'static C,
--        app_flash_address: impl Sized,
--        remaining_app_memory: impl Sized,
--        remaining_app_memory_size: impl Sized,
--        fault_response: impl Sized,
--        index: impl Sized,
-     ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-             let mut process: &mut Process<C> =
-                 &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
-```
-
-And compiling still hits the same ICE, so this “param-elimination” was a legitimate reduction of the problem.
-
-Next we’ll consider a related transformation on the fn-signature.
-
-------
-> theme: Trivialize Content
-
-### Technique: “Ret-elimination”
-If you have successfully eliminated all uses of the value returned from calls to foo, then you can apply this transformation:
-
-Change:
-
-```rust
-fn foo(----) -> ReturnType { loop { } }
-
-```
-
-to:
-
-```rust
-fn foo(----) { loop { } }
-
-```
-
-If fn foo still has a body, then you can just turn every return point in the body into a normal expression:
-
-Change:
-
-```rust
-fn foo(----) -> ReturnType { if A { return B; } TailReturn }
-
-```
-
-to:
-
-```rust
-fn foo(----) { if A { B; } TailReturn; }
-
-```
-In our case, the sole call to Process::create now looks like this:
-
-```rust
-    unsafe {
-        Process::create(
-            chip,
-        );
-    }
-
-```
-
-So we can directly apply “ret-elimination” to the definition of Process::create:
-
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -3060,11 +3060,11 @@ impl<C: 'static + Chip> Process<'a, C> {
-     #[allow(clippy::cast_ptr_alignment)]
-     crate unsafe fn create(
-         chip: &'static C,
--    ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-+    ) {
-             let mut process: &mut Process<C> =
-                 &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
--            return (
-+            (
-                 Some(process),
-                 0usize,
-                 0usize,
-```
-
-
-But… Ah ha! Doing this causes the compilation error to disappear!
-
-What happened?
-
-Well, inspecting the return type, we can see that “Ret-elimination” in this case has gotten rid of the type: (Option<&'static dyn ProcessType>, usize, usize). Nested within that tuple, we see the type &'static dyn ProcessType. So, the attemtpt to return (Some(process), 0, 0) is causing the generated code to coerce the process: &mut Process<C> into a trait-object of type &dyn ProcessType. And apparently this is part of generating the bug!
-
-So, do not look at this reduction-failure as a set-back: It in fact may serve as a clue as to the root cause of the bug.
-
-------
-### Final reduction touches on Process::create
-For Process::create, we have:
-
-```rust
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        chip: &'static C,
-    ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-            let mut process: &mut Process<C> =
-                &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
-            return (
-                Some(process),
-                0usize,
-                0usize,
-            );
-    }
-    ...
-}
-```
-
-We can simplfy this API by reducing the return type to the core element that matters: the trait object:
-
-```diff
---- a/tock/kernel/src/lib.rs
-+++ b/tock/kernel/src/lib.rs
-@@ -3045,15 +3045,11 @@ impl<C: 'static + Chip> Process<'a, C> {
-     #[allow(clippy::cast_ptr_alignment)]
-     crate unsafe fn create(
-         chip: &'static C,
--    ) -> (Option<&'static dyn ProcessType>, usize, usize) {
-+    ) -> &'static dyn ProcessType {
-             let mut process: &mut Process<C> =
-                 &mut *((&mut []).as_mut_ptr() as *mut Process<'static, C>);
-
--            return (
--                Some(process),
--                0usize,
--                0usize,
--            );
-+            process
-     }
-
-     #[allow(clippy::cast_ptr_alignment)]
-```
-
-In fact, we can do even better. The initialization expression on the right-hand side of let mut process = ... is ugly, and its actually completely irrelevant.
-
-In cases like these where we are hitting an ICE, we can use a special kind of “defaultification” to conjure up types without needing any knowledge of their expression.
-
-------
-> theme: Trivialize Content
-
-### Technique: “None-defaulting”
->> This is yet another case where the fact that we are debugging a compile-time issue is crucial. You obviously cannot be tossing None.unwrap() into code you expect to run usefully.
-
-The idea of “none-defaulting” is simple: You need the compiler to think you have a value of type T. But the steps to make an instance of T are not relevant to reproducing the bug. So just make a None::<T>, and unwrap it.
-
-Change:
-
-```rust
-let x: T = ----;
-```
-
-to:
-
-```rust
-let x: T = None.unwrap();
-```
-
-In our case, applying this technique to Process::create yields this:
-
-
-```rust
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        chip: &'static C,
-    ) -> &'static dyn ProcessType {
-            let mut process: &mut Process<C> = None.unwrap();
-
-            process
-    }
-    ...
-}
-```
-
-And compiling this, the ICE still reproduces!
-
-## So, where are we now
-We’ve still got a set of three crates, one of which is over 3,000 lines long.
-
-But we’ve also reduced the set of non-trival functions in that big crate to just three:
-
-- Process::create,
-- load_processes, and
-- <Process as ProcessType>::process_detail_fmt.
-
-If you think for a momeent, you can see how everything is tying together here: This ICE is occurring in the midst of some step of code-generation. We previously established that in order to observe the ICE, the compiler needs to handle code-generation for the coercion from &Process to a trait object &dyn ProcessType . A method like <Process as ProcessType>::process_detail_fmt is part of the virtual-methods that get their code generated as part of that coercion.
-
-We already showed Process::create is now pretty trivial.
-
-As for load_processes, after doing some additional “unusedification” and “param-elimination” we can get it down to this:
-
-```rust
-pub fn load_processes<C: Chip>(
-    chip: &'static C,
-) {
-        unsafe {
-            Process::create(
-                chip,
-            );
-        }
-}
-```
-
-which we might as well rewrite into the one-liner:
-
-```rust
-pub fn load_processes<C: Chip>(chip: &'static C) { unsafe { Process::create(chip); } }
-
-```
-
-That just leaves <Process as ProcessType>::process_detail_fmt, which we have not looked at yet.
-
-As part of the earlier (undocumented) bisection process on the out-of-line mod process;, I already “simpl-impled” the ProcessType trait declaration, so it looks like this:
-
-
-```rust
-pub trait ProcessType {
-    fn appid(&self) -> AppId { loop { } }
-    ...
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) { loop { } }
-    ...
-}
-```
-
-This means we can remove all of the irrelevant methods from the impl<C: Chip> ProcessType for Process<'a, C>, leaving us with just the single method:
-
-```rust
-impl<C: Chip> ProcessType for Process<'a, C> {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) {
-        ...
-    }
-}
-
-```
-
-And since this is now the only impl of ProcessType, we can also remove the other methods from the ProcessType trait itself:
-
-```rust
-pub trait ProcessType {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) { loop { } }
-}
-
-```
-
-I cannot stress how satisfying it is to be able to retest the ICE in between each of these steps. It gives you excellent points to pause, get up from the keyboard and take a walk (which is another surprisingly effective debugging methodology).
-
-But we still have the body of fn process_detail_fmt itself, which is about 175 lines of code. So lets try to winnow that down.
-
-“Suffix-bisection” ends up revealing that the ICE is triggered by this bit of code in the method.
-
-```rust
-    self.mpu_config.map(|config| {
-        let _ = writer.write_fmt(format_args!("{}", config));
-    });
-
-```
-
-And so we can “expr-eliminate” all the rest, leaving this defintion of the method:
-
-```rust
-impl<C: Chip> ProcessType for Process<'a, C> {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) {
-        self.mpu_config.map(|config| {
-            let _ = writer.write_fmt(format_args!("{}", config));
-        });
-    }
-}
-
-```
-
-That looks pretty simple (after all, its a a three line body). But its still doing some relatively interesting stuff: there’s that format_args! macro in there, and a closure being constructed.
-
-We might try to simplify the body further: turn the closure body into the main body of process_detail_fmt itself.
-
-The closure takes an input of type config; a quick inspect of the map method shows that should have the same type as is fed into the MapCell here:
-
-```rust
-mpu_config: MapCell<<<C as Chip>::MPU as MPU>::MpuConfig>,
-
-```
-Unfortunately, we quickly discover that just moving the closure body into the process_detail_fmt method is not a valid reduction. That is, I tried compiling with this definition instead:
-
-```rust
-impl<C: Chip> ProcessType for Process<'a, C> {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) {
-        let config = None::<<<C as Chip>::MPU as MPU>::MpuConfig>.unwrap();
-        let _ = writer.write_fmt(format_args!("{}", config));
-    }
-}
-
-```
-and got this ICE:
-
-```
-error: internal compiler error: src/librustc/traits/codegen/mod.rs:53: Encountered error `Unimplemented` selecting `Binder(<() as core::fmt::Display>)` during codegen
-
-```
-
->> When reduction uncovers a different bug, it is of course good practice to record that distinct state of the test source code somewhere. E.g. you could make a separate git branch for it, and come back to later.
-
-That is certainly a similar looking ICE. But if we want to be sure about our reduction, we really need to see the same error: if we don’t see [FulfillmentError(Obligation(...))], then we should not be satisifed.
-
-So, we apparently have to keep more of the original code from process_detail_fmt.
-
-At this point we must note that MapCell is a type that kernel is pulling in from another crate, tock-cells.
-
-So we might need to go and modify code over in tock-cells if we want to fully reduce this code.
-
-Or we might be able to get away with just copying its definition locally, avoiding the hassle of the full process of reducing the tock-cells crate itself.
-
-------
-> themes: Eliminate Coupling, Identify the Unnecessary
-
-### Tactic: “Cut-spaghetti-imports”
-This is pretty easy: If you’ve “loopified” most of your code, you can often do this replacement.
-
-Change:
-
-```rust
-use ...::Type;
-```
-
-to:
-
-```rust
-struct Type;
-```
-
-or, if applicable:
-
-```rust
-type Type = ();
-```
-
-If you haven’t done full “loopification” everywhere (our situation), then you may need to do this.
-
-```rust
-struct Type { ... } // (adapt definition from elsewhere, potentially via cut-and-paste).
-impl Type { ... }
-```
-
-Note: may need to add (potentially artificial) generic parameters, like so:
-
-Change:
-
-```rust
-use ...::Type;
-```
-
-to:
-
-
-```rust
-struct<'a, T> Type(&'a (), Option<T>);
-```
-
-or
-
-```rust
-type Type<'a, T> = (&'a (), Option<T>);
-```
-In our case, we are going to make a local version of tock_cells::MapCell.
-
-
-```rust
-struct MapCell<T> {
-    val: core::cell::UnsafeCell<core::mem::MaybeUninit<T>>,
-    occupied: Cell<bool>,
-}
-impl<T> MapCell<T> {
-    pub fn is_some(&self) -> bool {
-        self.occupied.get()
-    }
-    pub fn map<F, R>(&self, closure: F) -> Option<R>
-    where
-        F: FnOnce(&mut T) -> R,
-    {
-        if self.is_some() {
-            self.occupied.set(false);
-            let valref = unsafe { &mut *self.val.get() };
-            // TODO: change to valref.get_mut() once stabilized [#53491](https://github.com/rust-lang/rust/issues/53491)
-            let res = closure(unsafe { &mut *valref.as_mut_ptr() });
-            self.occupied.set(true);
-            Some(res)
-        } else {
-            None
-        }
-    }
-}
-
-```
-
-I got this by cut-and-pasting the definiton for struct MapCell<T> (and then fixing its types so I could avoid adding use statements elsewhere), and then cut-and-pasting its fn map method, and finally cut-and-pasting its fn is_some method after a compilation attempt said that was missing.
-
-With that done, compilation continues to show the ICE.
-
-If you “loopify” the body of MapCell::map, the ICE goes away. There is something relevant inside there.
-
-Some intelligent (as in, non-mechanical) “expr-elimination” and “none-defaulting” gets MapCell::map down to this:
-
-```rust
-impl<T> MapCell<T> {
-    pub fn map<F, R>(&self, closure: F) -> Option<R>
-    where
-        F: FnOnce(&mut T) -> R,
-    {
-            closure(None::<&mut T>.unwrap());
-            loop { }
-    }
-}
-
-```
-Compilation still shows the same ICE here, so we haven’t lost anything yet.
-
-And yet, this version of map does not use self at all!
-
-This brings us to another kind of simplification: going from object methods to top-level functions.
-
-------
-> themes: Identify the Unnecessary, Trivialize Content
-
-### Tactic: “Deobjectification”
-The goal of “deobjectification” is to replace a method defined in an impl with a top-level function. Moving some necessary component for reproducing the bug out of the impl can make the impl itself unnecessary, and thus removable.
-
-Change:
-
-```rust
-impl<X> Type<X> {
-    pub fn foo<T>(&self, args: ---) -> ReturnType { --- } // where `---` does not use `Self`/`self`
-}
-
-```
-to:
-
-```rust
-fn top_foo<X, T>(args: ---) -> ReturnType { --- }
-
-```
-
-In our case, lets try to pull MapCell::map out of MapCell:
-
-
-```diff
---- a/tock/kernel/src/lib.rs
-+++ b/tock/kernel/src/lib.rs
-@@ -2577,6 +2577,13 @@ impl<T> MapCell<T> {
-             loop { }
-     }
- }
-+
-+fn mapcell_map<T, F, R>(closure: F) -> Option<R> where F: FnOnce(&mut T) -> R
-+{
-+    closure(None::<&mut T>.unwrap());
-+    loop { }
-+}
-+
- use crate::common::{Queue, RingBuffer};
- use crate::mem::{AppSlice, Shared};
- use crate::platform::mpu::{self, MPU};
-@@ -2719,7 +2726,7 @@ pub struct Process<'a, C: 'static + Chip> {
-
- impl<C: Chip> ProcessType for Process<'a, C> {
-     unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) {
--        self.mpu_config.map(|config| {
-+        mapcell_map(|config: &mut <<C as Chip>::MPU as MPU>::MpuConfig| {
-             let _ = writer.write_fmt(format_args!("{}", config));
-         });
-     }
-```
-
-Success: compilation still ICE’s in the same way.
-
-And now that we’ve remove the last uses of fields in self for Process, we can simplify its definition considerably:
-
-
-```rust
-pub struct Process<'a, C: 'static + Chip> {
-    chip: &'static C,
-    tasks: &'a (),
-}
-
-```
-(And that simplification lets us remove the struct MapCell we added a few steps ago, since we no longer need it for the now-eliminated mpu_config field.)
-
-So now we’ve reduced all three methods to pretty simple bodies; we had to add a fourth method (mapcell_map) in the process; but that method was always there all along as part of the puzzle. It had just been waiting for us in the upstream tock-cells crate.
-
-Furthermore, we can apply “ret-elimination” to mapcell_map, both on the fn mapcell_map itself, and on its closure argument:
-
-```diff
---- INDEX/tock/kernel/src/lib.rs
-+++ WORKDIR/tock/kernel/src/lib.rs
-@@ -2564,10 +2564,9 @@ use core::{mem, ptr, slice, str};
-
- use crate::callback::{AppId, CallbackId};
- use crate::capabilities::ProcessManagementCapability;
--fn mapcell_map<T, F, R>(closure: F) -> Option<R> where F: FnOnce(&mut T) -> R
-+fn mapcell_map<T, F>(closure: F) where F: FnOnce(&mut T)
- {
-     closure(None::<&mut T>.unwrap());
--    loop { }
- }
-
- use crate::common::{Queue, RingBuffer};
-
-```
-
-We have now gotten ourself down to the following core set of methods:
-
-
-```rust
-
-fn mapcell_map<T, F>(closure: F) where F: FnOnce(&mut T)
-{
-    closure(None::<&mut T>.unwrap());
-}
-
-...
-
-pub fn load_processes<C: Chip>(chip: &'static C) { unsafe { Process::create(chip); } }
-
-pub struct Process<'a, C: 'static + Chip> {
-    chip: &'static C,
-    tasks: &'a (),
-}
-
-pub trait ProcessType {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) { loop { } }
-}
-
-...
-
-impl<C: Chip> ProcessType for Process<'a, C> {
-    unsafe fn process_detail_fmt(&self, writer: &mut dyn Write) {
-        mapcell_map(|config: &mut <<C as Chip>::MPU as MPU>::MpuConfig| {
-            let _ = writer.write_fmt(format_args!("{}", config));
-        });
-    }
-}
-
-...
-
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        chip: &'static C,
-    ) -> &'static dyn ProcessType {
-            let mut process: &mut Process<C> = None.unwrap();
-
-            process
-    }
-}
-```
-
-------
-> theme: Eliminate Coupling
-
-### Technique: “Ret-ascription”
-We could further reduce Process::create a tiny bit: We can remove its return type, as long as we ensure that the coercion implied by the return type still happens in the code.
-
-This is a variant on “ret-elimination”: we again want to remove the return type from the fn signature, but this time we will also ensure that any coercions implied by the return type still occur:
-
-Change:
-
-```rust
-fn foo(----) -> ReturnType { if A { return B; } TailReturn }
-```
-
-to:
-
-```rust
-fn foo(----) { if A { let _: ReturnType = B; } let _: ReturnType = TailReturn; }
-```
-
-For Process::create, this looks like this:
-
-```rust
-impl<C: 'static + Chip> Process<'a, C> {
-    #[allow(clippy::cast_ptr_alignment)]
-    crate unsafe fn create(
-        chip: &'static C,
-    ) {
-        let mut process: &mut Process<C> = None.unwrap();
-
-        let _: &'static dyn ProcessType = process;
-    }
-}
-```
-And furthermore, we can apply “deobjectification” and “param-elimination” here; this method doesn’t even have a self parameter.
-
-That gets us here:
-
-```rust
-pub fn load_processes<C: Chip>(_: &'static C) { process_create::<C>(); }
-
-fn process_create<C: 'static + Chip>() {
-    let _: &'static dyn ProcessType = None::<&mut Process<C>>.unwrap();
-}
-```
-
-## Take a breath
-Now that all of the involved methods seem relatively small, this seems like a good time to take a breath.
-
-At this point, we could try to take these pieces and build-up a new example from scratch, preserving the core elements identified above. That’s not a bad idea at all, at this point; it could be worth spending a half-hour or so on. Either building up an example from scratch will work, or it won’t. Let’s assume for now that we are not able to jump to a minimal example, even with the pieces we have identified as core to the problem up above?
-
-What now?
-
-We could attempt to remove large swaths of code from the example as it stands: After all, we know we just need these methods; can we just comment everything else out?
-
-Well, no. You can’t just comment random things out. The interdependencies in the crate graph will frustrate attempts to do so.
-
-For example, I tried commenting out most of the code after the mod process { ... }, in the lib.rs, and got a slew of “unresolved import” errors. So, if you want to continue reducing this exmaple, we need to do it in a more directed fashion.
-
-In the interest of trying to follow a semi-mindless process here, lets look at what we need to do in order to really minimize kernel to its core:
-
-1. We have to finish minimizing the leaves. There are crates unrelated to the ICE still being pulled into the build here, and they rely on things in kernel that we will not be able to remove until those crates are themselves reduced or otherwise eliminated from the crate graph.
-
-For us, we can apply some of the other techniques we have learned about to the leaf crates, such as using “none-defaulting” to create an instance of arty_e21::chip::ArtyExx in board/argy-e21/main.rs.
-
-2. We have to reducing the coupling within kernel itself. It can be maddening trying to comment out modules at random. When that madness becomes too much for me, I force myself to adopt a more disciplined approach: I use the “cut-spaghetti-imports” tactic to replace the existing use imports with local definitions. (Remember: since most fn-items in every module are “loopified”, the “cut-spaghetti-imports” tactic will work fairly often.
-3. This goes hand-in-hand with the general point above about reducing coupling within kernel: We have to finish mimimizing mod process { ... } itself within kernel. All of the interesting functions for reproducing the bug live there, so we know we cannot “cfgment” out that module for now. But if we have to keep mod process, we won’t be able to remove the other modules until we remove the dependencies that it has on those modules.
-
-I hope to return to this richly-documented minimization of rust-lang/rust#65774 the future; and when I do, I hope to cover all three of the points above.
-
-But for now, I hope this was a helpful tour of various minimization technique that you can employ for reducing ICEs and other static analysis bugs in rustc.
-
-
-
-## refer.
-> 关键参考
-
-后续值得细读的:
-
-- [Linking Rust Crates, Part 1 - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2022/05/12/linking-rust-crates/)
-- [Why I use a debugger - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2022/01/10/why-i-use-a-debugger/)
-- [Breaking News: Non-Lexical Lifetimes arrives for everyone - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/2019/06/26/breaking-news-non-lexical-lifetimes-arrives-for-everyone/)
-- [Category: turbowish - The {pnk}f(eli)x Blog](http://blog.pnkfx.org/blog/categories/turbowish/)
-- ...
-
-## logging
-> 版本记要
-
-- ..
-- 230228 ZQ init.
-
-```
-     _~^*~~_
- \/ /  * ◷  \ \/
-   '_   ⏡   _'
-   \ '--+--' \
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```
-
-
 
 
 ]]></content:encoded></item></channel></rss>
