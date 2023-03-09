@@ -26,6 +26,7 @@ additional-css = ["theme/style.css"]
 additional-js = ["assets/custom.js", "assets/bigPicture.js"]
 git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
 edit-url-template = "https://github.com/zhrust/rustacean/edit/master/{path}"
+sit-rss-url = "/rss.xml"
 #mathjax-support = true
 #site-url = "/mdBook/"
 
