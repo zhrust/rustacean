@@ -2,7 +2,7 @@
 title = "be Rustaceans"
 description = "如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程..."
 authors = ["ZoomQuiet"]
-#language = "en"
+language = "zh"
 multilingual = false
 src = "src"
 base_url = "rs.101.so"
@@ -12,6 +12,8 @@ base_url = "rs.101.so"
 
 [build]
 build-dir = "docs"
+create-missing = true
+
 [rss4mdbook]
 url_base = "https://rs.101.so"
 rss_title = "be Rustaceans ~ 成锈纪"
@@ -22,29 +24,31 @@ rss_desc = "~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈�
 #url-base = "https://rs.101.so/"
 
 [output.html]
-additional-css = ["theme/style.css"]
-additional-js = ["assets/custom.js", "assets/bigPicture.js"]
+#default-theme = "rust"
+#site-url = "/mdBook/"
+#mathjax-support = true
 git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
 edit-url-template = "https://github.com/zhrust/rustacean/blob/main/src/{path}"
-#sit-rss-url = "/rss.xml"
-#mathjax-support = true
-#site-url = "/mdBook/"
-
-#[output.html.playpen]
-#line-numbers = true
-#editable = true
-#editor = "ace"
-[output.html.playground]
-editable = true
-copy-js = true
-# line-numbers = true
+additional-css = ["theme/style.css"]
+additional-js = ["assets/custom.js", "assets/bigPicture.js"]
 
 [output.html.fold]
-enable = true
+enable = false
 level = 1
 
+[output.html.print]
+enable = false
+
+[output.html.playground]
+editable = true
+line-numbers = true
+#copy-js = true
+[output.theme-ace]
+theme-white = "xcode"
+theme-dark = "monokai"
+
 [output.html.search]
-limit-results = 20
+limit-results = 13
 use-boolean-and = true
 boost-title = 2
 boost-hierarchy = 2
