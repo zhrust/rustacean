@@ -24,13 +24,14 @@ rss_desc = "~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈�
 #url-base = "https://rs.101.so/"
 
 [output.html]
-#default-theme = "rust"
-#site-url = "/mdBook/"
-#mathjax-support = true
+no-section-label = true
 git-repository-url = "https://github.com/zhrust/rustacean/tree/main/src"
 edit-url-template = "https://github.com/zhrust/rustacean/blob/main/src/{path}"
 additional-css = ["theme/style.css"]
 additional-js = ["assets/custom.js", "assets/bigPicture.js"]
+#default-theme = "rust"
+#site-url = "/mdBook/"
+#mathjax-support = true
 
 [output.html.fold]
 enable = false
@@ -43,9 +44,9 @@ enable = false
 editable = true
 line-numbers = true
 #copy-js = true
-[output.theme-ace]
-theme-white = "xcode"
-theme-dark = "monokai"
+#[output.theme-ace]
+#theme-white = "xcode"
+#theme-dark = "monokai"
 
 [output.html.search]
 limit-results = 13
