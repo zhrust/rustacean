@@ -17,7 +17,7 @@
 > 具体推进
 
 - [ ] 基本概念
-    - [ ] 所有权/借用/作用域
+    - [x] 所有权/借用/作用域
     - [ ] Option
     - [ ] Box
     - [ ] ...
@@ -77,6 +77,9 @@
     - [Rust 文档翻译指引 | Rust 文档网](https://rustwiki.org/wiki/translate/rust-translation-guide/#tong-yi-fan-yi-zhu-yu-he-gu-ding-yong-yu)
     - [常见问题解答 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/faq.html#lifetimes)
     - ...
+- [张汉东|半小时弄懂-Rust基本语法及语言特性_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV15U4y177oh/)
+    - [左耳朵耗子|以 Rust 为例，带你搞懂编程语言本质_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1cA411877u/)
+    - ...
 - ...
 
 
@@ -125,6 +128,15 @@
     - [Introduction - Learning Rust With Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/first.html)
     - ...
 - ...
+
+### 面试向...
+> 也就是 Leetcode 之类的东西, 要死记的...
+
+
+- 44+ [Leetcode - YouTube](https://www.youtube.com/watch?v=L93kxEn2sEA&list=PLib6-zlkjfXnl7Qyy9QzOt5BAphdAwmHm&pp=iAQB)
+- 8+ [Rust Leetcode Solutions - YouTube](https://www.youtube.com/watch?v=dK5jUHRbyCA&list=PLvePk7bSSZhe5C8NNaxDhABkjg5F70wdE&pp=iAQB)
+- ...
+
 
 
 ## logging

@@ -41,6 +41,10 @@
     - 1.1k★ [fltk-rs/fltk-rs: Rust bindings for the FLTK GUI library.](https://github.com/fltk-rs/fltk-rs)
         - [开始 - fltk book](https://fltk.flatig.vip/Home.html)
     - ...
+- 相关分享:
+    - [EGUI:凿寂的个人空间_哔哩哔哩_bilibili](https://space.bilibili.com/68973181/channel/seriesdetail?sid=2761772&ctype=0)
+    - [\[Rust语言\]为数不多的教程简易完整的gui_哔哩哔哩_bilibili](https://www.bilibili.com/blackboard/activity-0fq5uFZVDZ.html)
+    - ...
 - ...
 
 

@@ -573,39 +573,97 @@ Rust 将会根据任何比较的第一个参数而不是类型来测定使用什
 <p>然而, 在 Rust 中, trait 提供了一种有组织且更连贯的方式来访问类似技术,
 获得模板的性能优势,
 同时仍然提供可靠类型系统的结构;</p>
-<h3 id="alternative-3-dynamic-trait-objects"><a class="header" href="#alternative-3-dynamic-trait-objects">Alternative #3: Dynamic Trait Objects</a></h3>
-<p>Sometimes, however, you do need full run-time polymorphism. You have the opposite of the scenario with the enum: You have a closed set of operations that can be performed on a value, but what those operations actually do will change dynamically in a way that cannot be bounded ahead of time.</p>
-<p>In such situations, Rust has you covered with the dyn keyword. Please don’t overuse it, though. In almost all situations where I’ve thought it might be appropriate, static polymorphism combined with other design elements have worked out better.</p>
-<p>Legitimate use cases for dyn tend to come up in situations involving inversion of control, where a framework library takes on a main loop, and the client code says how to handle various events. In network programming, the framework library says how to juggle all the sockets and register them with the operating system, but the application needs to say what to actually do with the data. In GUI programming, the framework code can say what widget was being clicked on, but very different things happen if that widget is a button versus a text box versus a custom widget you invented for this particular app.</p>
-<p>Now, you don’t strictly need run-time polymorphism for this. You could use closures (or even raw function pointers) instead, creating struct of closures (or function pointers) if multiple operations are called for – which amounts to basically doing what dyn does the hard way by hand. For example, I fully expected tokio to use Rust’s run-time polymorphism feature internally to handle this inversion of control in task scheduling. Instead, for what I imagine are performance reasons, tokio implements dyn by hand, even calling its struct of function pointers Vtable.</p>
+<h3 id="备选方案-3-动态-trait-对象"><a class="header" href="#备选方案-3-动态-trait-对象">备选方案 #3: 动态 trait 对象</a></h3>
+<blockquote>
+<p>Alternative #3: Dynamic Trait Objects</p>
+</blockquote>
+<p>然而, 有时你确实需要完备的运行时多态;
+那么你的情况和枚举的情况相反:
+有一组可以对值执行的闭包操作,
+但是, 这些操作实际执行的操作将以无法提前限制的方式动态变化;</p>
+<p>这种情况中, Rust 已经为你提供了 dyn 关键字;
+不过, 不要过度使用;
+在几乎所有我认为可能合适的情况中,
+静态多态和其它设计元素的结合效果总是最好的;</p>
+<p>dyn 的合法用例往往出现在涉及控制反转的情况中,
+其中框架库采用主循环, 客户端代码说明如何处理各种事件;</p>
+<ul>
+<li>在网络编程中, 框架库说明如何处理所有套接字, 并将她们注册到操作系统, 但是, 应用程序需要说明如何实际处理数据;</li>
+<li>在 GUI 编程中, 框架代码可以说明点击了什么小部件,但是, 如果该小部件是按钮/文本框/...又或是你为该特定应用发明的自定义小部件,则会发生截然不同的事情;</li>
+</ul>
+<p>现在, 你并不需要严格的运行时多态;
+你可以改用闭包(甚至于原始函数指针),
+如果需要多个操作,就创建闭包结构(或是函数指针)
+---这基本上相当于手工完成 dyn 的困难工作;
+例如, 我完全希望 tokio 在内部使用 Rust 运行时多态 trait 来处理任务调度中的这种控制反转;
+相反, 出于我想象的性能原因,
+tokio 手动实现 dyn, 甚至于调用其函数指针结构 Vtable;</p>
+<p>但是, dyn 的确能为你完成所有这些工作,
+为你的 trait;
+唯一的要求是你的 trait 必须是对象安全的, 
+要求列表可能看起来很熟悉,
+尤其是当涉及到关联函数(例如方法)的要求是  “dispatchable”:</p>
 <p>But dyn does all of this work for you, for your trait. The only requirement is that your trait be object-safe, and the list of requirements may seem familiar, especially when it comes to the requirements for an associated function (e.g. a method) to be “dispatchable”:</p>
 <hr />
 <ul>
-<li>Not have any type parameters (although lifetime parameters are allowed),</li>
-<li>Be a method that does not use Self except in the type of the receiver.</li>
-<li>Have a receiver with one of the following types:
+<li>没有任何类型参数(尽管允许使用生命周期秋粮),</li>
+<li>是一个不使用 Self 的方法, 除了接收者的类型</li>
+<li>具有以下类型之一的接收器:
 <ul>
 <li>&amp;Self (i.e. &amp;self)</li>
 <li>&amp;mut Self (i.e &amp;mut self)</li>
 <li>Box<Self></li>
 <li>Rc<Self></li>
 <li>Arc<Self></li>
-<li>Pin<P> where P is one of the types above</li>
+<li>Pin<P>  ~ 其中 P 是去述类型之一</li>
 </ul>
 </li>
-<li>Does not have a where Self: Sized bound (receiver type of Self (i.e. self) implies this).</li>
+<li>没有  where Self: Sized bound ( Self 的接收者类型, 即, self 暗示了这点).</li>
 </ul>
 <hr />
-<p>That is to say, it can be polymorphic in exactly one parameter, and that parameter must be by reference – more or less the exact requirements for methods to support run-time polymorphism in OOP.</p>
-<p>This is of course because dyn uses almost exactly the same mechanism as OOP to implement run-time polymorphism: the “vtable.” Box<dyn Foo> really contains two pointers rather than one, one to the object in question, and the pointer to the “vtable,” the automatically-generated structure of function pointers for that type. The one-parameter requirement is because that is the parameter whose vtable is used to look up which concrete implementation of a method to call, and the indirection requirement is because the concrete type might be different sizes, with the size only known at run-time.</p>
-<p>To be clear, these are limitations on one particular implementation strategy for run-time polymorphism. Alternative strategies exist that fully decouple the vtable from individual values of the type, as in Haskell.</p>
-<p>There are still a few advantages of Rust’s version of run-time polymorphism with traits as opposed to OOP-style interfaces.</p>
-<p>Performance-wise, it’s something done alongside a type, rather than intrinsic to the type. Normal values don’t store a vtable, spreading the cost of this throughout the program, but rather, the vtables are only referenced when a dyn pointer is created. If you never create a dyn pointer to a value of a given type, that type’s vtable doesn’t even have to be created. Certainly, you don’t have 8 bytes of extra gunk in every allocation for all the vtable pointers! This also means there’s one fewer level of indirection.</p>
-<p>Semantically, it’s also a good thing that it’s just one option among many, and that it’s not the strongly preferred option that the entire programming language is trying to push you towards. Often, even usually, static polymorphism, enums, or even just good old-fashioned closures more accurately represent the problem at hand, and should be used instead.</p>
-<p>Finally, the fact that run-time and static polymorphism in Rust both use traits makes it easier to transition from one system to another. If you find yourself using dyn for a trait, you don’t have to use it everywhere that trait is used. You can use the mechanisms of static polymorphism (like type parameters and impl Trait) instead, freely mixing and matching with the same traits.</p>
-<p>Unlike in C++, you don’t have to learn two completely different sets of syntax for concepts vs parent classes, and vastly different semantics. Really, in Rust, dynamic polymorphism is just a special case of static polymorphism, and the only differences are the things that actually are different.</p>
+<p>也就是说, 可以仅在一个参数上是多态的,
+并且, 该参数必须是引用 --- 或多少是支持 OOP 中运行时多态的方法的确切要求;</p>
+<p>这当然是因为 dyn 使用和 OOP 几乎完全相同的机制来实现运行时多态:
+“vtable” ;
+<code>Box&lt;dyn Foo&gt;</code> 实际上包含两个指针而不是一个,
+一个指向所讨论的对象, 一个指向“vtable”,
+即, 为该类型自动生成的函数指针结构;
+单参数要求, 是因为那个参数的 “vtable” 用于查找要调用的方法的具体实现,
+而间接要求, 是因为具体类型可能有不同的大小,
+只有在运行时才知道尺寸;</p>
+<p>需要明确的是, 这些都是对运行时多态的一种特定实现策略的限制;
+存在将 “vtable” 和类型的各个值完全分离的替代策略, 
+比如在 Haskell 中;</p>
+<p>和 OOP 风格的接口相比, Rust 版本的运行时多态和 trait 仍然有一些优势;</p>
+<p>在性能方面, 是和类型一起完成的,
+而不是类型固有的;
+普通值不存储“vtable” ,将其成本分散到了整个程序,
+而是仅仅在创建 dyn 针对时才引用 “vtable” ;
+如果你从未创建指向给定类型值的动态指针,
+则,甚至不必创建该类型的 “vtable”;
+当然, 你不会在所有 “vtable” 指针的每次分配中,
+都有8个字节的额外垃圾!
+这也意味着减少了一层间接调用;</p>
+<p>从语义上讲, 这只是众多选项中的一个,
+这也是一件好事儿,而且,并不是整个编程语言都试图将你强力推向的首选选项;
+甚至于通常情况中, 静态多态/枚举, 甚至只是好的老式闭包,
+都能更加准备的代表手上的问题, 那就应该替用回来;</p>
+<p>最后, Rust 中的运行时和静态多态都使用 trait 这一事实,
+也使得从一个系统切换到另外一个系统变得更加容易;
+如果你发现自己将 dyn 用于某个 trait,
+则不必要在使用该 trait 的所有地方都使用;
+你可以改用静态多态机制
+(比如类型参数和 impl trait),
+自由的混合以及匹配相同的 trait;</p>
+<p>和 C++ 不同, 你不必为概念和父类学习两组完全不同的语法,
+以及大量完全不同的语义;
+实际上, 在 Rust 中,
+动态多态只是静态多态的一个特例,
+唯一的区别是实际上不同的东西;</p>
 <h2 id="logging"><a class="header" href="#logging">logging</a></h2>
 <ul>
+<li>...</li>
+<li>230309 ZQ v0 done</li>
 <li>230215 ZQ init.</li>
 </ul>
 <pre><code>         _~^&amp;∽~_

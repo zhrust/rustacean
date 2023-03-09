@@ -88,6 +88,7 @@ MVP ~ 最小可行工程能力?
 - [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
 - 各种值得尝试的作品类型:
     - SSG: [Tutorial: Building a Blog in Rust \- Static File Server \- YouTube](https://www.youtube.com/watch?v=9uAy8skUVsc)
+    - [Rust编程小项目：编写简单的区块链_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV145411t7qp?p=7)
     - ...
 - ...
 
