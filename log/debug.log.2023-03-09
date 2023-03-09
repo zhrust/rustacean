@@ -30,3 +30,19 @@
  /Users/zoomq/Exercism/_sites/rustacean/src/dev/gui4web.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
     [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
 
+  [2m2023-03-09 17:10:39.047[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/tip/oop-2-polymorphism.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-09 17:10:39.048[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/101/README.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-09 17:10:39.048[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/dev/README.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-03-09 17:10:39.048[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/dev/gui4web.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
