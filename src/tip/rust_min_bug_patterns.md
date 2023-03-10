@@ -36,19 +36,25 @@
 
 
 
-## The Rust specifics
-Oh, and one other thing: A lot of the ideas here are applicable to many languages, and so its possible readers have already heard about them or discovered them independently.
+## Rust 细节
+> The Rust specifics
 
-However, a few of the techniques leverage features that are not universal to languages outside of Rust.
+嗯哼,还有件事儿: 
+这儿的很多想法其实适用各种语言,
+因此,你们已经听说过, 又或是独立发现过了;
 
-Specifically:
+然而, 一些技术使用了 Rust 之外不通用的语言特性;
 
-- “cfgmenting” makes use of Rust’s attribute system to remove items in a lightway fashion.
-- “loopification” makes use of the fact that the Rust allows the divergent expression loop { } to be assigned any type.
-- “loopification” via pretty-printer leverages the compiler’s (unstable) ability to inject loop { } for all function bodies.
-- Bisecting the module tree makes use of Rust’s support for a mix of inline and out-of-line modules to allow one to quickly swap code in and out.
+具体来说:
 
-So, without further ado: here is the odyssey of my minimization of rust-lang/rust#65774
+
+- “cfgmenting” 利用 Rust 的属性系统以轻快的方式删除条目;
+- “loopification” 利用 Rust 允许分散表达式循环 {} 能被分配任何类型的事实;
+- “loopification” 通过 pretty-printer 能循环利用编译器 (unstable) 能力为所有函数体注入循环 {}
+- 将模块树一分为二, 利用 Rust 混合支持内联和外联模块, 能允许快速交换代码块进出;
+
+那么,事不宜迟: 这就是我最小化 rust-lang/rust#65774 的探险之旅:
+
 
 ------
 ## Philosophical meandering
