@@ -57,7 +57,10 @@
 
 
 ------
-## Philosophical meandering
+## 曲折的哲学
+> Philosophical meandering
+
+
 ### What does “minimal” mean anyway?
 The objective of a “minimal” test case could mean minimize lines of code; or the number of characters. It is also good to minimize the number of source files: one file, cut-and-pastable into play.rust-lang.org, is especially desirable.
 
