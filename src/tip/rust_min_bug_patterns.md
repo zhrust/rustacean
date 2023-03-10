@@ -61,7 +61,18 @@
 > Philosophical meandering
 
 
-### What does “minimal” mean anyway?
+### "最小"到底什么意思?
+> What does “minimal” mean anyway?
+
+"最小"测试用例的目标可能意味着代码行最小; 又或是字符数;
+尽量减少源文件数量也有好处:
+一个文件, 可以剪切并粘贴到 play.rust-lang.org 就很好;
+
+> 还有入甚至可以争辩说, 在最小化时, 抽象语法树中的节点数是比面向文本层次的指标要更加好;
+
+
+
+
 The objective of a “minimal” test case could mean minimize lines of code; or the number of characters. It is also good to minimize the number of source files: one file, cut-and-pastable into play.rust-lang.org, is especially desirable.
 
 > One could even argue that the number of nodes in the abstract syntax tree is a better metric to use than text-oriented metrics when minimizing.
