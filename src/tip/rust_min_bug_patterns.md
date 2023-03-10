@@ -5,17 +5,36 @@
 
 > 快译:
 
-Hey there again!
+嗯哼, 俺来也!
 
-I have been pretty busy with Rust compiler tasks, so no there has not been a blog post for a few months. But now, here we are!
+之前一直忙于 Rust 编译器任务,
+所以,这几个月没更新; 现在有了!
 
-While I was working some particularly nasty bugs recently, I put a lot of effort into bug minimization: the process of taking a large test case and finding ways to remove code from the test while preserving the test’s ability to expose the same bug.
+最近当俺处理一些特别讨厌的 bug 时,
+在 bug 最小化并上投入了大量精力:
+采用大型测试用例并找到从测试中删除代码的办法,
+同时保留测试显露相同 bug 的能力过程;
 
-As I worked, I realized that I was following a somewhat mechanical process. I was using regular patterns for code transformation. At some point, I said “you know, I’m not sure if everyone is aware of these patterns. I only remember some of them while I am in the middle of a bug minimization session.”
+在我工作时, 突然意识到, 其实自己在遵循一个有点儿机械的过程;
+我使用常规模式进行代码转换;
+在某个时刻, 我想说:"
+你知道, 我不确定是否每个入都知道这些模式;
+我只记得其中一些,
+而我正在进行错误最小化过程/BMS;
+"
 
-Since the Rust compiler team always wants to help newcomers learn ways they can contribute to the project, I realized this could be the ideal subject for a blog post.
+由于 Rust 编译团队总是希望帮助新手学习他们可以为项目作出贡献的方式,
+我意识到这可能就是 blog 文章的理想主题;
 
-And, to try to keep things concrete, I’m going to try to drive the presentation by showing an actual bug being minimized. (Or rather, I’m going to recreate the minimization that I already did. So if it seems like I am rather conveniently picking transformations that always seem to work: You’re right! I’m cheating and not telling you about all the false paths I went down during my first minimization odyssey on this bug.
+而且,为了尽量使事情具体化,
+我将尝试通过展示一个被最小化的实际错误来推动演示;
+(或者更加确切的说,我将重新复现已经完成过的 BMS/最小化;
+因此,如果我似乎能很精确的选择总是有效的转换:
+你感觉对了, 的确在作弊, 并没告诉你所有的错误路径,
+其实都在第一次 BSM 过程中都遭受过, 就象odyssey听过的海妖魔音...
+)
+
+
 
 ## The Rust specifics
 Oh, and one other thing: A lot of the ideas here are applicable to many languages, and so its possible readers have already heard about them or discovered them independently.
