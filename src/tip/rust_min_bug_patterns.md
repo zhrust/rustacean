@@ -71,17 +71,20 @@
 > 还有入甚至可以争辩说, 在最小化时, 抽象语法树中的节点数是比面向文本层次的指标要更加好;
 
 
+以这种正式最小化源代码测试可以产生一个良好的回归测试候选,
+以便在(希望是)最终修复错误时,将其追加到编译器测试套件中;
+
+但是, 那些最小化语法树节点指标忽略了一些东西:
+当最小化错误代码时, 我自己的最终目标是更好的理解错误, 
+也就是更好的理解我自己, 以及阅读测试用例的其它开发者;
 
 
-The objective of a “minimal” test case could mean minimize lines of code; or the number of characters. It is also good to minimize the number of source files: one file, cut-and-pastable into play.rust-lang.org, is especially desirable.
 
-> One could even argue that the number of nodes in the abstract syntax tree is a better metric to use than text-oriented metrics when minimizing.
+> 我是从 rustc 开发者角度来写这篇文章的;
+> 所以, 我可能对什么是有用的, 或是什么是最小的, 有轻微的偏见;
 
-Minimizing the source test in this way can yield a good candidate for a regression test to add to the compiler test suite when the bug is (hopefully) eventually fixed.
 
-But those syntactic metrics of minimality overlook something: My own end goal when minimizing the code for a bug is a better understanding of the bug: a better understanding for myself, and for other developers who are reading the test case.
-
-> I am writing this post from the viewpoint of a rustc developer. So I may have a slightly skewed view on what is useful or minimal.And for such understanding, there are other metrics to keep in mind:
+基于这种理解, 还有其它指标需要牢记:
 
 - Minimize the amount of time the compiler runs before it hits the bug.
 
