@@ -123,7 +123,7 @@ error: failed to publish to registry at https://crates.io
 是的, 就少了 github 自动创建时后面的一个 `License` 就通过了:
 
 ```
-$   cargo publish --registry crates-io
+$ cargo publish --registry crates-io --allow-dirty --no-verify
     Updating crates.io index
 ...
      Waiting on `ferris-actor` to propagate to crates.io index (ctrl-c to wait asynchronously)
@@ -168,6 +168,7 @@ $   cargo publish --registry crates-io
 > 版本记要
 
 - ...
+- 230314 ZQ 增补日常发布时的具体指令
 - 230122 ZQ init.
 
 

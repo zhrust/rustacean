@@ -1,0 +1,313 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+
+<head>
+    <!-- Book generated using mdBook -->
+    <meta charset="UTF-8">
+    <title>🌘 两种&#x27;Assert&#x27;构建清晰代码 - be Rustaceans</title>
+
+
+    <!-- Custom HTML head -->
+    
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程...">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.png">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="../highlight.css">
+    <link rel="stylesheet" href="../tomorrow-night.css">
+    <link rel="stylesheet" href="../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="../theme/style.css">
+
+
+</head>
+
+<body>
+    <!-- Provide site root to javascript -->
+    <script type="text/javascript">
+        var path_to_root = "../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+    </script>
+
+    <!-- Work around some values being stored in localStorage wrapped in quotes -->
+    <script type="text/javascript">
+        try {
+            var theme = localStorage.getItem('mdbook-theme');
+            var sidebar = localStorage.getItem('mdbook-sidebar');
+            if (theme.startsWith('"') && theme.endsWith('"')) {
+                localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+            }
+            if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- Set the theme before any content is loaded, prevents flash -->
+    <script type="text/javascript">
+        var theme;
+        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
+        if (theme === null || theme === undefined) { theme = default_theme; }
+        var html = document.querySelector('html');
+        html.classList.remove('no-js')
+        html.classList.remove('light')
+        html.classList.add(theme);
+        html.classList.add('js');
+    </script>
+
+    <!-- Hide / unhide sidebar before it is displayed -->
+    <script type="text/javascript">
+        var html = document.querySelector('html');
+        var sidebar = 'hidden';
+        if (document.body.clientWidth >= 1080) {
+            try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+            sidebar = sidebar || 'visible';
+        }
+        html.classList.remove('sidebar-visible');
+        html.classList.add("sidebar-" + sidebar);
+    </script>
+
+    <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <div class="sidebar-scrollbox">
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html">成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html">gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html">zhrust</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">自习🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../101/index.html">🌖 Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/past_ampersand-driven_development.html">🌘 克服"& 驱动开发"</a></li><li class="chapter-item "><a href="../101/idioms.html">🌘 idioms</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/idiom325_create_a_queue.html">🌝 idiom#325:构造队列</a></li></ol></li><li class="chapter-item "><a href="../101/quiz.html">🌘 Quiz.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/quiz_1.html">🌝 Quiz#1</a></li></ol></li><li class="chapter-item "><a href="../101/exercism.html">🌘 Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html">🌖 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html">🌖 43:Allergies</a></li></ol></li><li class="chapter-item "><a href="../101/chatgpt101.html">🌚 伴学ChatGPT</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/chat_dyn101.html">🌖 dyn 初步</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">实践🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../dev/index.html">🌖 Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html">🌘小作品</a></li><li class="chapter-item "><a href="../dev/tui4cli.html">🌖TUI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_nnera.html">🌖 NNera</a></li><li class="chapter-item "><a href="../dev/cli_ferris_art.html">🌝 Ferris艺术</a></li><li class="chapter-item "><a href="../dev/cli_bxmr.html">🌝 BXMr</a></li><li class="chapter-item "><a href="../dev/cli_rss4mdbook.html">🌝 RSS4mdbook</a></li><li class="chapter-item "><a href="../dev/cli_yuzu.html">🌚 Yuzu</a></li></ol></li><li class="chapter-item "><a href="../dev/web4async.html">🌚 异步</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/tokio.html">🌘 Tokio</a></li><li class="chapter-item "><a href="../dev/graphql.html">🌚 GraphQL</a></li></ol></li><li class="chapter-item "><div>🌚 TTD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html">🌘 Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/debug_rust_with_codelldb.html">🌚 CodeLLDB</a></li></ol></li><li class="chapter-item "><a href="../dev/gui4web.html">🌚 GUI</a></li><li class="chapter-item "><a href="../dev/embedded_rs.html">🌚 嵌入</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/emb_rp2040pico.html">🌘 Pico</a></li><li class="chapter-item "><a href="../dev/emb_rpi02w.html">🌘 Zero2w</a></li></ol></li><li class="chapter-item "><div>🌚 CI/CD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cross-compiling.html">🌘 交叉编译?</a></li></ol></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html">🌝 20年来作为软件工程师学到的10件事</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html">🌝 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item "><div>🌘 实用工具推荐...</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_btm.html">🌘 Bottom</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">工程🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../tip/index.html">🌘 Rust 技能</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/awesome4rs.html">🌘 Awesome.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/aw4rs_handlebars.html">🌘 Handlebars</a></li><li class="chapter-item "><a href="../tip/tracing.html">🌖 tracing 初步</a></li><li class="chapter-item "><a href="../tip/open_big_file_speed.html">🌖 文件加速打开</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/rust_min_bug_patterns.html">🌘 BMP:最小bug模式</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/manag_growing_proj_with_crates_modules.html">🌖 Crate中合理划分目录</a></li><li class="chapter-item "><a href="../tip/clear_explanation_rust_modele_system.html">🌘 清晰解释Rust模块系统</a></li><li class="chapter-item expanded "><a href="../tip/two_kinds_assert_make_better_code.html" class="active">🌘 两种'Assert'构建清晰代码</a></li></ol></li><li class="chapter-item "><div>🌝 anti-OOP</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/default-params.html">🌝 OOP:Rust 和默认参数</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html">🌝 Rust 超越OOP,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html">🌝 Rust 超越OOP,第2部分</a></li></ol></li><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html">🌝 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">笔记🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../log/index.html">🌖 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust101logging.html">🌗 Rust 课程笔记</a></li><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html">🌝 Rust 丑句法</a></li><li class="chapter-item "><a href="../log/graph-rust-move-copy-borrow.html">🌝 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item "><div>🌚 Choas嗯哼</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/c101.html">🌖 0基础入门C?</a></li><li class="spacer"></li></ol></li></ol></li></ol>
+        </div>
+        <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+    </nav>
+
+    <div id="page-wrapper" class="page-wrapper">
+
+        <div class="page">
+                        <div id="menu-bar-hover-placeholder"></div>
+            <div id="menu-bar" class="menu-bar sticky bordered">
+                <div class="left-buttons">
+                    <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents"
+                        aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <button id="theme-toggle" class="icon-button" type="button" title="Change theme"
+                        aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                        <i class="fa fa-paint-brush"></i>
+                    </button>
+                    <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                        <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button>
+                        </li>
+                    </ul>
+                    <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)"
+                        aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S"
+                        aria-controls="searchbar">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <h1 class="menu-title">be Rustaceans</h1>
+
+                <div class="right-buttons">
+                    <a href="https://github.com/zhrust/rustacean/tree/main/src" title="Git repository" aria-label="Git repository">
+                        <i id="git-repository-button" class="fa fa-github"></i>
+                    </a>
+                    <a href="https://github.com/zhrust/rustacean/blob/main/src/src/tip/two_kinds_assert_make_better_code.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <i id="git-edit-button" class="fa fa-edit"></i>
+                    </a>
+
+                    <a href="/rss.xml" title="RSS.xml" aria-label=""RSS.xml">
+                        <b id="git-edit-button" class="fa fa-feed"></b>
+                    </a>
+
+                </div>
+            </div>
+
+            <div id="search-wrapper" class="hidden">
+                <form id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..."
+                        aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </form>
+                <div id="searchresults-outer" class="searchresults-outer hidden">
+                    <div id="searchresults-header" class="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+            <script type="text/javascript">
+                document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                    link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                });
+            </script>
+
+            <div id="content" class="content">
+                <!-- Page table of contents -->
+                <div class="sidetoc">
+                    <nav class="pagetoc"></nav>
+                </div>
+                <main>
+                    <h1 id="两种assert构建清晰代码"><a class="header" href="#两种assert构建清晰代码">两种'Assert'构建清晰代码</a></h1>
+<blockquote>
+<p>tips...重要也不重要</p>
+</blockquote>
+<p>原文: <a href="https://tratt.net/laurie/blog/2023/rusts_two_kinds_of_assert_make_for_better_code.html">Laurence Tratt: Rust's Two Kinds of 'Assert' Make for Better Code</a></p>
+<h2 id="快译"><a class="header" href="#快译">快译</a></h2>
+<p>Daniel Lemire's recent post &quot;runtime asserts are not free&quot; looks at the run-time cost of assert statements in C and shows that a simple assert in a frequently executed loop can cause significant overhead.
+My own opinion on assertions has shifted over the years, from &quot;I don't see the point&quot; to &quot;use them sparingly&quot; to &quot;use them as much as possible&quot;. That last shift is largely due to Rust having two kinds of &quot;assert&quot; statement – assert and debug_assert – which has allowed me to accurately express two different kinds of assertions, largely freeing me from performance worries. If you come from a language that only has one kind of assert statement, this distinction can seem pointless, so in this post I want to briefly explain why it helped shift my thinking.</p>
+<p>Background
+Let me quickly define what I mean by an &quot;assert&quot;: it's a programming language statement that checks a property and causes a crash if that property does not hold (conventionally called a &quot;failing assert&quot;). For example, if I have a Python program with a list of people's ages and calculate the minimum age, I might want to check that the youngest person doesn't have a negative age:</p>
+<p>ages = [...]
+youngest = min(ages)
+assert(youngest &gt;= 0)
+If ages contains a negative value – or if min doesn't work correctly! – the assert will fail and cause a run-time exception:
+Traceback (most recent call last):
+File &quot;/tmp/t.py&quot;, line 3, in 
+assert(youngest &gt;= 0)
+AssertionError
+In other words, writing assert is roughly equivalent to:
+ages = [...]
+youngest = min(ages)
+if not (youngest &gt;= 0):
+raise AssertionError
+In practise, asserts are mostly used to check assumptions about a program's state — in this case, that at no point has a negative age entered into the system.
+There are two major reasons why I might want to check this particular assumption. First, I might have written subsequent code which will only execute correctly with non-negative youngest values: I want to prevent that subsequent code from executing if that property is violated. Second, the assert both documents and checks the property. In other words, I could just have written a comment:</p>
+<p>ages = [...]
+youngest = min(ages)</p>
+<h1 id="youngest-must-be-non-negative-or-bad-things-will-happen-below"><a class="header" href="#youngest-must-be-non-negative-or-bad-things-will-happen-below">youngest must be non-negative or bad things will happen below</a></h1>
+<p>...
+That comment accurately describes the program's assumption, but if the assumption is incorrect – perhaps because another part of the program uses -1 to mean &quot;we don't know how old this person is&quot; – the threatened &quot;bad things&quot; will occur. If I'm lucky, the effects will be relatively benign, and perhaps even invisible. But, if I'm unlucky, genuinely bad things will occur, ranging from odd output to security vulnerabilities.
+Debugging incorrect assumptions of this sort is hard, because the effect of the assumption's violation is generally only noticed long after the violation occurred. It's not unusual for some poor programmer to spend a day or more hunting down a problem only to find that it was caused by the violation of a simple assumption. In contrast, the assert causes my program to crash predictably, with a clear report, and at the earliest possible opportunity. In general, fixing the causes of failing asserts tends to be relatively simple.</p>
+<p>Why asserts are used less often than one might think
+As I've described them above, asserts sound like a clear win — but most programs use many fewer asserts than one might hope.
+The most obvious reason for this is that programmers often don't realise the assumptions they're embedding in their programs, or don't consider the consequences of their assumptions. This tends to be particularly true for junior programmers, who have not yet built up scar tissue from multi-day debugging sessions that were necessary only because they didn't think to use asserts. It took me many years of programming before I realised how much time I was wasting by not thinking about, and checking with asserts, my assumptions about a program's properties.</p>
+<p>Sometimes it's also very difficult to work out how to assert the property one cares about. This is particularly true in languages like C where there is no built-in help to express properties such as &quot;no element in the list can be negative&quot;. The lengthier, and more difficult, an assert needs to be – particularly if it needs a helper function – the less likely it is to be written down.</p>
+<p>Inevitably, some asserts are plain wrong, either expressing an incorrect property, or expressing correct property incorrectly. I think most of us expect such mistakes. However, what many people don't realise is that asserts can change a program's behaviour if they have side effects. I have shot myself in the foot more than once by copying and pasting code such as l[i++] into an assert, causing the program to execute differently depending on whether the assert is compiled in or not. I view this as inevitable stupidity on my part, rather than a flaw in the concept of asserts, but I have heard of at least one organisation that bans (or, at least, banned) asserts because of this issue.</p>
+<p>Performance issues
+Daniel pointed out a very different reason for avoiding asserts: they can cause serious performance issues when used in the &quot;wrong&quot; places. An assert introduces a branch (i.e. an &quot;if&quot;) which must be executed at run-time [1]. The existence of an assert can also cause a compiler to miss compile-time optimisation opportunities [2]. There is a general fear in the programming community about the performance costs of asserts, even though none of us can know how they impact a given program without actually measuring it.
+To avoid performance issues, most software is compiled in either &quot;debug&quot; (sometimes called &quot;testing&quot;) or &quot;release&quot; modes: in debug mode, asserts are compiled in and checked at run-time; but in release mode, the asserts are not compiled in, and thus not checked at run-time. In languages like C, there isn't a standard concept of &quot;debug&quot; and &quot;release&quot; modes, but many people consider &quot;release&quot; mode to imply adding a flag -DNDEBUG, which causes assert to become a no-op. Rust's standard Cargo build system defaults to debug mode, with --release performing a release build.</p>
+<p>Two kinds of asserts
+While not compiling (and thus not checking) asserts in release mode removes performance problems, it also weakens the guarantees we have about a program's correctness — just because a test suite doesn't violate an assumption doesn't mean that real users won't use the program in a way which does.
+These days I thus view asserts as falling into two categories:</p>
+<p>Checking problem domain assumptions.
+Checking internal assumptions.
+That distinction might seem artificial, perhaps even non-existent, so let me give examples of what I mean.
+The first category contains assumptions about the &quot;real world&quot; problem my program is trying to help solve. For example, if I'm writing a warehouse stock system, parts of my program might assume properties such as &quot;an item's barcode is never empty&quot;.</p>
+<p>The second category contains assumptions about the way I've structured my program. For example, I might have written a function which runs much faster if I assume the input integer is greater than 1. It's probable that, at the time I write that function, I won't call it in a way that violates that property: but later programmers (including me!) will quite possibly forget, or not notice, that property. An assertion is thus particularly helpful for future programmers, especially when they're refactoring code, to give them greater confidence that they haven't broken the program in subtle ways.</p>
+<p>What it took me years to realise is that I have very different confidence levels about my assumptions in each category. I have high confidence that violations of my assumptions in the second category will be caught during normal testing. However, I have much lower confidence that violations of my assumptions in the first category will be caught during testing.</p>
+<p>My differing confidence levels shouldn't be surprising — after all, I've been hired because I can program, not because I know much about warehouse stock systems or barcodes! However, since &quot;normal testing&quot; implies &quot;debug mode&quot; and &quot;user is running the program&quot; implies &quot;release mode&quot;, it means that the assumptions I am least confident are not exercised when they're most needed.</p>
+<p>Two kinds of assert statement
+The problem that I've just expressed ultimately occurs because languages like C force us to encode both kinds of assumption with a single assert statement: either all asserts are compiled in or none are.
+I long considered this inevitable, but when I moved to Rust several years back, I slowly realised that I now had access to two kinds of assert statement. debug_assert is rather like assert in C, in the sense that the assumptions it expresses are only checked in debug mode. In contrast, assert is &quot;always checked in both debug and release builds, and cannot be disabled.&quot;</p>
+<p>This might seem like a small difference, but for me it completely unlocked the power of assertions. If you look at a lot of the code I now write, you'll see liberal use of debug_assert, often checking quite minor assumptions, including those I never think likely to be violated. I never even think, let alone worry, about the performance impact of debug_assert. But occasionally you'll spot an assert, sometimes even in fairly frequently executed code — those are where I'm checking particularly important assumptions, or assumptions in which I have particularly low confidence. Each time I write assert I think about the possible performance impact, and also about whether there's a way I can increase my confidence in the assumption to the point that I can downgrade it to a debug_assert. Similarly, when it comes to debugging, I often check assert statements quite carefully as they indicate my low confidence in a particular assumption: it's more likely that I have to reconsider an assert than a debug_assert.</p>
+<p>Of course, there's no reason why you can't write your own equivalents of assert and debug_assert in C, or any other language, but having them built into a language (or standard library), where their differing motivations are clearly documented and widely understood, makes it much easier to use them freely. I hope languages other than Rust will continue to make this difference in assertions — though I would prefer a shorter name than &quot;debug_assert&quot;!</p>
+<pre><code>          _~`|`~_
+      \) /  ← ◷  \ \/
+        '_   V   _'
+        \ '--∽--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+</code></pre>
+
+                    <div id="giscus-container"></div>
+                </main>
+
+                <nav class="nav-wrapper" aria-label="Page navigation">
+                    <!-- Mobile navigation buttons -->
+                    <a rel="prev" href="../tip/clear_explanation_rust_modele_system.html" class="mobile-nav-chapters previous"
+                        title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../tip/default-params.html" class="mobile-nav-chapters next"
+                        title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+
+                    <div style="clear: both"></div>
+                </nav>
+            </div>
+        </div>
+
+        <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            <a rel="prev" href="../tip/clear_explanation_rust_modele_system.html" class="nav-chapters previous" title="Previous chapter"
+                aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <i class="fa fa-angle-left"></i>
+            </a>
+
+            <a rel="next" href="../tip/default-params.html" class="nav-chapters next" title="Next chapter"
+                aria-label="Next chapter" aria-keyshortcuts="Right">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </nav>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        window.playground_line_numbers = true;
+    </script>
+
+    <script type="text/javascript">
+        window.playground_copyable = true;
+    </script>
+
+    <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var pagePath = "tip/two_kinds_assert_make_better_code.md"
+    </script>
+
+
+    <!-- Custom JS scripts -->
+    <script type="text/javascript" src="../assets/custom.js"></script>
+    <script type="text/javascript" src="../assets/bigPicture.js"></script>
+
+    <hr />
+
+    <p style="text-align:center">
+
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议"
+                style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+        本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可;-)
+<!--
+][ <b>
+    <a href="/rss.xml">RSS</a>
+    </b>
+-->
+
+    </p>
+    <hr />
+
+    <script src="https://utteranc.es/client.js" repo="zhrust/comments" issue-term="pathname" label="✨💬✨"
+        theme="github-light" crossorigin="anonymous" async>
+        </script>
+
+</body>
+
+</html>

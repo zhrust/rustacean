@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+
+<head>
+    <!-- Book generated using mdBook -->
+    <meta charset="UTF-8">
+    <title>🌘 Zero2w - be Rustaceans</title>
+
+
+    <!-- Custom HTML head -->
+    
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程...">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.png">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="../highlight.css">
+    <link rel="stylesheet" href="../tomorrow-night.css">
+    <link rel="stylesheet" href="../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="../theme/style.css">
+
+
+</head>
+
+<body>
+    <!-- Provide site root to javascript -->
+    <script type="text/javascript">
+        var path_to_root = "../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+    </script>
+
+    <!-- Work around some values being stored in localStorage wrapped in quotes -->
+    <script type="text/javascript">
+        try {
+            var theme = localStorage.getItem('mdbook-theme');
+            var sidebar = localStorage.getItem('mdbook-sidebar');
+            if (theme.startsWith('"') && theme.endsWith('"')) {
+                localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+            }
+            if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- Set the theme before any content is loaded, prevents flash -->
+    <script type="text/javascript">
+        var theme;
+        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
+        if (theme === null || theme === undefined) { theme = default_theme; }
+        var html = document.querySelector('html');
+        html.classList.remove('no-js')
+        html.classList.remove('light')
+        html.classList.add(theme);
+        html.classList.add('js');
+    </script>
+
+    <!-- Hide / unhide sidebar before it is displayed -->
+    <script type="text/javascript">
+        var html = document.querySelector('html');
+        var sidebar = 'hidden';
+        if (document.body.clientWidth >= 1080) {
+            try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+            sidebar = sidebar || 'visible';
+        }
+        html.classList.remove('sidebar-visible');
+        html.classList.add("sidebar-" + sidebar);
+    </script>
+
+    <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <div class="sidebar-scrollbox">
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html">成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html">gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html">zhrust</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">自习🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../101/index.html">🌖 Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/past_ampersand-driven_development.html">🌘 克服"& 驱动开发"</a></li><li class="chapter-item "><a href="../101/idioms.html">🌘 idioms</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/idiom325_create_a_queue.html">🌝 idiom#325:构造队列</a></li></ol></li><li class="chapter-item "><a href="../101/quiz.html">🌘 Quiz.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/quiz_1.html">🌝 Quiz#1</a></li></ol></li><li class="chapter-item "><a href="../101/exercism.html">🌘 Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html">🌖 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html">🌖 43:Allergies</a></li></ol></li><li class="chapter-item "><a href="../101/chatgpt101.html">🌚 伴学ChatGPT</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/chat_dyn101.html">🌖 dyn 初步</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">实践🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../dev/index.html">🌖 Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html">🌘小作品</a></li><li class="chapter-item "><a href="../dev/tui4cli.html">🌖TUI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_nnera.html">🌖 NNera</a></li><li class="chapter-item "><a href="../dev/cli_ferris_art.html">🌝 Ferris艺术</a></li><li class="chapter-item "><a href="../dev/cli_bxmr.html">🌝 BXMr</a></li><li class="chapter-item "><a href="../dev/cli_rss4mdbook.html">🌝 RSS4mdbook</a></li><li class="chapter-item "><a href="../dev/cli_yuzu.html">🌚 Yuzu</a></li></ol></li><li class="chapter-item "><a href="../dev/web4async.html">🌚 异步</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/tokio.html">🌘 Tokio</a></li><li class="chapter-item "><a href="../dev/graphql.html">🌚 GraphQL</a></li></ol></li><li class="chapter-item "><div>🌚 TTD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html">🌘 Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/debug_rust_with_codelldb.html">🌚 CodeLLDB</a></li></ol></li><li class="chapter-item "><a href="../dev/gui4web.html">🌚 GUI</a></li><li class="chapter-item expanded "><a href="../dev/embedded_rs.html">🌚 嵌入</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/emb_rp2040pico.html">🌘 Pico</a></li><li class="chapter-item expanded "><a href="../dev/emb_rpi02w.html" class="active">🌘 Zero2w</a></li></ol></li><li class="chapter-item "><div>🌚 CI/CD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cross-compiling.html">🌘 交叉编译?</a></li></ol></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html">🌝 20年来作为软件工程师学到的10件事</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html">🌝 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item "><div>🌘 实用工具推荐...</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_btm.html">🌘 Bottom</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">工程🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../tip/index.html">🌘 Rust 技能</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/awesome4rs.html">🌘 Awesome.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/aw4rs_handlebars.html">🌘 Handlebars</a></li><li class="chapter-item "><a href="../tip/tracing.html">🌖 tracing 初步</a></li><li class="chapter-item "><a href="../tip/open_big_file_speed.html">🌖 文件加速打开</a></li></ol></li><li class="chapter-item "><a href="../tip/rust_min_bug_patterns.html">🌘 BMP:最小bug模式</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/manag_growing_proj_with_crates_modules.html">🌖 Crate中合理划分目录</a></li><li class="chapter-item "><a href="../tip/clear_explanation_rust_modele_system.html">🌘 清晰解释Rust模块系统</a></li><li class="chapter-item "><a href="../tip/two_kinds_assert_make_better_code.html">🌘 两种'Assert'构建清晰代码</a></li></ol></li><li class="chapter-item "><div>🌝 anti-OOP</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/default-params.html">🌝 OOP:Rust 和默认参数</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html">🌝 Rust 超越OOP,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html">🌝 Rust 超越OOP,第2部分</a></li></ol></li><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html">🌝 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">笔记🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../log/index.html">🌖 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust101logging.html">🌗 Rust 课程笔记</a></li><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html">🌝 Rust 丑句法</a></li><li class="chapter-item "><a href="../log/graph-rust-move-copy-borrow.html">🌝 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item "><div>🌚 Choas嗯哼</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/c101.html">🌖 0基础入门C?</a></li><li class="spacer"></li></ol></li></ol></li></ol>
+        </div>
+        <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+    </nav>
+
+    <div id="page-wrapper" class="page-wrapper">
+
+        <div class="page">
+                        <div id="menu-bar-hover-placeholder"></div>
+            <div id="menu-bar" class="menu-bar sticky bordered">
+                <div class="left-buttons">
+                    <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents"
+                        aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <button id="theme-toggle" class="icon-button" type="button" title="Change theme"
+                        aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                        <i class="fa fa-paint-brush"></i>
+                    </button>
+                    <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                        <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button>
+                        </li>
+                    </ul>
+                    <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)"
+                        aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S"
+                        aria-controls="searchbar">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <h1 class="menu-title">be Rustaceans</h1>
+
+                <div class="right-buttons">
+                    <a href="https://github.com/zhrust/rustacean/tree/main/src" title="Git repository" aria-label="Git repository">
+                        <i id="git-repository-button" class="fa fa-github"></i>
+                    </a>
+                    <a href="https://github.com/zhrust/rustacean/blob/main/src/src/dev/emb_rpi02w.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <i id="git-edit-button" class="fa fa-edit"></i>
+                    </a>
+
+                    <a href="/rss.xml" title="RSS.xml" aria-label=""RSS.xml">
+                        <b id="git-edit-button" class="fa fa-feed"></b>
+                    </a>
+
+                </div>
+            </div>
+
+            <div id="search-wrapper" class="hidden">
+                <form id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..."
+                        aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </form>
+                <div id="searchresults-outer" class="searchresults-outer hidden">
+                    <div id="searchresults-header" class="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+            <script type="text/javascript">
+                document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                    link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                });
+            </script>
+
+            <div id="content" class="content">
+                <!-- Page table of contents -->
+                <div class="sidetoc">
+                    <nav class="pagetoc"></nav>
+                </div>
+                <main>
+                    <h1 id="raspberry-pi-zero-2-w"><a class="header" href="#raspberry-pi-zero-2-w">Raspberry Pi Zero 2 w</a></h1>
+<blockquote>
+<p>最便宜的开发板了...</p>
+</blockquote>
+<h2 id="background"><a class="header" href="#background">background</a></h2>
+<p>Why not?</p>
+<h2 id="goal"><a class="header" href="#goal">goal</a></h2>
+<p>作为上位机和 Pico 连接起来折腾点儿事儿。。。</p>
+<h2 id="trace"><a class="header" href="#trace">trace</a></h2>
+<h3 id="hx1838"><a class="header" href="#hx1838">HX1838</a></h3>
+<blockquote>
+<p>... 接入标准 HX1838 红外接收器的需求。需要使用 Rust 语言提供的 GPIO 库来控制 Raspberry Pi 的 GPIO 引脚，以及使用 Rust 的外部库来读取红外信号。具体的实现步骤如下：</p>
+</blockquote>
+<ol>
+<li>配置环境</li>
+</ol>
+<p>首先需要安装 Rust 工具链，可以在 Raspberry Pi zero 2w 上使用以下命令进行安装：</p>
+<pre><code>curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+</code></pre>
+<p>安装完成后，需要安装对应的交叉编译工具链，以便于在 Raspberry Pi zero 2w 上编译 ARM 版本的代码。可以使用以下命令进行安装：</p>
+<pre><code>rustup target add armv7-unknown-linux-gnueabihf
+</code></pre>
+<ol start="2">
+<li>连接硬件</li>
+</ol>
+<p>将 HX1838 红外接收器连接到 Raspberry Pi 的 GPIO 引脚上。可以参考 HX1838 的数据手册来确定连接方式。</p>
+<ol start="3">
+<li>编写代码</li>
+</ol>
+<p>首先需要导入 GPIO 库和外部库，可以在项目的 Cargo.toml 文件中添加以下依赖：</p>
+<pre><code>[dependencies]
+rppal = &quot;0.12.2&quot;
+rust-hx711 = &quot;0.1.0&quot;
+</code></pre>
+<p>然后编写 Rust 代码，示例代码如下：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">use rppal::gpio::{Gpio, Level, Mode};
+use rust_hx711::HX711;
+
+fn main() {
+    let gpio = Gpio::new().unwrap();
+    let mut pin = gpio.get(17).unwrap().into_input_pullup();
+    let mut hx711 = HX711::new(18, 27).unwrap();
+
+    loop {
+        if pin.read() == Level::Low {
+            let reading = hx711.read().unwrap();
+            println!(&quot;Reading: {}&quot;, reading);
+        }
+    }
+}</code></pre></pre>
+<p>代码中的 <code>gpio.get(17)</code> 表示通过 GPIO 引脚编号来获取 GPIO 对象，然后将其设置为输入模式，并开启上拉电阻。<code>HX711::new(18, 27)</code> 表示创建一个 HX711 对象，其中 18 和 27 分别表示 HX711 的 SCK 和 DT 引脚对应 Raspberry Pi 的 GPIO 引脚编号。</p>
+<p>运行代码后，可以通过红外遥控器发送信号，然后在终端中可以看到将红外信号转换为数字的输出。</p>
+<ol start="4">
+<li>编译代码</li>
+</ol>
+<p>使用以下命令来编译代码：</p>
+<pre><code>cargo build --target=armv7-unknown-linux-gnueabihf
+</code></pre>
+<p>编译完成后，可以将生成的二进制文件拷贝到 Raspberry Pi zero 2w 上，然后在终端中运行即可。</p>
+<h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
+<blockquote>
+<p>关键参考</p>
+</blockquote>
+<p>选择困难? <a href="https://www.electromaker.io/blog/article/12-best-linux-operating-systems-for-the-raspberry-pi">Best Linux Operating Systems for the Raspberry Pi</a></p>
+<ul>
+<li><a href="http://segmentfault.com/a/1190000000503041">树莓派及其他硬件平台国内外Linux镜像站全汇总-阿里云开发者社区</a>
+<ul>
+<li><a href="https://my.oschina.net/u/2306127/blog/1587585">Alpine Linux 安装到 Raspberry Pi - openthings的个人空间 - OSCHINA - 中文开源技术交流社区</a></li>
+</ul>
+</li>
+<li>Raspbian 派 ... 官方的总是有问题...虽然文档多, 毕竟不是专业 OS 发行商...
+53+ <a href="https://www.youtube.com/playlist?list=PLolGQZF-26atBkbYgFDm7z1o_B_eFy6eK">ラズベリーパイ - YouTube</a> 系列
+<ul>
+<li><a href="https://www.youtube.com/watch?v=wSvMPMdJjXI">Raspberry Pi Zero 2 W を使ってみる！セットアップ〜デスクトップとして使えるのかチェック - YouTube</a></li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>ArchLinux 流... ..
+<ul>
+<li><a href="https://wiki.archlinux.org/title/arch_compared_to_other_distributions#See_also">Arch compared to other distributions - ArchWiki</a></li>
+<li>以往真没用过, 值得学...关键看镜像:
+<ul>
+<li><a href="https://wiki.archlinuxcn.org/zh-hans/%E9%95%9C%E5%83%8F%E6%BA%90#%E5%8F%82%E8%A7%81">镜像源 - Arch Linux 中文维基</a></li>
+<li>这里使用 <code>-n 6</code> 参数来实现只获取 6 个最快的镜像：</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>    # rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup &gt; /etc/pacman.d/mirrorlist
+</code></pre>
+<ul>
+<li>
+<p><a href="https://www.zzxworld.com/posts/change-cn-mirror-for-arch-linux">Arch Linux 更换国内镜像源</a></p>
+<ul>
+<li><a href="https://archlinux.org/mirrors/">Arch Linux - Mirror Overview</a></li>
+<li><a href="https://archlinux.org/mirrors/aliyun.com/">Arch Linux - aliyun.com - Mirror Details</a></li>
+<li><a href="https://developer.aliyun.com/mirror/archlinuxcn/">archlinuxcn镜像_archlinuxcn下载地址_archlinuxcn安装教程-阿里巴巴开源镜像站</a></li>
+<li>好吧还是大厂的错误少...</li>
+</ul>
+</li>
+<li>
+<p><a href="https://cloud-atlas.readthedocs.io/zh_CN/latest/linux/arch_linux/pacman.html">Pacman — Cloud Atlas 0.1 文档</a></p>
+<ul>
+<li>关键工具, 平替 apt
+<ul>
+<li><a href="https://cloud-atlas.readthedocs.io/zh_CN/latest/linux/arch_linux/pacman_proxy.html">pacman使用代理服务器 — Cloud Atlas 0.1 文档</a>
+...
+安装指南:</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>官方: <a href="https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-zero-2">Raspberry Pi Zero 2 | Arch Linux ARM</a></p>
+<ul>
+<li>全指令... fdisk 开始...</li>
+<li><a href="https://chirsz.cc/blog/2020-09/install-archlinux-rp0w.html">在树莓派 Zero W 上安装 Arch Linux | 子飞的网络日志</a></li>
+<li>关键笔记:
+<ul>
+<li><a href="https://figuregeek.eu/linux/1732">Installing Arch Linux on Raspberry Pi with WiFi-only networking | Dollz'n'Codez</a></li>
+<li><a href="https://gist.github.com/larsch/4a320f8ee5586fe6170af8051fcd9f85">Install Arch Linux ARM for Raspberry Pi Zero W on SD Card (with commands to configure WiFi before first boot).</a></li>
+<li><a href="https://ladvien.com/installing-arch-linux-raspberry-pi-zero-w/">Installing Arch Linux on Raspberry Pi with Immediate WiFi Access –</a></li>
+<li><a href="https://www.systranbox.com/how-to-install-arch-linux-on-raspberry-pi-zero-w/">How To Install Arch Linux On A Raspberry Pi Zero W In Just A Few Minutes – Systran Box</a></li>
+<li><a href="https://www.youtube.com/watch?v=TCfMr3vk6FU">How to install Arch Linux ARM on a Raspberry Pi - YouTube</a></li>
+</ul>
+</li>
+<li>相同过程...
+<ul>
+<li>2022: <a href="https://www.youtube.com/watch?v=GvwD9pXYJi4">Installing Arch Linux On Raspberry Pi ProxMox - YouTube</a>
+<ul>
+<li>文字: <a href="https://novaspirit.github.io/piprox-arch/">piprox-arch | Install notes for installing arch linux on pi proxmox</a></li>
+</ul>
+</li>
+<li>...</li>
+<li>2017: <a href="https://www.youtube.com/watch?v=28-oPIuz-G0">Arch Linux for Raspberry Pi - YouTube</a>
+<ul>
+<li>文字: <a href="https://www.novaspirit.com/2017/04/25/installing-arch-linux-raspberry-pi/">Installing Arch Linux on Raspberry Pi - Novaspirit</a></li>
+</ul>
+</li>
+<li>...</li>
+<li>200+ <a href="https://www.youtube.com/watch?v=qhe6KUw3D78&amp;list=PL846hFPMqg3iTKbgQryS6UNXM4Nf3KVFw&amp;pp=iAQB">Raspberry Pi - YouTube</a> 系列...</li>
+<li>...文字版: <a href="https://raspberrypiprojects.com/installing-arch-linux-on-raspberry-pi-proxmox/">Installing Arch Linux On Raspberry Pi ProxMox - Raspberry Pi Projects</a></li>
+<li>...</li>
+<li><del><a href="https://raspberrytips.com/install-manjaro-raspberry-pi/">How to Install Manjaro on Raspberry Pi? – RaspberryTips</a></del>
+<ul>
+<li>更加友好的界面...不过, 这个要先插好屏幕和键盘...</li>
+<li>...</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Manjaro ARM 版,专门适配有 #RaspberryPi</p>
+<ul>
+<li><a href="https://www.youtube.com/watch?v=HwlM1Ws6KC8">The best 64 bit OS for Raspberry Pi: Manjaro KDE / XFCE (Full install guide / tutorial / review) - YouTube</a></li>
+<li><a href="https://www.youtube.com/watch?v=u8vricJXVWQ">How To Install Manjaro Arm On The Raspberry pi 1 2 3 Or Zero - YouTube</a>
+<ul>
+<li>...只是省不掉人工配置过程?</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>
+<p>Ubuntu 派 ... 方便是方便...就太慢了...而且 IoT 相关文档还没 #RaspberryPi 全...</p>
+<ul>
+<li><a href="https://linuxhint.com/category/raspberry-pi/">Raspberry Pi OS vs Ubuntu</a></li>
+</ul>
+</li>
+<li>
+<p>BSD 派...否决, 驱动实在难</p>
+</li>
+<li>
+<p>...</p>
+</li>
+</ul>
+<pre><code>          _~∽--~_
+      \/ /  ◶ ?  \ \/
+        '_   ⌐   _'
+        \ '--+--' |
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+</code></pre>
+
+                    <div id="giscus-container"></div>
+                </main>
+
+                <nav class="nav-wrapper" aria-label="Page navigation">
+                    <!-- Mobile navigation buttons -->
+                    <a rel="prev" href="../dev/emb_rp2040pico.html" class="mobile-nav-chapters previous"
+                        title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../dev/cross-compiling.html" class="mobile-nav-chapters next"
+                        title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+
+                    <div style="clear: both"></div>
+                </nav>
+            </div>
+        </div>
+
+        <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            <a rel="prev" href="../dev/emb_rp2040pico.html" class="nav-chapters previous" title="Previous chapter"
+                aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <i class="fa fa-angle-left"></i>
+            </a>
+
+            <a rel="next" href="../dev/cross-compiling.html" class="nav-chapters next" title="Next chapter"
+                aria-label="Next chapter" aria-keyshortcuts="Right">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </nav>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        window.playground_line_numbers = true;
+    </script>
+
+    <script type="text/javascript">
+        window.playground_copyable = true;
+    </script>
+
+    <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var pagePath = "dev/emb_rpi02w.md"
+    </script>
+
+
+    <!-- Custom JS scripts -->
+    <script type="text/javascript" src="../assets/custom.js"></script>
+    <script type="text/javascript" src="../assets/bigPicture.js"></script>
+
+    <hr />
+
+    <p style="text-align:center">
+
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议"
+                style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+        本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可;-)
+<!--
+][ <b>
+    <a href="/rss.xml">RSS</a>
+    </b>
+-->
+
+    </p>
+    <hr />
+
+    <script src="https://utteranc.es/client.js" repo="zhrust/comments" issue-term="pathname" label="✨💬✨"
+        theme="github-light" crossorigin="anonymous" async>
+        </script>
+
+</body>
+
+</html>

@@ -1,0 +1,534 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+
+<head>
+    <!-- Book generated using mdBook -->
+    <meta charset="UTF-8">
+    <title>🌘 清晰解释Rust模块系统 - be Rustaceans</title>
+
+
+    <!-- Custom HTML head -->
+    
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程...">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.png">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="../highlight.css">
+    <link rel="stylesheet" href="../tomorrow-night.css">
+    <link rel="stylesheet" href="../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="../theme/style.css">
+
+
+</head>
+
+<body>
+    <!-- Provide site root to javascript -->
+    <script type="text/javascript">
+        var path_to_root = "../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+    </script>
+
+    <!-- Work around some values being stored in localStorage wrapped in quotes -->
+    <script type="text/javascript">
+        try {
+            var theme = localStorage.getItem('mdbook-theme');
+            var sidebar = localStorage.getItem('mdbook-sidebar');
+            if (theme.startsWith('"') && theme.endsWith('"')) {
+                localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+            }
+            if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- Set the theme before any content is loaded, prevents flash -->
+    <script type="text/javascript">
+        var theme;
+        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
+        if (theme === null || theme === undefined) { theme = default_theme; }
+        var html = document.querySelector('html');
+        html.classList.remove('no-js')
+        html.classList.remove('light')
+        html.classList.add(theme);
+        html.classList.add('js');
+    </script>
+
+    <!-- Hide / unhide sidebar before it is displayed -->
+    <script type="text/javascript">
+        var html = document.querySelector('html');
+        var sidebar = 'hidden';
+        if (document.body.clientWidth >= 1080) {
+            try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+            sidebar = sidebar || 'visible';
+        }
+        html.classList.remove('sidebar-visible');
+        html.classList.add("sidebar-" + sidebar);
+    </script>
+
+    <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <div class="sidebar-scrollbox">
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html">成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html">gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html">zhrust</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">自习🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../101/index.html">🌖 Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/past_ampersand-driven_development.html">🌘 克服"& 驱动开发"</a></li><li class="chapter-item "><a href="../101/idioms.html">🌘 idioms</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/idiom325_create_a_queue.html">🌝 idiom#325:构造队列</a></li></ol></li><li class="chapter-item "><a href="../101/quiz.html">🌘 Quiz.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/quiz_1.html">🌝 Quiz#1</a></li></ol></li><li class="chapter-item "><a href="../101/exercism.html">🌘 Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html">🌖 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html">🌖 43:Allergies</a></li></ol></li><li class="chapter-item "><a href="../101/chatgpt101.html">🌚 伴学ChatGPT</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/chat_dyn101.html">🌖 dyn 初步</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">实践🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../dev/index.html">🌖 Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html">🌘小作品</a></li><li class="chapter-item "><a href="../dev/tui4cli.html">🌖TUI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_nnera.html">🌖 NNera</a></li><li class="chapter-item "><a href="../dev/cli_ferris_art.html">🌝 Ferris艺术</a></li><li class="chapter-item "><a href="../dev/cli_bxmr.html">🌝 BXMr</a></li><li class="chapter-item "><a href="../dev/cli_rss4mdbook.html">🌝 RSS4mdbook</a></li><li class="chapter-item "><a href="../dev/cli_yuzu.html">🌚 Yuzu</a></li></ol></li><li class="chapter-item "><a href="../dev/web4async.html">🌚 异步</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/tokio.html">🌘 Tokio</a></li><li class="chapter-item "><a href="../dev/graphql.html">🌚 GraphQL</a></li></ol></li><li class="chapter-item "><div>🌚 TTD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html">🌘 Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/debug_rust_with_codelldb.html">🌚 CodeLLDB</a></li></ol></li><li class="chapter-item "><a href="../dev/gui4web.html">🌚 GUI</a></li><li class="chapter-item "><a href="../dev/embedded_rs.html">🌚 嵌入</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/emb_rp2040pico.html">🌘 Pico</a></li><li class="chapter-item "><a href="../dev/emb_rpi02w.html">🌘 Zero2w</a></li></ol></li><li class="chapter-item "><div>🌚 CI/CD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cross-compiling.html">🌘 交叉编译?</a></li></ol></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html">🌝 20年来作为软件工程师学到的10件事</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html">🌝 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item "><div>🌘 实用工具推荐...</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_btm.html">🌘 Bottom</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">工程🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../tip/index.html">🌘 Rust 技能</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/awesome4rs.html">🌘 Awesome.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/aw4rs_handlebars.html">🌘 Handlebars</a></li><li class="chapter-item "><a href="../tip/tracing.html">🌖 tracing 初步</a></li><li class="chapter-item "><a href="../tip/open_big_file_speed.html">🌖 文件加速打开</a></li></ol></li><li class="chapter-item expanded "><a href="../tip/rust_min_bug_patterns.html">🌘 BMP:最小bug模式</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/manag_growing_proj_with_crates_modules.html">🌖 Crate中合理划分目录</a></li><li class="chapter-item expanded "><a href="../tip/clear_explanation_rust_modele_system.html" class="active">🌘 清晰解释Rust模块系统</a></li><li class="chapter-item "><a href="../tip/two_kinds_assert_make_better_code.html">🌘 两种'Assert'构建清晰代码</a></li></ol></li><li class="chapter-item "><div>🌝 anti-OOP</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/default-params.html">🌝 OOP:Rust 和默认参数</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html">🌝 Rust 超越OOP,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html">🌝 Rust 超越OOP,第2部分</a></li></ol></li><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html">🌝 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">笔记🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../log/index.html">🌖 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust101logging.html">🌗 Rust 课程笔记</a></li><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html">🌝 Rust 丑句法</a></li><li class="chapter-item "><a href="../log/graph-rust-move-copy-borrow.html">🌝 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item "><div>🌚 Choas嗯哼</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/c101.html">🌖 0基础入门C?</a></li><li class="spacer"></li></ol></li></ol></li></ol>
+        </div>
+        <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+    </nav>
+
+    <div id="page-wrapper" class="page-wrapper">
+
+        <div class="page">
+                        <div id="menu-bar-hover-placeholder"></div>
+            <div id="menu-bar" class="menu-bar sticky bordered">
+                <div class="left-buttons">
+                    <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents"
+                        aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <button id="theme-toggle" class="icon-button" type="button" title="Change theme"
+                        aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                        <i class="fa fa-paint-brush"></i>
+                    </button>
+                    <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                        <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button>
+                        </li>
+                    </ul>
+                    <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)"
+                        aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S"
+                        aria-controls="searchbar">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <h1 class="menu-title">be Rustaceans</h1>
+
+                <div class="right-buttons">
+                    <a href="https://github.com/zhrust/rustacean/tree/main/src" title="Git repository" aria-label="Git repository">
+                        <i id="git-repository-button" class="fa fa-github"></i>
+                    </a>
+                    <a href="https://github.com/zhrust/rustacean/blob/main/src/src/tip/clear_explanation_rust_modele_system.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <i id="git-edit-button" class="fa fa-edit"></i>
+                    </a>
+
+                    <a href="/rss.xml" title="RSS.xml" aria-label=""RSS.xml">
+                        <b id="git-edit-button" class="fa fa-feed"></b>
+                    </a>
+
+                </div>
+            </div>
+
+            <div id="search-wrapper" class="hidden">
+                <form id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..."
+                        aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </form>
+                <div id="searchresults-outer" class="searchresults-outer hidden">
+                    <div id="searchresults-header" class="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+            <script type="text/javascript">
+                document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                    link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                });
+            </script>
+
+            <div id="content" class="content">
+                <!-- Page table of contents -->
+                <div class="sidetoc">
+                    <nav class="pagetoc"></nav>
+                </div>
+                <main>
+                    <h1 id="清晰解释rust模块系统"><a class="header" href="#清晰解释rust模块系统">清晰解释Rust模块系统</a></h1>
+<blockquote>
+<p>tips...重要也不重要</p>
+</blockquote>
+<p>原文: <a href="https://www.sheshbabu.com/posts/rust-module-system/">Clear explanation of Rust’s module system</a></p>
+<h2 id="快译"><a class="header" href="#快译">快译</a></h2>
+<p>Rust’s module system is surprisingly confusing and causes a lot of frustration for beginners.</p>
+<p>In this post, I’ll explain the module system using practical examples so you get a clear understanding of how it works and can immediately start applying this in your projects.</p>
+<p>Since Rust’s module system is quite unique, I request the reader to read this post with an open mind and resist comparing it with how modules work in other languages.</p>
+<p>Let’s use this file structure to simulate a real world project:</p>
+<p>my_project
+├── Cargo.toml
+└─┬ src
+├── main.rs
+├── config.rs
+├─┬ routes
+│ ├── health_route.rs
+│ └── user_route.rs
+└─┬ models
+└── user_model.rs
+These are the different ways we should be able to consume our modules:</p>
+<p>These 3 examples should be sufficient to explain how Rust’s module system works.</p>
+<p>Example 1
+Let’s start with the first example - importing config.rs in main.rs.</p>
+<p>// main.rs
+fn main() {
+println!(&quot;main&quot;);
+}
+// config.rs
+fn print_config() {
+println!(&quot;config&quot;);
+}
+The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.</p>
+<p>Here’s what we see (file system tree) and what the compiler sees (module tree):</p>
+<p>Surprisingly, the compiler only sees the crate module which is our main.rs file. This is because we need to explicitly build the module tree in Rust - there’s no implicit mapping between file system tree to module tree.</p>
+<p>We need to explicitly build the module tree in Rust, there’s no implicit mapping to file system</p>
+<p>To add a file to the module tree, we need to declare that file as a submodule using the mod keyword. The next thing that confuses people is that you would assume we declare a file as module in the same file. But we need to declare this in a different file! Since we only have main.rs in the module tree, let’s declare config.rs as a submodule in main.rs.</p>
+<p>The mod keyword declares a submodule</p>
+<p>The mod keyword has this syntax:</p>
+<p>mod my_module;
+Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.</p>
+<p>my_project
+├── Cargo.toml
+└─┬ src
+├── main.rs
+└── my_module.rs</p>
+<p>or</p>
+<p>my_project
+├── Cargo.toml
+└─┬ src
+├── main.rs
+└─┬ my_module
+└── mod.rs
+Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:</p>
+<p>// main.rs</p>
+<ul>
+<li>mod config;</li>
+</ul>
+<p>fn main() {</p>
+<ul>
+<li>config::print_config();
+println!(&quot;main&quot;);
+}
+// config.rs
+fn print_config() {
+println!(&quot;config&quot;);
+}
+We’re accessing the print_config function using the :: syntax.</li>
+</ul>
+<p>Here’s how the module tree looks like:</p>
+<p>We’ve successfully declared the config module! But this is not sufficient to be able to call the print_config function inside config.rs. Almost everything in Rust is private by default, we need to make the function public using the pub keyword:</p>
+<p>The pub keyword makes things public</p>
+<p>// main.rs
+mod config;</p>
+<p>fn main() {
+config::print_config();
+println!(&quot;main&quot;);
+}
+// config.rs</p>
+<ul>
+<li>fn print_config() {</li>
+</ul>
+<ul>
+<li>pub fn print_config() {
+println!(&quot;config&quot;);
+}
+Now, this works. We’ve successfully called a function defined in a different file!</li>
+</ul>
+<p>Example 2
+Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.</p>
+<p>// main.rs
+mod config;</p>
+<p>fn main() {
+config::print_config();
+println!(&quot;main&quot;);
+}
+// routes/health_route.rs
+fn print_health_route() {
+println!(&quot;health_route&quot;);
+}
+As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.</p>
+<p>So in order to call functions inside routes/health_route.rs from main.rs, we need to do the following things:</p>
+<p>Create a file named routes/mod.rs and declare the routes submodule in main.rs
+Declare the health_route submodule in routes/mod.rs and make it public
+Make the functions inside health_route.rs public
+my_project
+├── Cargo.toml
+└─┬ src
+├── main.rs
+├── config.rs
+├─┬ routes</p>
+<ul>
+<li>│ ├── mod.rs
+│ ├── health_route.rs
+│ └── user_route.rs
+└─┬ models
+└── user_model.rs
+// main.rs
+mod config;</li>
+<li>mod routes;</li>
+</ul>
+<p>fn main() {</p>
+<ul>
+<li>routes::health_route::print_health_route();
+config::print_config();
+println!(&quot;main&quot;);
+}
+// routes/mod.rs</li>
+<li>pub mod health_route;
+// routes/health_route.rs</li>
+</ul>
+<ul>
+<li>fn print_health_route() {</li>
+</ul>
+<ul>
+<li>pub fn print_health_route() {
+println!(&quot;health_route&quot;);
+}
+Here’s how the module tree looks like:</li>
+</ul>
+<p>We can now call a function defined in a file inside a folder.</p>
+<p>Example 3
+Let’s try calling from main.rs =&gt; routes/user_route.rs =&gt; models/user_model.rs</p>
+<p>// main.rs
+mod config;
+mod routes;</p>
+<p>fn main() {
+routes::health_route::print_health_route();
+config::print_config();
+println!(&quot;main&quot;);
+}
+// routes/user_route.rs
+fn print_user_route() {
+println!(&quot;user_route&quot;);
+}
+// models/user_model.rs
+fn print_user_model() {
+println!(&quot;user_model&quot;);
+}
+We want to call the function print_user_model from print_user_route from main.</p>
+<p>Let’s make the same changes as before - declaring submodules, making functions public and adding the mod.rs file.</p>
+<p>my_project
+├── Cargo.toml
+└─┬ src
+├── main.rs
+├── config.rs
+├─┬ routes
+│ ├── mod.rs
+│ ├── health_route.rs
+│ └── user_route.rs
+└─┬ models</p>
+<ul>
+<li>├── mod.rs
+└── user_model.rs
+// main.rs
+mod config;
+mod routes;</li>
+<li>mod models;</li>
+</ul>
+<p>fn main() {
+routes::health_route::print_health_route();</p>
+<ul>
+<li>routes::user_route::print_user_route();
+config::print_config();
+println!(&quot;main&quot;);
+}
+// routes/mod.rs
+pub mod health_route;</li>
+<li>pub mod user_route;
+// routes/user_route.rs</li>
+</ul>
+<ul>
+<li>fn print_user_route() {</li>
+</ul>
+<ul>
+<li>pub fn print_user_route() {
+println!(&quot;user_route&quot;);
+}
+// models/mod.rs</li>
+<li>pub mod user_model;
+// models/user_model.rs</li>
+</ul>
+<ul>
+<li>fn print_user_model() {</li>
+</ul>
+<ul>
+<li>pub fn print_user_model() {
+println!(&quot;user_model&quot;);
+}
+Here’s how the module tree looks like:</li>
+</ul>
+<p>Wait, we haven’t actually called print_user_model from print_user_route! So far, we’ve only called the functions defined in other modules from main.rs, how do we do that from other files?</p>
+<p>If we look at our module tree, the print_user_model function sits in the crate::models::user_model path. So in order to use a module in files that are not main.rs, we should think in terms of the path necessary to reach that module in the module tree.</p>
+<p>// routes/user_route.rs
+pub fn print_user_route() {</p>
+<ul>
+<li>crate::models::user_model::print_user_model();
+println!(&quot;user_route&quot;);
+}
+We’ve successfully called a function defined in a file from a file that’s not main.rs.</li>
+</ul>
+<p>super
+The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.</p>
+<p>We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.</p>
+<p>The super keyword in module path refers to the parent scope</p>
+<p>pub fn print_user_route() {
+crate::routes::health_route::print_health_route();
+// can also be called using
+super::health_route::print_health_route();</p>
+<p>println!(&quot;user_route&quot;);
+}
+use
+It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.</p>
+<p>The use keyword is used to shorten the module path</p>
+<p>pub fn print_user_route() {
+crate::models::user_model::print_user_model();
+println!(&quot;user_route&quot;);
+}
+The above code can be refactored as:</p>
+<p>use crate::models::user_model::print_user_model;</p>
+<p>pub fn print_user_route() {
+print_user_model();
+println!(&quot;user_route&quot;);
+}
+Instead of using the name print_user_model, we can also alias it to something else:</p>
+<p>use crate::models::user_model::print_user_model as log_user_model;</p>
+<p>pub fn print_user_route() {
+log_user_model();
+println!(&quot;user_route&quot;);
+}
+External modules
+Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.</p>
+<p>External dependencies are globally available to all modules inside a project</p>
+<p>For example, let’s say we added the rand crate to our project. We can use it in our code directly as:</p>
+<p>pub fn print_health_route() {
+let random_number: u8 = rand::random();
+println!(&quot;{}&quot;, random_number);
+println!(&quot;health_route&quot;);
+}
+We can also use use to shorten the path:</p>
+<p>use rand::random;</p>
+<p>pub fn print_health_route() {
+let random_number: u8 = random();
+println!(&quot;{}&quot;, random_number);
+println!(&quot;health_route&quot;);
+}
+Summary
+The module system is explicit - there’s no 1:1 mapping with file system
+We declare a file as module in its parent, not in itself
+The mod keyword is used to declare submodules
+We need to explicitly declare functions, structs etc as public so they can be consumed in other modules
+The pub keyword makes things public
+The use keyword is used to shorten the module path
+We don’t need to explicitly declare 3rd party modules
+Thanks for reading! Feel free to follow me in Twitter for more posts like this :)</p>
+<pre><code>         _~^*∽~_
+     \/ /  # ◵  \ (/
+       '_   ⩌   _'
+       | '--+--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+</code></pre>
+
+                    <div id="giscus-container"></div>
+                </main>
+
+                <nav class="nav-wrapper" aria-label="Page navigation">
+                    <!-- Mobile navigation buttons -->
+                    <a rel="prev" href="../tip/manag_growing_proj_with_crates_modules.html" class="mobile-nav-chapters previous"
+                        title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../tip/two_kinds_assert_make_better_code.html" class="mobile-nav-chapters next"
+                        title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+
+                    <div style="clear: both"></div>
+                </nav>
+            </div>
+        </div>
+
+        <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            <a rel="prev" href="../tip/manag_growing_proj_with_crates_modules.html" class="nav-chapters previous" title="Previous chapter"
+                aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <i class="fa fa-angle-left"></i>
+            </a>
+
+            <a rel="next" href="../tip/two_kinds_assert_make_better_code.html" class="nav-chapters next" title="Next chapter"
+                aria-label="Next chapter" aria-keyshortcuts="Right">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </nav>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        window.playground_line_numbers = true;
+    </script>
+
+    <script type="text/javascript">
+        window.playground_copyable = true;
+    </script>
+
+    <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var pagePath = "tip/clear_explanation_rust_modele_system.md"
+    </script>
+
+
+    <!-- Custom JS scripts -->
+    <script type="text/javascript" src="../assets/custom.js"></script>
+    <script type="text/javascript" src="../assets/bigPicture.js"></script>
+
+    <hr />
+
+    <p style="text-align:center">
+
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议"
+                style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+        本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可;-)
+<!--
+][ <b>
+    <a href="/rss.xml">RSS</a>
+    </b>
+-->
+
+    </p>
+    <hr />
+
+    <script src="https://utteranc.es/client.js" repo="zhrust/comments" issue-term="pathname" label="✨💬✨"
+        theme="github-light" crossorigin="anonymous" async>
+        </script>
+
+</body>
+
+</html>

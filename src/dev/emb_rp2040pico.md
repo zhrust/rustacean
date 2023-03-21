@@ -1,5 +1,5 @@
 # Raspberry Pi Pico
-> 最便宜的开发板了...
+> 最便宜的控制板了...
 
 ## background
 
