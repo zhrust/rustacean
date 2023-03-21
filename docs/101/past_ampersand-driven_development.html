@@ -272,19 +272,25 @@ Rust 编译器会确保绝对没有其它人可以再次引用;
 |函数结束时丢弃?|✘|✘|✔︎|仅在 Rc 最后的克隆被丢弃后|仅当 Arc 的克隆被丢弃后|
 |多线程可用?|✘ 注1|✘|值可以在线程间移动\n但不同线程不可同时访问|   ✘  |✔︎|</p>
 <blockquote>
-<p>注1: (Unless it has a
-'static lifetime, meaning it will exist as long as all of the threads, or is used in a scoped thread)</p>
+<p>注1: (除非有一个 'static 生命周期, 这意味着在所有线程中存在,或是在线程作用域中使用)</p>
 </blockquote>
-<p>Ampersands are one of the scariest or least familiar parts when coming to Rust from a higher-level language like Typescript. But I promise that after some practice, it’ll feel much more intuitive when writing code to know whether a function should take a mutable or immutable reference, or to know whether some other library’s function will likely want a reference or owned value. Without the need for ampersand-driven development.</p>
-<p>For more details, you can also take a look at the Rust language doc sections on 
-<a href="https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html">References and Borrowing</a></p>
-<p>and 
-<a href="https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html">What is Ownership?</a>
-?.</p>
-<p><a href="https://github.com/emschwartz">Evan Schwartz</a>
-is a Principal Rust Engineer at Fiberplane. He is the creator of </p>
-<p><a href="https://github.com/autometrics-dev/autometrics-rs">Autometrics</a></p>
-<p>, a new crate that makes it easy to understand the error rate, latency, and production usage of any function in your code.</p>
+<p>在从 Typescript 等高级语言转到 Rust 时,
+&amp; 符号是最可怕或是最不熟悉的部分之一;
+但是, 能保证的是, 经过一些练习, 在编写代码时,
+知道一个函数应该采用可变引用还是不可变引用,
+又或是知道其它库的函数是否可能需要引用或是拥有值,
+感觉会更加直观;
+也就无需 <code>&quot;&amp; 驱动开发&quot;</code> 了;</p>
+<p>有关详情, 值得查阅 Rust 语言文档:
+<a href="https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html">References and Borrowing</a>
+以及:
+<a href="https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html">What is Ownership?</a></p>
+<p>还有 <a href="https://github.com/emschwartz">Evan Schwartz</a>
+是 Fiberplane 的首席 Rust 工程师;
+也是 <a href="https://github.com/autometrics-dev/autometrics-rs">Autometrics</a>
+的创造者,
+一个全新的 crate, 
+可以让你轻松了解代码中任何函数的错误率/延迟和生产使用情况.</p>
 <h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
 <p>... TBD</p>
 <pre><code>          _~`+∽~_

@@ -148,24 +148,28 @@ Rc 跟踪有多少人(或是代码的一部分)
 |函数结束时丢弃?|✘|✘|✔︎|仅在 Rc 最后的克隆被丢弃后|仅当 Arc 的克隆被丢弃后|
 |多线程可用?|✘ 注1|✘|值可以在线程间移动\n但不同线程不可同时访问|   ✘  |✔︎|
 
-> 注1: (Unless it has a
-'static lifetime, meaning it will exist as long as all of the threads, or is used in a scoped thread)
+> 注1: (除非有一个 'static 生命周期, 这意味着在所有线程中存在,或是在线程作用域中使用)
 
-Ampersands are one of the scariest or least familiar parts when coming to Rust from a higher-level language like Typescript. But I promise that after some practice, it’ll feel much more intuitive when writing code to know whether a function should take a mutable or immutable reference, or to know whether some other library’s function will likely want a reference or owned value. Without the need for ampersand-driven development.
 
-For more details, you can also take a look at the Rust language doc sections on 
+在从 Typescript 等高级语言转到 Rust 时,
+& 符号是最可怕或是最不熟悉的部分之一;
+但是, 能保证的是, 经过一些练习, 在编写代码时,
+知道一个函数应该采用可变引用还是不可变引用,
+又或是知道其它库的函数是否可能需要引用或是拥有值,
+感觉会更加直观;
+也就无需 `"& 驱动开发"` 了;
+
+有关详情, 值得查阅 Rust 语言文档:
 [References and Borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html)
-
- and 
+以及:
  [What is Ownership?](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html)
- ?.
-
-[Evan Schwartz](https://github.com/emschwartz)
-is a Principal Rust Engineer at Fiberplane. He is the creator of 
-
-[Autometrics](https://github.com/autometrics-dev/autometrics-rs)
-
- , a new crate that makes it easy to understand the error rate, latency, and production usage of any function in your code.
+ 
+还有 [Evan Schwartz](https://github.com/emschwartz)
+是 Fiberplane 的首席 Rust 工程师;
+也是 [Autometrics](https://github.com/autometrics-dev/autometrics-rs)
+的创造者,
+一个全新的 crate, 
+可以让你轻松了解代码中任何函数的错误率/延迟和生产使用情况.
 
 ## refer.
 
