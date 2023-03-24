@@ -1,4 +1,562 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>past_ampersand-driven_development.md</title><link>https://rs.101.so//101/past_ampersand-driven_development</link><pubDate>Wed, 22 Mar 2023 00:47:58 +0800</pubDate><content:encoded><![CDATA[# 克服 "& 驱动开发"
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>chat_heap_stack.md</title><link>https://rs.101.so//101/chat_heap_stack</link><pubDate>Fri, 24 Mar 2023 11:28:53 +0800</pubDate><content:encoded><![CDATA[# 可变/不可变引用态度
+> 学伴ChatGPT, chatting for debugging ...
+
+## background
+> 李明 coding到灯火阑珊 2023-03-24 06:00
+
+[Rust开发人员经常犯的5个常见错误](https://mp.weixin.qq.com/s/KXfCHeFuLvK8PHAkA5QJmA)
+
+## goal
+
+完成合理概念摸查...
+
+## trace
+
+> Q: rust 代码:
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        // 这一行将导致编译错误
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    println!("The longest string is {}", result);
+}
+
+```
+
+为什么出错?如何修改? 以及如何理解?
+
+> A:该程序出错是因为 string2 的生命周期比 result 的生命周期短，而 result 是一个指向 string2 中的引用，因此在 string2 离开作用域后，result 指向的内存已经被释放，这会导致未定义的行为。
+
+为了解决这个问题，我们需要让 result 的生命周期比 string2 的生命周期更长。有多种方法可以实现这一点，以下是其中的一种：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    let string2 = String::from("xyz");
+    result = longest(string1.as_str(), string2.as_str());
+    println!("The longest string is {}", result);
+}
+```
+在这个修改后的程序中，我们将 string2 的声明移到了 result 的声明之前，并且不再使用一个代码块来限制 string2 的作用域。这意味着 string2 和 result 的生命周期相同，因此 result 仍然有效。
+
+该程序的代码使用了 Rust 的生命周期注释 'a 来告诉编译器 longest 函数的返回值的生命周期应该与 x 和 y 的生命周期相同。
+
+简单地说，程序中的修改让 string2 和 result 具有相同的生命周期，从而解决了问题。
+
+> Q: let string2 = "xyz"; 是否也可以解决相同的问题? 为什么?
+
+> A:是的，如果将 string2 的类型从 String 改为字符串字面量 &str，则程序就可以正确编译和运行。修改后的程序如下：
+
+```rust
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let string2 = "xyz";
+    let result = longest(string1.as_str(), string2);
+    println!("The longest string is {}", result);
+}
+```
+
+字符串字面量在编译时就已经存在于程序的二进制文件中，因此它们的生命周期与程序的生命周期相同，而不需要在堆上分配内存。这意味着它们的生命周期与其他在程序中定义的变量的生命周期相同，因此在使用字符串字面量时不需要担心生命周期的问题。
+
+所以使用字符串字面量作为参数传递给 longest 函数是安全的，因为它们的生命周期已经在编译时确定了，并且与函数中的其他变量的生命周期相同。
+
+> Q: 那么, 为什么 longest() 一定要指定参数的生命周期? 没有其它更加简洁的形式了嘛?
+
+> A: 在 Rust 中，str 是一个字符串 slice 类型，它是一个不可变的、固定长度的引用类型。由于 str 引用的是存储在堆上的字符串数据，因此它的生命周期必须是由该字符串的所有权来决定的。
+
+在 longest() 函数中，x 和 y 的类型是 &'a str，这表示它们是指向某个字符串数据的引用，它们的生命周期被限制为 'a，即函数的生命周期。这是必要的，因为函数的返回值也是一个对字符串数据的引用，它的生命周期必须是在函数返回后才能开始的，而且必须与参数的生命周期相关联，以避免悬垂引用的问题。
+
+如果我们将参数类型改为 str，那么就无法控制它们引用的字符串的生命周期，因为它们不是引用类型。如果我们试图通过将 string1 和 string2 的值进行 clone 来传递它们的副本，这样可能会导致堆分配的额外开销和性能问题，因为这需要为每个字符串分配一个新的内存块，并在函数调用结束后释放这些内存块。
+
+因此，在 longest() 函数中，最好使用字符串 slice 类型 &str，并在调用函数时传递指向原始字符串的引用，以确保在不需要分配额外内存的情况下正确处理字符串。
+
+> Q: 明白了, 如果不考虑性能, 使用 clone 也是可以的
+
+> A: 是的，如果不考虑性能问题，你可以通过使用 clone() 方法来创建传递给 longest() 函数的字符串的拷贝。这将使每个字符串都在堆上分配新的内存，并使 longest() 函数能够接受 String 类型的参数。
+
+例如，可以使用下面的代码来调用 longest() 函数，使用 clone() 方法创建了 string1 和 string2 的副本：
+
+```rust
+
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from("long string is long");
+    let string2 = String::from("xyz");
+    let result = longest(string1.as_str(), string2.as_str());
+    println!("The longest string is {}", result);
+
+    // Create clones of the strings and pass them to longest()
+    let string3 = string1.clone();
+    let string4 = string2.clone();
+    let result2 = longest(string3.as_str(), string4.as_str());
+    println!("The longest string is {}", result2);
+}
+
+```
+注意，这种方法可能会产生性能问题，因为每次调用 clone() 方法都会分配新的内存并复制字符串的内容。因此，如果性能是一个问题，最好避免使用 clone() 方法来创建字符串的副本。
+
+
+> Q: 明白了, 那么 堆与栈的本质区别是什么? 为什么 rust 对栈这么信任, 对堆却很警惕?
+
+> A: 在计算机科学中，堆和栈都是内存中用于存储程序数据的数据结构。它们之间的本质区别在于它们的内存分配方式和数据存储的生命周期。
+
+栈是一种先进后出的数据结构，它使用固定大小的内存块来存储程序数据。当一个函数被调用时，该函数的参数、局部变量和返回地址等数据将被存储在栈帧中。当函数返回时，该栈帧将被弹出，其中存储的数据也将被销毁。由于栈内存的分配和释放是由程序自动进行的，因此它们的效率非常高。
+
+堆是一种动态的数据结构，它使用不连续的内存块来存储程序数据。堆内存的分配和释放是由程序员手动管理的，它们的效率相对较低。由于堆内存的生命周期不像栈那样易于确定，因此在使用堆内存时需要注意内存泄漏和悬垂指针等问题。
+
+在 Rust 中，栈上的数据是可以直接在栈帧中进行分配和释放的，因此 Rust 对栈的管理非常信任。但是，由于堆上的数据需要手动管理，因此在 Rust 中对堆的管理要更加警惕，以避免内存泄漏和悬垂指针等问题。因此，在 Rust 中使用堆内存时，必须遵循所有权规则，以确保每个值都有且只有一个所有者，并在所有者超出作用域时自动释放其内存。这也是 Rust 中所有权系统的核心概念。
+
+
+> Q: 那么, rust 内建数据类型中, 哪些是栈, 哪些是堆?
+
+> A: 在 Rust 中，内建数据类型可以分为两类：栈上分配的值和堆上分配的值。
+
+以下是一些常见的栈上分配的值：
+
+- 所有基本数据类型（例如整数、布尔值和浮点数）
+- 数组和元组（当它们包含栈上分配的值时）
+- 函数和闭包
+
+以下是一些常见的堆上分配的值：
+
+- 所有标准库集合类型，例如 Vec、String 和 HashMap 等
+- Box 智能指针和 Rc 引用计数指针
+- 闭包（如果它们捕获了堆上分配的值）
+
+
+需要注意的是，Rust 中的**所有类型都可以在堆上分配，只要使用堆分配器**（如 Box、Vec 或者 String）即可。但是，所有权系统确保这些堆上分配的值仍然遵循所有权规则，以确保内存安全。
+
+
+> Q: 明白了, 也就是说 String::from("xyz") 是堆上内存, 但是, "xyz" 是栈上内存,
+那么, 为什么都是生成不可变字符串, 为什么 Rust 要构建出堆上字符串 String::from("xyz") ?
+问题是 String::from("xyz")  有什么比 "xyz" 的好处?
+
+
+> A: 是的，您的理解是正确的。"xyz" 是一个编译时常量，分配在程序的栈上，它是一个静态分配的不可变字符串。而 String::from("xyz") 是在运行时动态分配的堆上的一个不可变字符串。
+
+Rust 之所以提供 String 类型，是因为它具有以下一些优点：
+
+- 动态长度：在堆上分配一个字符串，它的长度可以在运行时根据需要动态增加或减少，这是栈上分配的静态字符串所不能做到的。
+- 丰富的字符串处理功能：String 类型提供了各种字符串处理功能，例如拼接、切割、查找、替换等。
+- UTF-8 编码：Rust 中的字符串类型都是基于 UTF-8 编码的，这意味着它们可以表示世界上几乎所有语言中的字符，包括非拉丁字符集，而不会出现编码问题。
+
+
+但是，由于动态分配内存涉及到堆的使用，这会带来一些额外的开销和复杂性。因此，在编写 Rust 代码时，应该尽可能地使用栈上分配的数据类型来避免堆分配的开销。仅当需要动态长度或其他特殊功能时，才应该使用堆上分配的类型。
+
+
+## refer.
+> 其实官方的文档吃透, 基本可以平趟 80% 的日常开发了...
+
+以及将自己伪装成一个认真又很笨的学员,
+GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行检验以及官方文档证实:
+
+
+- [什么是所有权？ - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html#%E6%A0%88stack%E4%B8%8E%E5%A0%86heap)
+- [生命周期基础 - Rust By Practice( Rust 练习实践 )](https://zh.practice.rs/lifetime/basic.html)
+- [字符串：str和String - Rust入门秘籍](https://rust-book.junmajinlong.com/ch3/04_str_string.html#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AD%97%E9%9D%A2%E9%87%8F)
+- [理解Rust内存管理 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
+    - [堆空间和栈空间 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
+    - ...
+- [使用Box<T> 指向堆上数据 - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch15-01-box.html#%E4%BD%BF%E7%94%A8-boxt-%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%82%A8%E5%AD%98%E6%95%B0%E6%8D%AE)
+
+
+```
+     _~`|~~_
+ \/ /  = →  \ ()
+   '_   ∧   _'
+   / '--~--' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>clear_explanation_rust_modele_system.md</title><link>https://rs.101.so//tip/clear_explanation_rust_modele_system</link><pubDate>Wed, 22 Mar 2023 00:51:38 +0800</pubDate><content:encoded><![CDATA[# 清晰解释Rust模块系统
+> tips...重要也不重要
+
+原文: [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
+
+## 快译
+
+
+
+Rust’s module system is surprisingly confusing and causes a lot of frustration for beginners.
+
+In this post, I’ll explain the module system using practical examples so you get a clear understanding of how it works and can immediately start applying this in your projects.
+
+Since Rust’s module system is quite unique, I request the reader to read this post with an open mind and resist comparing it with how modules work in other languages.
+
+Let’s use this file structure to simulate a real world project:
+
+```
+my_project
+├── Cargo.toml
+└─┬ src
+  ├── main.rs
+  ├── config.rs
+  ├─┬ routes
+  │ ├── health_route.rs
+  │ └── user_route.rs
+  └─┬ models
+    └── user_model.rs
+```
+
+These are the different ways we should be able to consume our modules:
+
+![rust-module-system-1](https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-1.png)
+
+
+These 3 examples should be sufficient to explain how Rust’s module system works.
+
+------
+
+
+### Example 1
+Let’s start with the first example - importing config.rs in main.rs.
+
+// main.rs
+fn main() {
+  println!("main");
+}
+// config.rs
+fn print_config() {
+  println!("config");
+}
+The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.
+
+Here’s what we see (file system tree) and what the compiler sees (module tree):
+
+
+
+Surprisingly, the compiler only sees the crate module which is our main.rs file. This is because we need to explicitly build the module tree in Rust - there’s no implicit mapping between file system tree to module tree.
+
+We need to explicitly build the module tree in Rust, there’s no implicit mapping to file system
+
+To add a file to the module tree, we need to declare that file as a submodule using the mod keyword. The next thing that confuses people is that you would assume we declare a file as module in the same file. But we need to declare this in a different file! Since we only have main.rs in the module tree, let’s declare config.rs as a submodule in main.rs.
+
+The mod keyword declares a submodule
+
+The mod keyword has this syntax:
+
+mod my_module;
+Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.
+
+my_project
+├── Cargo.toml
+└─┬ src
+  ├── main.rs
+  └── my_module.rs
+
+or
+
+my_project
+├── Cargo.toml
+└─┬ src
+  ├── main.rs
+  └─┬ my_module
+    └── mod.rs
+Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:
+
+// main.rs
++ mod config;
+
+fn main() {
++ config::print_config();
+  println!("main");
+}
+// config.rs
+fn print_config() {
+  println!("config");
+}
+We’re accessing the print_config function using the :: syntax.
+
+Here’s how the module tree looks like:
+
+
+
+We’ve successfully declared the config module! But this is not sufficient to be able to call the print_config function inside config.rs. Almost everything in Rust is private by default, we need to make the function public using the pub keyword:
+
+The pub keyword makes things public
+
+// main.rs
+mod config;
+
+fn main() {
+  config::print_config();
+  println!("main");
+}
+// config.rs
+- fn print_config() {
++ pub fn print_config() {
+  println!("config");
+}
+Now, this works. We’ve successfully called a function defined in a different file!
+
+------
+
+
+### Example 2
+Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.
+
+// main.rs
+mod config;
+
+fn main() {
+  config::print_config();
+  println!("main");
+}
+// routes/health_route.rs
+fn print_health_route() {
+  println!("health_route");
+}
+As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.
+
+So in order to call functions inside routes/health_route.rs from main.rs, we need to do the following things:
+
+Create a file named routes/mod.rs and declare the routes submodule in main.rs
+Declare the health_route submodule in routes/mod.rs and make it public
+Make the functions inside health_route.rs public
+my_project
+├── Cargo.toml
+└─┬ src
+  ├── main.rs
+  ├── config.rs
+  ├─┬ routes
++ │ ├── mod.rs
+  │ ├── health_route.rs
+  │ └── user_route.rs
+  └─┬ models
+    └── user_model.rs
+// main.rs
+mod config;
++ mod routes;
+
+fn main() {
++ routes::health_route::print_health_route();
+  config::print_config();
+  println!("main");
+}
+// routes/mod.rs
++ pub mod health_route;
+// routes/health_route.rs
+- fn print_health_route() {
++ pub fn print_health_route() {
+  println!("health_route");
+}
+Here’s how the module tree looks like:
+
+
+
+We can now call a function defined in a file inside a folder.
+
+------
+
+
+### Example 3
+Let’s try calling from main.rs => routes/user_route.rs => models/user_model.rs
+
+// main.rs
+mod config;
+mod routes;
+
+fn main() {
+  routes::health_route::print_health_route();
+  config::print_config();
+  println!("main");
+}
+// routes/user_route.rs
+fn print_user_route() {
+  println!("user_route");
+}
+// models/user_model.rs
+fn print_user_model() {
+  println!("user_model");
+}
+We want to call the function print_user_model from print_user_route from main.
+
+Let’s make the same changes as before - declaring submodules, making functions public and adding the mod.rs file.
+
+my_project
+├── Cargo.toml
+└─┬ src
+  ├── main.rs
+  ├── config.rs
+  ├─┬ routes
+  │ ├── mod.rs
+  │ ├── health_route.rs
+  │ └── user_route.rs
+  └─┬ models
++   ├── mod.rs
+    └── user_model.rs
+// main.rs
+mod config;
+mod routes;
++ mod models;
+
+fn main() {
+  routes::health_route::print_health_route();
++ routes::user_route::print_user_route();
+  config::print_config();
+  println!("main");
+}
+// routes/mod.rs
+pub mod health_route;
++ pub mod user_route;
+// routes/user_route.rs
+- fn print_user_route() {
++ pub fn print_user_route() {
+  println!("user_route");
+}
+// models/mod.rs
++ pub mod user_model;
+// models/user_model.rs
+- fn print_user_model() {
++ pub fn print_user_model() {
+  println!("user_model");
+}
+Here’s how the module tree looks like:
+
+
+
+Wait, we haven’t actually called print_user_model from print_user_route! So far, we’ve only called the functions defined in other modules from main.rs, how do we do that from other files?
+
+If we look at our module tree, the print_user_model function sits in the crate::models::user_model path. So in order to use a module in files that are not main.rs, we should think in terms of the path necessary to reach that module in the module tree.
+
+// routes/user_route.rs
+pub fn print_user_route() {
++ crate::models::user_model::print_user_model();
+  println!("user_route");
+}
+We’ve successfully called a function defined in a file from a file that’s not main.rs.
+
+------
+
+
+### super
+The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.
+
+We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.
+
+The super keyword in module path refers to the parent scope
+
+pub fn print_user_route() {
+  crate::routes::health_route::print_health_route();
+  // can also be called using
+  super::health_route::print_health_route();
+
+  println!("user_route");
+}
+
+------
+
+
+### use
+It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.
+
+The use keyword is used to shorten the module path
+
+pub fn print_user_route() {
+  crate::models::user_model::print_user_model();
+  println!("user_route");
+}
+The above code can be refactored as:
+
+use crate::models::user_model::print_user_model;
+
+pub fn print_user_route() {
+  print_user_model();
+  println!("user_route");
+}
+Instead of using the name print_user_model, we can also alias it to something else:
+
+use crate::models::user_model::print_user_model as log_user_model;
+
+pub fn print_user_route() {
+  log_user_model();
+  println!("user_route");
+}
+
+------
+
+### External modules
+Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.
+
+External dependencies are globally available to all modules inside a project
+
+For example, let’s say we added the rand crate to our project. We can use it in our code directly as:
+
+pub fn print_health_route() {
+  let random_number: u8 = rand::random();
+  println!("{}", random_number);
+  println!("health_route");
+}
+We can also use use to shorten the path:
+
+use rand::random;
+
+pub fn print_health_route() {
+  let random_number: u8 = random();
+  println!("{}", random_number);
+  println!("health_route");
+}
+
+------
+
+### Summary
+The module system is explicit - there’s no 1:1 mapping with file system
+We declare a file as module in its parent, not in itself
+The mod keyword is used to declare submodules
+We need to explicitly declare functions, structs etc as public so they can be consumed in other modules
+The pub keyword makes things public
+The use keyword is used to shorten the module path
+We don’t need to explicitly declare 3rd party modules
+Thanks for reading! Feel free to follow me in Twitter for more posts like this :)
+
+
+
+
+
+```
+         _~^*∽~_
+     \/ /  # ◵  \ (/
+       '_   ⩌   _'
+       | '--+--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>past_ampersand-driven_development.md</title><link>https://rs.101.so//101/past_ampersand-driven_development</link><pubDate>Wed, 22 Mar 2023 00:47:58 +0800</pubDate><content:encoded><![CDATA[# 克服 "& 驱动开发"
 原文: [Getting Past “Ampersand-Driven Development” in Rust - Blog](https://fiberplane.com/blog/getting-past-ampersand-driven-development-in-rust)
 
 ## background
@@ -276,481 +834,6 @@ Of course, there's no reason why you can't write your own equivalents of assert 
       \) /  ← ◷  \ \/
         '_   V   _'
         \ '--∽--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>clear_explanation_rust_modele_system.md</title><link>https://rs.101.so//tip/clear_explanation_rust_modele_system</link><pubDate>Mon, 20 Mar 2023 15:44:06 +0800</pubDate><content:encoded><![CDATA[# 清晰解释Rust模块系统
-> tips...重要也不重要
-
-原文: [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
-
-## 快译
-
-
-
-Rust’s module system is surprisingly confusing and causes a lot of frustration for beginners.
-
-In this post, I’ll explain the module system using practical examples so you get a clear understanding of how it works and can immediately start applying this in your projects.
-
-Since Rust’s module system is quite unique, I request the reader to read this post with an open mind and resist comparing it with how modules work in other languages.
-
-Let’s use this file structure to simulate a real world project:
-
-my_project
-├── Cargo.toml
-└─┬ src
-  ├── main.rs
-  ├── config.rs
-  ├─┬ routes
-  │ ├── health_route.rs
-  │ └── user_route.rs
-  └─┬ models
-    └── user_model.rs
-These are the different ways we should be able to consume our modules:
-
-
-
-These 3 examples should be sufficient to explain how Rust’s module system works.
-
-Example 1
-Let’s start with the first example - importing config.rs in main.rs.
-
-// main.rs
-fn main() {
-  println!("main");
-}
-// config.rs
-fn print_config() {
-  println!("config");
-}
-The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.
-
-Here’s what we see (file system tree) and what the compiler sees (module tree):
-
-
-
-Surprisingly, the compiler only sees the crate module which is our main.rs file. This is because we need to explicitly build the module tree in Rust - there’s no implicit mapping between file system tree to module tree.
-
-We need to explicitly build the module tree in Rust, there’s no implicit mapping to file system
-
-To add a file to the module tree, we need to declare that file as a submodule using the mod keyword. The next thing that confuses people is that you would assume we declare a file as module in the same file. But we need to declare this in a different file! Since we only have main.rs in the module tree, let’s declare config.rs as a submodule in main.rs.
-
-The mod keyword declares a submodule
-
-The mod keyword has this syntax:
-
-mod my_module;
-Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.
-
-my_project
-├── Cargo.toml
-└─┬ src
-  ├── main.rs
-  └── my_module.rs
-
-or
-
-my_project
-├── Cargo.toml
-└─┬ src
-  ├── main.rs
-  └─┬ my_module
-    └── mod.rs
-Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:
-
-// main.rs
-+ mod config;
-
-fn main() {
-+ config::print_config();
-  println!("main");
-}
-// config.rs
-fn print_config() {
-  println!("config");
-}
-We’re accessing the print_config function using the :: syntax.
-
-Here’s how the module tree looks like:
-
-
-
-We’ve successfully declared the config module! But this is not sufficient to be able to call the print_config function inside config.rs. Almost everything in Rust is private by default, we need to make the function public using the pub keyword:
-
-The pub keyword makes things public
-
-// main.rs
-mod config;
-
-fn main() {
-  config::print_config();
-  println!("main");
-}
-// config.rs
-- fn print_config() {
-+ pub fn print_config() {
-  println!("config");
-}
-Now, this works. We’ve successfully called a function defined in a different file!
-
-Example 2
-Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.
-
-// main.rs
-mod config;
-
-fn main() {
-  config::print_config();
-  println!("main");
-}
-// routes/health_route.rs
-fn print_health_route() {
-  println!("health_route");
-}
-As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.
-
-So in order to call functions inside routes/health_route.rs from main.rs, we need to do the following things:
-
-Create a file named routes/mod.rs and declare the routes submodule in main.rs
-Declare the health_route submodule in routes/mod.rs and make it public
-Make the functions inside health_route.rs public
-my_project
-├── Cargo.toml
-└─┬ src
-  ├── main.rs
-  ├── config.rs
-  ├─┬ routes
-+ │ ├── mod.rs
-  │ ├── health_route.rs
-  │ └── user_route.rs
-  └─┬ models
-    └── user_model.rs
-// main.rs
-mod config;
-+ mod routes;
-
-fn main() {
-+ routes::health_route::print_health_route();
-  config::print_config();
-  println!("main");
-}
-// routes/mod.rs
-+ pub mod health_route;
-// routes/health_route.rs
-- fn print_health_route() {
-+ pub fn print_health_route() {
-  println!("health_route");
-}
-Here’s how the module tree looks like:
-
-
-
-We can now call a function defined in a file inside a folder.
-
-Example 3
-Let’s try calling from main.rs => routes/user_route.rs => models/user_model.rs
-
-// main.rs
-mod config;
-mod routes;
-
-fn main() {
-  routes::health_route::print_health_route();
-  config::print_config();
-  println!("main");
-}
-// routes/user_route.rs
-fn print_user_route() {
-  println!("user_route");
-}
-// models/user_model.rs
-fn print_user_model() {
-  println!("user_model");
-}
-We want to call the function print_user_model from print_user_route from main.
-
-Let’s make the same changes as before - declaring submodules, making functions public and adding the mod.rs file.
-
-my_project
-├── Cargo.toml
-└─┬ src
-  ├── main.rs
-  ├── config.rs
-  ├─┬ routes
-  │ ├── mod.rs
-  │ ├── health_route.rs
-  │ └── user_route.rs
-  └─┬ models
-+   ├── mod.rs
-    └── user_model.rs
-// main.rs
-mod config;
-mod routes;
-+ mod models;
-
-fn main() {
-  routes::health_route::print_health_route();
-+ routes::user_route::print_user_route();
-  config::print_config();
-  println!("main");
-}
-// routes/mod.rs
-pub mod health_route;
-+ pub mod user_route;
-// routes/user_route.rs
-- fn print_user_route() {
-+ pub fn print_user_route() {
-  println!("user_route");
-}
-// models/mod.rs
-+ pub mod user_model;
-// models/user_model.rs
-- fn print_user_model() {
-+ pub fn print_user_model() {
-  println!("user_model");
-}
-Here’s how the module tree looks like:
-
-
-
-Wait, we haven’t actually called print_user_model from print_user_route! So far, we’ve only called the functions defined in other modules from main.rs, how do we do that from other files?
-
-If we look at our module tree, the print_user_model function sits in the crate::models::user_model path. So in order to use a module in files that are not main.rs, we should think in terms of the path necessary to reach that module in the module tree.
-
-// routes/user_route.rs
-pub fn print_user_route() {
-+ crate::models::user_model::print_user_model();
-  println!("user_route");
-}
-We’ve successfully called a function defined in a file from a file that’s not main.rs.
-
-super
-The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.
-
-We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.
-
-The super keyword in module path refers to the parent scope
-
-pub fn print_user_route() {
-  crate::routes::health_route::print_health_route();
-  // can also be called using
-  super::health_route::print_health_route();
-
-  println!("user_route");
-}
-use
-It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.
-
-The use keyword is used to shorten the module path
-
-pub fn print_user_route() {
-  crate::models::user_model::print_user_model();
-  println!("user_route");
-}
-The above code can be refactored as:
-
-use crate::models::user_model::print_user_model;
-
-pub fn print_user_route() {
-  print_user_model();
-  println!("user_route");
-}
-Instead of using the name print_user_model, we can also alias it to something else:
-
-use crate::models::user_model::print_user_model as log_user_model;
-
-pub fn print_user_route() {
-  log_user_model();
-  println!("user_route");
-}
-External modules
-Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.
-
-External dependencies are globally available to all modules inside a project
-
-For example, let’s say we added the rand crate to our project. We can use it in our code directly as:
-
-pub fn print_health_route() {
-  let random_number: u8 = rand::random();
-  println!("{}", random_number);
-  println!("health_route");
-}
-We can also use use to shorten the path:
-
-use rand::random;
-
-pub fn print_health_route() {
-  let random_number: u8 = random();
-  println!("{}", random_number);
-  println!("health_route");
-}
-Summary
-The module system is explicit - there’s no 1:1 mapping with file system
-We declare a file as module in its parent, not in itself
-The mod keyword is used to declare submodules
-We need to explicitly declare functions, structs etc as public so they can be consumed in other modules
-The pub keyword makes things public
-The use keyword is used to shorten the module path
-We don’t need to explicitly declare 3rd party modules
-Thanks for reading! Feel free to follow me in Twitter for more posts like this :)
-
-
-
-
-
-```
-         _~^*∽~_
-     \/ /  # ◵  \ (/
-       '_   ⩌   _'
-       | '--+--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>emb_rpi02w.md</title><link>https://rs.101.so//dev/emb_rpi02w</link><pubDate>Fri, 17 Mar 2023 09:45:32 +0800</pubDate><content:encoded><![CDATA[# Raspberry Pi Zero 2 w
-> 最便宜的开发板了...
-
-## background
-
-Why not?
-
-## goal
-
-作为上位机和 Pico 连接起来折腾点儿事儿。。。
-
-## trace
-
-### HX1838
-> ... 接入标准 HX1838 红外接收器的需求。需要使用 Rust 语言提供的 GPIO 库来控制 Raspberry Pi 的 GPIO 引脚，以及使用 Rust 的外部库来读取红外信号。具体的实现步骤如下：
-
-1. 配置环境
-
-首先需要安装 Rust 工具链，可以在 Raspberry Pi zero 2w 上使用以下命令进行安装：
-
-```
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-```
-
-安装完成后，需要安装对应的交叉编译工具链，以便于在 Raspberry Pi zero 2w 上编译 ARM 版本的代码。可以使用以下命令进行安装：
-
-```
-rustup target add armv7-unknown-linux-gnueabihf
-```
-
-2. 连接硬件
-
-将 HX1838 红外接收器连接到 Raspberry Pi 的 GPIO 引脚上。可以参考 HX1838 的数据手册来确定连接方式。
-
-3. 编写代码
-
-首先需要导入 GPIO 库和外部库，可以在项目的 Cargo.toml 文件中添加以下依赖：
-
-```
-[dependencies]
-rppal = "0.12.2"
-rust-hx711 = "0.1.0"
-```
-
-然后编写 Rust 代码，示例代码如下：
-
-```rust
-use rppal::gpio::{Gpio, Level, Mode};
-use rust_hx711::HX711;
-
-fn main() {
-    let gpio = Gpio::new().unwrap();
-    let mut pin = gpio.get(17).unwrap().into_input_pullup();
-    let mut hx711 = HX711::new(18, 27).unwrap();
-
-    loop {
-        if pin.read() == Level::Low {
-            let reading = hx711.read().unwrap();
-            println!("Reading: {}", reading);
-        }
-    }
-}
-```
-
-代码中的 `gpio.get(17)` 表示通过 GPIO 引脚编号来获取 GPIO 对象，然后将其设置为输入模式，并开启上拉电阻。`HX711::new(18, 27)` 表示创建一个 HX711 对象，其中 18 和 27 分别表示 HX711 的 SCK 和 DT 引脚对应 Raspberry Pi 的 GPIO 引脚编号。
-
-运行代码后，可以通过红外遥控器发送信号，然后在终端中可以看到将红外信号转换为数字的输出。
-
-4. 编译代码
-
-使用以下命令来编译代码：
-
-```
-cargo build --target=armv7-unknown-linux-gnueabihf
-```
-
-编译完成后，可以将生成的二进制文件拷贝到 Raspberry Pi zero 2w 上，然后在终端中运行即可。
-
-## refer.
-> 关键参考
-
-选择困难? [Best Linux Operating Systems for the Raspberry Pi](https://www.electromaker.io/blog/article/12-best-linux-operating-systems-for-the-raspberry-pi)
-
--	[树莓派及其他硬件平台国内外Linux镜像站全汇总-阿里云开发者社区](http://segmentfault.com/a/1190000000503041)
-    -	[Alpine Linux 安装到 Raspberry Pi - openthings的个人空间 - OSCHINA - 中文开源技术交流社区](https://my.oschina.net/u/2306127/blog/1587585)
--	Raspbian 派 ... 官方的总是有问题...虽然文档多, 毕竟不是专业 OS 发行商...
-		53+ [ラズベリーパイ - YouTube](https://www.youtube.com/playlist?list=PLolGQZF-26atBkbYgFDm7z1o_B_eFy6eK) 系列
-    + 	[Raspberry Pi Zero 2 W を使ってみる！セットアップ〜デスクトップとして使えるのかチェック - YouTube](https://www.youtube.com/watch?v=wSvMPMdJjXI)
-+ ArchLinux 流... ..
-    + [Arch compared to other distributions - ArchWiki](https://wiki.archlinux.org/title/arch_compared_to_other_distributions#See_also)
-    + 	以往真没用过, 值得学...关键看镜像:
-        + [镜像源 - Arch Linux 中文维基](https://wiki.archlinuxcn.org/zh-hans/%E9%95%9C%E5%83%8F%E6%BA%90#%E5%8F%82%E8%A7%81)
-        + 这里使用 `-n 6` 参数来实现只获取 6 个最快的镜像：
-			    
-```
-    # rankmirrors -n 6 /etc/pacman.d/mirrorlist.backup > /etc/pacman.d/mirrorlist
-```
-
-- [Arch Linux 更换国内镜像源](https://www.zzxworld.com/posts/change-cn-mirror-for-arch-linux)
-    - [Arch Linux - Mirror Overview](https://archlinux.org/mirrors/)
-    - [Arch Linux - aliyun.com - Mirror Details](https://archlinux.org/mirrors/aliyun.com/)
-    - [archlinuxcn镜像_archlinuxcn下载地址_archlinuxcn安装教程-阿里巴巴开源镜像站](https://developer.aliyun.com/mirror/archlinuxcn/)
-    - 好吧还是大厂的错误少...
-- [Pacman — Cloud Atlas 0.1 文档](https://cloud-atlas.readthedocs.io/zh_CN/latest/linux/arch_linux/pacman.html)
-    - 关键工具, 平替 apt
-        - [pacman使用代理服务器 — Cloud Atlas 0.1 文档](https://cloud-atlas.readthedocs.io/zh_CN/latest/linux/arch_linux/pacman_proxy.html)
-			...
-安装指南:
-
-- 官方: [Raspberry Pi Zero 2 | Arch Linux ARM](https://archlinuxarm.org/platforms/armv8/broadcom/raspberry-pi-zero-2)
-    - 全指令... fdisk 开始...
-    - [在树莓派 Zero W 上安装 Arch Linux | 子飞的网络日志](https://chirsz.cc/blog/2020-09/install-archlinux-rp0w.html)
-    - 关键笔记:
-        - [Installing Arch Linux on Raspberry Pi with WiFi-only networking | Dollz'n'Codez](https://figuregeek.eu/linux/1732)
-        - [Install Arch Linux ARM for Raspberry Pi Zero W on SD Card (with commands to configure WiFi before first boot).](https://gist.github.com/larsch/4a320f8ee5586fe6170af8051fcd9f85)
-        - [Installing Arch Linux on Raspberry Pi with Immediate WiFi Access –](https://ladvien.com/installing-arch-linux-raspberry-pi-zero-w/)
-        - [How To Install Arch Linux On A Raspberry Pi Zero W In Just A Few Minutes – Systran Box](https://www.systranbox.com/how-to-install-arch-linux-on-raspberry-pi-zero-w/)
-        - [How to install Arch Linux ARM on a Raspberry Pi - YouTube](https://www.youtube.com/watch?v=TCfMr3vk6FU)
-    - 相同过程...
-        - 2022: [Installing Arch Linux On Raspberry Pi ProxMox - YouTube](https://www.youtube.com/watch?v=GvwD9pXYJi4)
-            - 文字: [piprox-arch | Install notes for installing arch linux on pi proxmox](https://novaspirit.github.io/piprox-arch/)
-        - ...
-        - 2017: [Arch Linux for Raspberry Pi - YouTube](https://www.youtube.com/watch?v=28-oPIuz-G0)
-            - 文字: [Installing Arch Linux on Raspberry Pi - Novaspirit](https://www.novaspirit.com/2017/04/25/installing-arch-linux-raspberry-pi/)
-        - ...
-        - 200+ [Raspberry Pi - YouTube](https://www.youtube.com/watch?v=qhe6KUw3D78&list=PL846hFPMqg3iTKbgQryS6UNXM4Nf3KVFw&pp=iAQB) 系列...
-        - ...文字版: [Installing Arch Linux On Raspberry Pi ProxMox - Raspberry Pi Projects](https://raspberrypiprojects.com/installing-arch-linux-on-raspberry-pi-proxmox/)
-        - 	...
-        - ~~[How to Install Manjaro on Raspberry Pi? – RaspberryTips](https://raspberrytips.com/install-manjaro-raspberry-pi/)~~
-            - 更加友好的界面...不过, 这个要先插好屏幕和键盘...
-            - ...
-- Manjaro ARM 版,专门适配有 #RaspberryPi
-    - [The best 64 bit OS for Raspberry Pi: Manjaro KDE / XFCE (Full install guide / tutorial / review) - YouTube](https://www.youtube.com/watch?v=HwlM1Ws6KC8)
-    - [How To Install Manjaro Arm On The Raspberry pi 1 2 3 Or Zero - YouTube](https://www.youtube.com/watch?v=u8vricJXVWQ)
-        - ...只是省不掉人工配置过程?
-- Ubuntu 派 ... 方便是方便...就太慢了...而且 IoT 相关文档还没 #RaspberryPi 全...
-    - [Raspberry Pi OS vs Ubuntu](https://linuxhint.com/category/raspberry-pi/)
-- BSD 派...否决, 驱动实在难
-- ...
-
-
-
-```
-          _~∽--~_
-      \/ /  ◶ ?  \ \/
-        '_   ⌐   _'
-        \ '--+--' |
 
 ...act by ferris-actor v0.2.4 (built on 23.0303.201916)
 ```]]></content:encoded></item></channel></rss>

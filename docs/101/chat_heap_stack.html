@@ -1,0 +1,438 @@
+<!DOCTYPE HTML>
+<html lang="zh" class="sidebar-visible no-js light">
+
+<head>
+    <!-- Book generated using mdBook -->
+    <meta charset="UTF-8">
+    <title>🌖 可变不可变混合 - be Rustaceans</title>
+
+
+    <!-- Custom HTML head -->
+    
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <meta name="description" content="如何成为一名合格的 Rustacean ? 肯定有个过程, 这儿记录了私人这个转化过程...">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#ffffff" />
+
+    <link rel="icon" href="../favicon.svg">
+    <link rel="shortcut icon" href="../favicon.png">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/general.css">
+    <link rel="stylesheet" href="../css/chrome.css">
+
+    <!-- Fonts -->
+    <link rel="stylesheet" href="../FontAwesome/css/font-awesome.css">
+    <link rel="stylesheet" href="../fonts/fonts.css">
+
+    <!-- Highlight.js Stylesheets -->
+    <link rel="stylesheet" href="../highlight.css">
+    <link rel="stylesheet" href="../tomorrow-night.css">
+    <link rel="stylesheet" href="../ayu-highlight.css">
+
+    <!-- Custom theme stylesheets -->
+    <link rel="stylesheet" href="../theme/style.css">
+
+
+</head>
+
+<body>
+    <!-- Provide site root to javascript -->
+    <script type="text/javascript">
+        var path_to_root = "../";
+        var default_theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "navy" : "light";
+    </script>
+
+    <!-- Work around some values being stored in localStorage wrapped in quotes -->
+    <script type="text/javascript">
+        try {
+            var theme = localStorage.getItem('mdbook-theme');
+            var sidebar = localStorage.getItem('mdbook-sidebar');
+            if (theme.startsWith('"') && theme.endsWith('"')) {
+                localStorage.setItem('mdbook-theme', theme.slice(1, theme.length - 1));
+            }
+            if (sidebar.startsWith('"') && sidebar.endsWith('"')) {
+                localStorage.setItem('mdbook-sidebar', sidebar.slice(1, sidebar.length - 1));
+            }
+        } catch (e) { }
+    </script>
+
+    <!-- Set the theme before any content is loaded, prevents flash -->
+    <script type="text/javascript">
+        var theme;
+        try { theme = localStorage.getItem('mdbook-theme'); } catch (e) { }
+        if (theme === null || theme === undefined) { theme = default_theme; }
+        var html = document.querySelector('html');
+        html.classList.remove('no-js')
+        html.classList.remove('light')
+        html.classList.add(theme);
+        html.classList.add('js');
+    </script>
+
+    <!-- Hide / unhide sidebar before it is displayed -->
+    <script type="text/javascript">
+        var html = document.querySelector('html');
+        var sidebar = 'hidden';
+        if (document.body.clientWidth >= 1080) {
+            try { sidebar = localStorage.getItem('mdbook-sidebar'); } catch (e) { }
+            sidebar = sidebar || 'visible';
+        }
+        html.classList.remove('sidebar-visible');
+        html.classList.add("sidebar-" + sidebar);
+    </script>
+
+    <nav id="sidebar" class="sidebar" aria-label="Table of contents">
+        <div class="sidebar-scrollbox">
+            <ol class="chapter"><li class="chapter-item expanded "><a href="../abt/index.html">成为 Rustacean</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../abt/gh-pages.html">gh-pages</a></li><li class="chapter-item "><a href="../abt/zhrust.html">zhrust</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">自习🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../101/index.html">🌖 Rust 学习</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/past_ampersand-driven_development.html">🌝 克服"& 驱动开发"</a></li><li class="chapter-item "><a href="../101/idioms.html">🌘 idioms</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/idiom325_create_a_queue.html">🌝 idiom#325:构造队列</a></li></ol></li><li class="chapter-item "><a href="../101/quiz.html">🌘 Quiz.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/quiz_1.html">🌝 Quiz#1</a></li></ol></li><li class="chapter-item "><a href="../101/exercism.html">🌘 Exercism</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/ex42all-your-base.html">🌖 42:all-your-base</a></li><li class="chapter-item "><a href="../101/ex43Allergies.html">🌖 43:Allergies</a></li></ol></li><li class="chapter-item expanded "><a href="../101/chatgpt101.html">🌚 伴学ChatGPT</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../101/chat_dyn101.html">🌖 dyn 初步</a></li><li class="chapter-item expanded "><a href="../101/chat_heap_stack.html" class="active">🌖 可变不可变混合</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">实践🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../dev/index.html">🌖 Rust 开发</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/dama-projects.html">🌘小作品</a></li><li class="chapter-item "><a href="../dev/tui4cli.html">🌖TUI</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_nnera.html">🌖 NNera</a></li><li class="chapter-item "><a href="../dev/cli_ferris_art.html">🌝 Ferris艺术</a></li><li class="chapter-item "><a href="../dev/cli_bxmr.html">🌝 BXMr</a></li><li class="chapter-item "><a href="../dev/cli_rss4mdbook.html">🌝 RSS4mdbook</a></li><li class="chapter-item "><a href="../dev/cli_yuzu.html">🌚 Yuzu</a></li></ol></li><li class="chapter-item "><a href="../dev/web4async.html">🌚 异步</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/tokio.html">🌘 Tokio</a></li><li class="chapter-item "><a href="../dev/graphql.html">🌚 GraphQL</a></li></ol></li><li class="chapter-item "><div>🌚 TTD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/rust-unit-test-everything-wanted-know.html">🌘 Rust 单元测试得知道的一切</a></li><li class="chapter-item "><a href="../dev/debug_rust_with_codelldb.html">🌚 CodeLLDB</a></li></ol></li><li class="chapter-item "><a href="../dev/gui4web.html">🌚 GUI</a></li><li class="chapter-item "><a href="../dev/embedded_rs.html">🌚 嵌入</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/emb_rp2040pico.html">🌘 Pico</a></li><li class="chapter-item "><a href="../dev/emb_rpi02w.html">🌘 Zero2w</a></li></ol></li><li class="chapter-item "><div>🌚 CI/CD</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cross-compiling.html">🌘 交叉编译?</a></li></ol></li><li class="chapter-item "><a href="../dev/20-things-ive-learned-in-my-20-years-as-a-software-engineer.html">🌝 20年来作为软件工程师学到的10件事</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/concepts-i-wish-i-learned-earlier.html">🌝 希望一早知道的关键概念</a></li></ol></li><li class="chapter-item "><div>🌘 实用工具推荐...</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../dev/cli_btm.html">🌘 Bottom</a></li></ol></li></ol></li><li class="chapter-item expanded "><li class="part-title">工程🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../tip/index.html">🌘 Rust 技能</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/awesome4rs.html">🌘 Awesome.rs</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/aw4rs_handlebars.html">🌘 Handlebars</a></li><li class="chapter-item "><a href="../tip/tracing.html">🌖 tracing 初步</a></li><li class="chapter-item "><a href="../tip/open_big_file_speed.html">🌖 文件加速打开</a></li></ol></li><li class="chapter-item "><a href="../tip/rust_min_bug_patterns.html">🌘 BMP:最小bug模式</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/manag_growing_proj_with_crates_modules.html">🌖 Crate中合理划分目录</a></li><li class="chapter-item "><a href="../tip/clear_explanation_rust_modele_system.html">🌘 清晰解释Rust模块系统</a></li><li class="chapter-item "><a href="../tip/two_kinds_assert_make_better_code.html">🌘 两种'Assert'构建清晰代码</a></li></ol></li><li class="chapter-item "><div>🌝 anti-OOP</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../tip/default-params.html">🌝 OOP:Rust 和默认参数</a></li><li class="chapter-item "><a href="../tip/oop-1-encapsulation.html">🌝 Rust 超越OOP,第1部分</a></li><li class="chapter-item "><a href="../tip/oop-2-polymorphism.html">🌝 Rust 超越OOP,第2部分</a></li></ol></li><li class="chapter-item "><a href="../tip/rust6fun-operator-overloading.html">🌝 运算符重载六件趣事</a></li></ol></li><li class="chapter-item expanded "><li class="part-title">笔记🌚🌘🌗🌖🌝</li><li class="spacer"></li><li class="chapter-item expanded "><a href="../log/index.html">🌖 笔记</a><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/rust101logging.html">🌗 Rust 课程笔记</a></li><li class="chapter-item "><a href="../log/rust-s-ugly-syntax.html">🌝 Rust 丑句法</a></li><li class="chapter-item "><a href="../log/graph-rust-move-copy-borrow.html">🌝 图形描述 Rust 中所有权和借用</a></li><li class="chapter-item "><div>🌚 Choas嗯哼</div><a class="toggle"><div>❱</div></a></li><li><ol class="section"><li class="chapter-item "><a href="../log/c101.html">🌖 0基础入门C?</a></li><li class="spacer"></li></ol></li></ol></li></ol>
+        </div>
+        <div id="sidebar-resize-handle" class="sidebar-resize-handle"></div>
+    </nav>
+
+    <div id="page-wrapper" class="page-wrapper">
+
+        <div class="page">
+                        <div id="menu-bar-hover-placeholder"></div>
+            <div id="menu-bar" class="menu-bar sticky bordered">
+                <div class="left-buttons">
+                    <button id="sidebar-toggle" class="icon-button" type="button" title="Toggle Table of Contents"
+                        aria-label="Toggle Table of Contents" aria-controls="sidebar">
+                        <i class="fa fa-bars"></i>
+                    </button>
+                    <button id="theme-toggle" class="icon-button" type="button" title="Change theme"
+                        aria-label="Change theme" aria-haspopup="true" aria-expanded="false" aria-controls="theme-list">
+                        <i class="fa fa-paint-brush"></i>
+                    </button>
+                    <ul id="theme-list" class="theme-popup" aria-label="Themes" role="menu">
+                        <li role="none"><button role="menuitem" class="theme" id="light">Light (default)</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="rust">Rust</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="coal">Coal</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="navy">Navy</button></li>
+                        <li role="none"><button role="menuitem" class="theme" id="ayu">Ayu</button>
+                        </li>
+                    </ul>
+                    <button id="search-toggle" class="icon-button" type="button" title="Search. (Shortkey: s)"
+                        aria-label="Toggle Searchbar" aria-expanded="false" aria-keyshortcuts="S"
+                        aria-controls="searchbar">
+                        <i class="fa fa-search"></i>
+                    </button>
+                </div>
+
+                <h1 class="menu-title">be Rustaceans</h1>
+
+                <div class="right-buttons">
+                    <a href="https://github.com/zhrust/rustacean/tree/main/src" title="Git repository" aria-label="Git repository">
+                        <i id="git-repository-button" class="fa fa-github"></i>
+                    </a>
+                    <a href="https://github.com/zhrust/rustacean/blob/main/src/src/101/chat_heap_stack.md" title="Suggest an edit" aria-label="Suggest an edit">
+                        <i id="git-edit-button" class="fa fa-edit"></i>
+                    </a>
+
+                    <a href="/rss.xml" title="RSS.xml" aria-label=""RSS.xml">
+                        <b id="git-edit-button" class="fa fa-feed"></b>
+                    </a>
+
+                </div>
+            </div>
+
+            <div id="search-wrapper" class="hidden">
+                <form id="searchbar-outer" class="searchbar-outer">
+                    <input type="search" id="searchbar" name="searchbar" placeholder="Search this book ..."
+                        aria-controls="searchresults-outer" aria-describedby="searchresults-header">
+                </form>
+                <div id="searchresults-outer" class="searchresults-outer hidden">
+                    <div id="searchresults-header" class="searchresults-header"></div>
+                    <ul id="searchresults">
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Apply ARIA attributes after the sidebar and the sidebar toggle button are added to the DOM -->
+            <script type="text/javascript">
+                document.getElementById('sidebar-toggle').setAttribute('aria-expanded', sidebar === 'visible');
+                document.getElementById('sidebar').setAttribute('aria-hidden', sidebar !== 'visible');
+                Array.from(document.querySelectorAll('#sidebar a')).forEach(function (link) {
+                    link.setAttribute('tabIndex', sidebar === 'visible' ? 0 : -1);
+                });
+            </script>
+
+            <div id="content" class="content">
+                <!-- Page table of contents -->
+                <div class="sidetoc">
+                    <nav class="pagetoc"></nav>
+                </div>
+                <main>
+                    <h1 id="可变不可变引用态度"><a class="header" href="#可变不可变引用态度">可变/不可变引用态度</a></h1>
+<blockquote>
+<p>学伴ChatGPT, chatting for debugging ...</p>
+</blockquote>
+<h2 id="background"><a class="header" href="#background">background</a></h2>
+<blockquote>
+<p>李明 coding到灯火阑珊 2023-03-24 06:00</p>
+</blockquote>
+<p><a href="https://mp.weixin.qq.com/s/KXfCHeFuLvK8PHAkA5QJmA">Rust开发人员经常犯的5个常见错误</a></p>
+<h2 id="goal"><a class="header" href="#goal">goal</a></h2>
+<p>完成合理概念摸查...</p>
+<h2 id="trace"><a class="header" href="#trace">trace</a></h2>
+<blockquote>
+<p>Q: rust 代码:</p>
+</blockquote>
+<pre><pre class="playground"><code class="language-rust edition2021">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+    if x.len() &gt; y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from(&quot;long string is long&quot;);
+    let result;
+    {
+        let string2 = String::from(&quot;xyz&quot;);
+        // 这一行将导致编译错误
+        result = longest(string1.as_str(), string2.as_str());
+    }
+    println!(&quot;The longest string is {}&quot;, result);
+}
+</code></pre></pre>
+<p>为什么出错?如何修改? 以及如何理解?</p>
+<blockquote>
+<p>A:该程序出错是因为 string2 的生命周期比 result 的生命周期短，而 result 是一个指向 string2 中的引用，因此在 string2 离开作用域后，result 指向的内存已经被释放，这会导致未定义的行为。</p>
+</blockquote>
+<p>为了解决这个问题，我们需要让 result 的生命周期比 string2 的生命周期更长。有多种方法可以实现这一点，以下是其中的一种：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+    if x.len() &gt; y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from(&quot;long string is long&quot;);
+    let result;
+    let string2 = String::from(&quot;xyz&quot;);
+    result = longest(string1.as_str(), string2.as_str());
+    println!(&quot;The longest string is {}&quot;, result);
+}</code></pre></pre>
+<p>在这个修改后的程序中，我们将 string2 的声明移到了 result 的声明之前，并且不再使用一个代码块来限制 string2 的作用域。这意味着 string2 和 result 的生命周期相同，因此 result 仍然有效。</p>
+<p>该程序的代码使用了 Rust 的生命周期注释 'a 来告诉编译器 longest 函数的返回值的生命周期应该与 x 和 y 的生命周期相同。</p>
+<p>简单地说，程序中的修改让 string2 和 result 具有相同的生命周期，从而解决了问题。</p>
+<blockquote>
+<p>Q: let string2 = &quot;xyz&quot;; 是否也可以解决相同的问题? 为什么?</p>
+</blockquote>
+<blockquote>
+<p>A:是的，如果将 string2 的类型从 String 改为字符串字面量 &amp;str，则程序就可以正确编译和运行。修改后的程序如下：</p>
+</blockquote>
+<pre><pre class="playground"><code class="language-rust edition2021">fn longest&lt;'a&gt;(x: &amp;'a str, y: &amp;'a str) -&gt; &amp;'a str {
+    if x.len() &gt; y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from(&quot;long string is long&quot;);
+    let string2 = &quot;xyz&quot;;
+    let result = longest(string1.as_str(), string2);
+    println!(&quot;The longest string is {}&quot;, result);
+}</code></pre></pre>
+<p>字符串字面量在编译时就已经存在于程序的二进制文件中，因此它们的生命周期与程序的生命周期相同，而不需要在堆上分配内存。这意味着它们的生命周期与其他在程序中定义的变量的生命周期相同，因此在使用字符串字面量时不需要担心生命周期的问题。</p>
+<p>所以使用字符串字面量作为参数传递给 longest 函数是安全的，因为它们的生命周期已经在编译时确定了，并且与函数中的其他变量的生命周期相同。</p>
+<blockquote>
+<p>Q: 那么, 为什么 longest() 一定要指定参数的生命周期? 没有其它更加简洁的形式了嘛?</p>
+</blockquote>
+<blockquote>
+<p>A: 在 Rust 中，str 是一个字符串 slice 类型，它是一个不可变的、固定长度的引用类型。由于 str 引用的是存储在堆上的字符串数据，因此它的生命周期必须是由该字符串的所有权来决定的。</p>
+</blockquote>
+<p>在 longest() 函数中，x 和 y 的类型是 &amp;'a str，这表示它们是指向某个字符串数据的引用，它们的生命周期被限制为 'a，即函数的生命周期。这是必要的，因为函数的返回值也是一个对字符串数据的引用，它的生命周期必须是在函数返回后才能开始的，而且必须与参数的生命周期相关联，以避免悬垂引用的问题。</p>
+<p>如果我们将参数类型改为 str，那么就无法控制它们引用的字符串的生命周期，因为它们不是引用类型。如果我们试图通过将 string1 和 string2 的值进行 clone 来传递它们的副本，这样可能会导致堆分配的额外开销和性能问题，因为这需要为每个字符串分配一个新的内存块，并在函数调用结束后释放这些内存块。</p>
+<p>因此，在 longest() 函数中，最好使用字符串 slice 类型 &amp;str，并在调用函数时传递指向原始字符串的引用，以确保在不需要分配额外内存的情况下正确处理字符串。</p>
+<blockquote>
+<p>Q: 明白了, 如果不考虑性能, 使用 clone 也是可以的</p>
+</blockquote>
+<blockquote>
+<p>A: 是的，如果不考虑性能问题，你可以通过使用 clone() 方法来创建传递给 longest() 函数的字符串的拷贝。这将使每个字符串都在堆上分配新的内存，并使 longest() 函数能够接受 String 类型的参数。</p>
+</blockquote>
+<p>例如，可以使用下面的代码来调用 longest() 函数，使用 clone() 方法创建了 string1 和 string2 的副本：</p>
+<pre><pre class="playground"><code class="language-rust edition2021">
+fn longest(x: &amp;str, y: &amp;str) -&gt; &amp;str {
+    if x.len() &gt; y.len() {
+        x
+    } else {
+        y
+    }
+}
+
+fn main() {
+    let string1 = String::from(&quot;long string is long&quot;);
+    let string2 = String::from(&quot;xyz&quot;);
+    let result = longest(string1.as_str(), string2.as_str());
+    println!(&quot;The longest string is {}&quot;, result);
+
+    // Create clones of the strings and pass them to longest()
+    let string3 = string1.clone();
+    let string4 = string2.clone();
+    let result2 = longest(string3.as_str(), string4.as_str());
+    println!(&quot;The longest string is {}&quot;, result2);
+}
+</code></pre></pre>
+<p>注意，这种方法可能会产生性能问题，因为每次调用 clone() 方法都会分配新的内存并复制字符串的内容。因此，如果性能是一个问题，最好避免使用 clone() 方法来创建字符串的副本。</p>
+<blockquote>
+<p>Q: 明白了, 那么 堆与栈的本质区别是什么? 为什么 rust 对栈这么信任, 对堆却很警惕?</p>
+</blockquote>
+<blockquote>
+<p>A: 在计算机科学中，堆和栈都是内存中用于存储程序数据的数据结构。它们之间的本质区别在于它们的内存分配方式和数据存储的生命周期。</p>
+</blockquote>
+<p>栈是一种先进后出的数据结构，它使用固定大小的内存块来存储程序数据。当一个函数被调用时，该函数的参数、局部变量和返回地址等数据将被存储在栈帧中。当函数返回时，该栈帧将被弹出，其中存储的数据也将被销毁。由于栈内存的分配和释放是由程序自动进行的，因此它们的效率非常高。</p>
+<p>堆是一种动态的数据结构，它使用不连续的内存块来存储程序数据。堆内存的分配和释放是由程序员手动管理的，它们的效率相对较低。由于堆内存的生命周期不像栈那样易于确定，因此在使用堆内存时需要注意内存泄漏和悬垂指针等问题。</p>
+<p>在 Rust 中，栈上的数据是可以直接在栈帧中进行分配和释放的，因此 Rust 对栈的管理非常信任。但是，由于堆上的数据需要手动管理，因此在 Rust 中对堆的管理要更加警惕，以避免内存泄漏和悬垂指针等问题。因此，在 Rust 中使用堆内存时，必须遵循所有权规则，以确保每个值都有且只有一个所有者，并在所有者超出作用域时自动释放其内存。这也是 Rust 中所有权系统的核心概念。</p>
+<blockquote>
+<p>Q: 那么, rust 内建数据类型中, 哪些是栈, 哪些是堆?</p>
+</blockquote>
+<blockquote>
+<p>A: 在 Rust 中，内建数据类型可以分为两类：栈上分配的值和堆上分配的值。</p>
+</blockquote>
+<p>以下是一些常见的栈上分配的值：</p>
+<ul>
+<li>所有基本数据类型（例如整数、布尔值和浮点数）</li>
+<li>数组和元组（当它们包含栈上分配的值时）</li>
+<li>函数和闭包</li>
+</ul>
+<p>以下是一些常见的堆上分配的值：</p>
+<ul>
+<li>所有标准库集合类型，例如 Vec、String 和 HashMap 等</li>
+<li>Box 智能指针和 Rc 引用计数指针</li>
+<li>闭包（如果它们捕获了堆上分配的值）</li>
+</ul>
+<p>需要注意的是，Rust 中的<strong>所有类型都可以在堆上分配，只要使用堆分配器</strong>（如 Box、Vec 或者 String）即可。但是，所有权系统确保这些堆上分配的值仍然遵循所有权规则，以确保内存安全。</p>
+<blockquote>
+<p>Q: 明白了, 也就是说 String::from(&quot;xyz&quot;) 是堆上内存, 但是, &quot;xyz&quot; 是栈上内存,
+那么, 为什么都是生成不可变字符串, 为什么 Rust 要构建出堆上字符串 String::from(&quot;xyz&quot;) ?
+问题是 String::from(&quot;xyz&quot;)  有什么比 &quot;xyz&quot; 的好处?</p>
+</blockquote>
+<blockquote>
+<p>A: 是的，您的理解是正确的。&quot;xyz&quot; 是一个编译时常量，分配在程序的栈上，它是一个静态分配的不可变字符串。而 String::from(&quot;xyz&quot;) 是在运行时动态分配的堆上的一个不可变字符串。</p>
+</blockquote>
+<p>Rust 之所以提供 String 类型，是因为它具有以下一些优点：</p>
+<ul>
+<li>动态长度：在堆上分配一个字符串，它的长度可以在运行时根据需要动态增加或减少，这是栈上分配的静态字符串所不能做到的。</li>
+<li>丰富的字符串处理功能：String 类型提供了各种字符串处理功能，例如拼接、切割、查找、替换等。</li>
+<li>UTF-8 编码：Rust 中的字符串类型都是基于 UTF-8 编码的，这意味着它们可以表示世界上几乎所有语言中的字符，包括非拉丁字符集，而不会出现编码问题。</li>
+</ul>
+<p>但是，由于动态分配内存涉及到堆的使用，这会带来一些额外的开销和复杂性。因此，在编写 Rust 代码时，应该尽可能地使用栈上分配的数据类型来避免堆分配的开销。仅当需要动态长度或其他特殊功能时，才应该使用堆上分配的类型。</p>
+<h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
+<blockquote>
+<p>其实官方的文档吃透, 基本可以平趟 80% 的日常开发了...</p>
+</blockquote>
+<p>以及将自己伪装成一个认真又很笨的学员,
+GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行检验以及官方文档证实:</p>
+<ul>
+<li><a href="https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html#%E6%A0%88stack%E4%B8%8E%E5%A0%86heap">什么是所有权？ - Rust 程序设计语言 简体中文版</a></li>
+<li><a href="https://zh.practice.rs/lifetime/basic.html">生命周期基础 - Rust By Practice( Rust 练习实践 )</a></li>
+<li><a href="https://rust-book.junmajinlong.com/ch3/04_str_string.html#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AD%97%E9%9D%A2%E9%87%8F">字符串：str和String - Rust入门秘籍</a></li>
+<li><a href="https://rust-book.junmajinlong.com/ch5/01_heap_stack.html">理解Rust内存管理 - Rust入门秘籍</a>
+<ul>
+<li><a href="https://rust-book.junmajinlong.com/ch5/01_heap_stack.html">堆空间和栈空间 - Rust入门秘籍</a></li>
+<li>...</li>
+</ul>
+</li>
+<li><a href="https://kaisery.github.io/trpl-zh-cn/ch15-01-box.html#%E4%BD%BF%E7%94%A8-boxt-%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%82%A8%E5%AD%98%E6%95%B0%E6%8D%AE">使用Box<T> 指向堆上数据 - Rust 程序设计语言 简体中文版</a></li>
+</ul>
+<pre><code>     _~`|~~_
+ \/ /  = →  \ ()
+   '_   ∧   _'
+   / '--~--' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+</code></pre>
+
+                    <div id="giscus-container"></div>
+                </main>
+
+                <nav class="nav-wrapper" aria-label="Page navigation">
+                    <!-- Mobile navigation buttons -->
+                    <a rel="prev" href="../101/chat_dyn101.html" class="mobile-nav-chapters previous"
+                        title="Previous chapter" aria-label="Previous chapter" aria-keyshortcuts="Left">
+                        <i class="fa fa-angle-left"></i>
+                    </a>
+
+                    <a rel="next" href="../dev/index.html" class="mobile-nav-chapters next"
+                        title="Next chapter" aria-label="Next chapter" aria-keyshortcuts="Right">
+                        <i class="fa fa-angle-right"></i>
+                    </a>
+
+                    <div style="clear: both"></div>
+                </nav>
+            </div>
+        </div>
+
+        <nav class="nav-wide-wrapper" aria-label="Page navigation">
+            <a rel="prev" href="../101/chat_dyn101.html" class="nav-chapters previous" title="Previous chapter"
+                aria-label="Previous chapter" aria-keyshortcuts="Left">
+                <i class="fa fa-angle-left"></i>
+            </a>
+
+            <a rel="next" href="../dev/index.html" class="nav-chapters next" title="Next chapter"
+                aria-label="Next chapter" aria-keyshortcuts="Right">
+                <i class="fa fa-angle-right"></i>
+            </a>
+        </nav>
+
+    </div>
+
+
+
+    <script type="text/javascript">
+        window.playground_line_numbers = true;
+    </script>
+
+    <script type="text/javascript">
+        window.playground_copyable = true;
+    </script>
+
+    <script src="../ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../editor.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mode-rust.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-dawn.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../theme-tomorrow_night.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../elasticlunr.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../mark.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../searcher.js" type="text/javascript" charset="utf-8"></script>
+
+    <script src="../clipboard.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../highlight.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../book.js" type="text/javascript" charset="utf-8"></script>
+    <script type="text/javascript" charset="utf-8">
+        var pagePath = "101/chat_heap_stack.md"
+    </script>
+
+
+    <!-- Custom JS scripts -->
+    <script type="text/javascript" src="../assets/custom.js"></script>
+    <script type="text/javascript" src="../assets/bigPicture.js"></script>
+
+    <hr />
+
+    <p style="text-align:center">
+
+        <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="知识共享许可协议"
+                style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>
+        本作品采用<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">知识共享署名-相同方式共享 4.0 国际许可协议</a>进行许可;-)
+<!--
+][ <b>
+    <a href="/rss.xml">RSS</a>
+    </b>
+-->
+
+    </p>
+    <hr />
+
+    <script src="https://utteranc.es/client.js" repo="zhrust/comments" issue-term="pathname" label="✨💬✨"
+        theme="github-light" crossorigin="anonymous" async>
+        </script>
+
+</body>
+
+</html>

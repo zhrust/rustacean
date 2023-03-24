@@ -15,6 +15,7 @@ Since Rust’s module system is quite unique, I request the reader to read this 
 
 Let’s use this file structure to simulate a real world project:
 
+```
 my_project
 ├── Cargo.toml
 └─┬ src
@@ -25,13 +26,19 @@ my_project
   │ └── user_route.rs
   └─┬ models
     └── user_model.rs
+```
+
 These are the different ways we should be able to consume our modules:
 
+![rust-module-system-1](https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-1.png)
 
 
 These 3 examples should be sufficient to explain how Rust’s module system works.
 
-Example 1
+------
+
+
+### Example 1
 Let’s start with the first example - importing config.rs in main.rs.
 
 // main.rs
@@ -112,7 +119,10 @@ fn main() {
 }
 Now, this works. We’ve successfully called a function defined in a different file!
 
-Example 2
+------
+
+
+### Example 2
 Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.
 
 // main.rs
@@ -166,7 +176,10 @@ Here’s how the module tree looks like:
 
 We can now call a function defined in a file inside a folder.
 
-Example 3
+------
+
+
+### Example 3
 Let’s try calling from main.rs => routes/user_route.rs => models/user_model.rs
 
 // main.rs
@@ -243,7 +256,10 @@ pub fn print_user_route() {
 }
 We’ve successfully called a function defined in a file from a file that’s not main.rs.
 
-super
+------
+
+
+### super
 The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.
 
 We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.
@@ -257,7 +273,11 @@ pub fn print_user_route() {
 
   println!("user_route");
 }
-use
+
+------
+
+
+### use
 It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.
 
 The use keyword is used to shorten the module path
@@ -282,7 +302,10 @@ pub fn print_user_route() {
   log_user_model();
   println!("user_route");
 }
-External modules
+
+------
+
+### External modules
 Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.
 
 External dependencies are globally available to all modules inside a project
@@ -303,7 +326,10 @@ pub fn print_health_route() {
   println!("{}", random_number);
   println!("health_route");
 }
-Summary
+
+------
+
+### Summary
 The module system is explicit - there’s no 1:1 mapping with file system
 We declare a file as module in its parent, not in itself
 The mod keyword is used to declare submodules
