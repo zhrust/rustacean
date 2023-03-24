@@ -166,10 +166,14 @@
 </blockquote>
 <p>原文: <a href="https://www.sheshbabu.com/posts/rust-module-system/">Clear explanation of Rust’s module system</a></p>
 <h2 id="快译"><a class="header" href="#快译">快译</a></h2>
-<p>Rust’s module system is surprisingly confusing and causes a lot of frustration for beginners.</p>
-<p>In this post, I’ll explain the module system using practical examples so you get a clear understanding of how it works and can immediately start applying this in your projects.</p>
-<p>Since Rust’s module system is quite unique, I request the reader to read this post with an open mind and resist comparing it with how modules work in other languages.</p>
-<p>Let’s use this file structure to simulate a real world project:</p>
+<p>Rust 的模块系统出奇的混乱,给初学者带来了很多挫败感;</p>
+<p>在这篇文章中, 我将使用实际案例来解释模块系统,
+以便清楚的了解其工作原理,
+并可以立即开始在你的项目中应用起来;</p>
+<p>由于 Rust 的模块系统非常独特,
+我请求读者以开放的心态阅读这篇文章,
+不要将其和其它语言的模块运作方式进行比较;</p>
+<p>先使用这个文件结构来模拟一个真实世界的项目:</p>
 <pre><code>my_project
 ├── Cargo.toml
 └─┬ src
@@ -181,269 +185,313 @@
   └─┬ models
     └── user_model.rs
 </code></pre>
-<p>These are the different ways we should be able to consume our modules:</p>
+<p>以下这些是我们想使用自己不同模块的不同方式:</p>
+<ul>
+<li>同级引用</li>
+<li>引用下级</li>
+<li>跨目录引用兄弟目录/模块</li>
+</ul>
 <p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-1.png" alt="rust-module-system-1" /></p>
-<p>These 3 examples should be sufficient to explain how Rust’s module system works.</p>
+<p>这三个例子足以营利 Rust 的模块系统是如何工作的;</p>
+<p>(<code>译按</code>: 其实, 这只是最基础的, 
+这种目录结构是人工创建, 还是工具创建, 其实也是个问题,
+毕竟, Rust 还支持内部库, 工作空间 ...等等代码管理姿势...)</p>
 <hr />
-<h3 id="example-1"><a class="header" href="#example-1">Example 1</a></h3>
-<p>Let’s start with the first example - importing config.rs in main.rs.</p>
-<p>// main.rs
+<h3 id="示例-1"><a class="header" href="#示例-1">示例 1</a></h3>
+<p>先从第一个姿势开始 --- <code>importing config.rs in main.rs</code></p>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 fn main() {
-println!(&quot;main&quot;);
+  println!(&quot;main&quot;);
 }
+
 // config.rs
 fn print_config() {
-println!(&quot;config&quot;);
-}
-The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.</p>
+  println!(&quot;config&quot;);
+}</code></pre></pre>
+<p>The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.</p>
 <p>Here’s what we see (file system tree) and what the compiler sees (module tree):</p>
+<p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-2.png" alt="system-2" /></p>
 <p>Surprisingly, the compiler only sees the crate module which is our main.rs file. This is because we need to explicitly build the module tree in Rust - there’s no implicit mapping between file system tree to module tree.</p>
+<blockquote>
 <p>We need to explicitly build the module tree in Rust, there’s no implicit mapping to file system</p>
+</blockquote>
 <p>To add a file to the module tree, we need to declare that file as a submodule using the mod keyword. The next thing that confuses people is that you would assume we declare a file as module in the same file. But we need to declare this in a different file! Since we only have main.rs in the module tree, let’s declare config.rs as a submodule in main.rs.</p>
+<blockquote>
 <p>The mod keyword declares a submodule</p>
+</blockquote>
 <p>The mod keyword has this syntax:</p>
-<p>mod my_module;
-Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.</p>
-<p>my_project
+<p><code>mod my_module;</code></p>
+<p>Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.</p>
+<pre><code>my_project
 ├── Cargo.toml
 └─┬ src
-├── main.rs
-└── my_module.rs</p>
+  ├── main.rs
+  └── my_module.rs
+</code></pre>
 <p>or</p>
-<p>my_project
+<pre><code>my_project
 ├── Cargo.toml
 └─┬ src
-├── main.rs
-└─┬ my_module
-└── mod.rs
-Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:</p>
-<p>// main.rs</p>
-<ul>
-<li>mod config;</li>
-</ul>
-<p>fn main() {</p>
-<ul>
-<li>config::print_config();
-println!(&quot;main&quot;);
+  ├── main.rs
+  └─┬ my_module
+    └── mod.rs
+</code></pre>
+<p>Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
++ mod config;
+
+fn main() {
++ config::print_config();
+  println!(&quot;main&quot;);
 }
 // config.rs
 fn print_config() {
-println!(&quot;config&quot;);
-}
-We’re accessing the print_config function using the :: syntax.</li>
-</ul>
+  println!(&quot;config&quot;);
+}</code></pre></pre>
+<p>We’re accessing the print_config function using the :: syntax.</p>
 <p>Here’s how the module tree looks like:</p>
+<p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-3.png" alt="system-3" /></p>
 <p>We’ve successfully declared the config module! But this is not sufficient to be able to call the print_config function inside config.rs. Almost everything in Rust is private by default, we need to make the function public using the pub keyword:</p>
+<blockquote>
 <p>The pub keyword makes things public</p>
-<p>// main.rs
-mod config;</p>
-<p>fn main() {
-config::print_config();
-println!(&quot;main&quot;);
+</blockquote>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
+mod config;
+
+fn main() {
+  config::print_config();
+  println!(&quot;main&quot;);
 }
-// config.rs</p>
-<ul>
-<li>fn print_config() {</li>
-</ul>
-<ul>
-<li>pub fn print_config() {
-println!(&quot;config&quot;);
-}
-Now, this works. We’ve successfully called a function defined in a different file!</li>
-</ul>
+// config.rs
+- fn print_config() {
++ pub fn print_config() {
+  println!(&quot;config&quot;);
+}</code></pre></pre>
+<p>Now, this works. We’ve successfully called a function defined in a different file!</p>
 <hr />
 <h3 id="example-2"><a class="header" href="#example-2">Example 2</a></h3>
 <p>Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.</p>
-<p>// main.rs
-mod config;</p>
-<p>fn main() {
-config::print_config();
-println!(&quot;main&quot;);
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
+mod config;
+
+fn main() {
+  config::print_config();
+  println!(&quot;main&quot;);
 }
 // routes/health_route.rs
 fn print_health_route() {
-println!(&quot;health_route&quot;);
+  println!(&quot;health_route&quot;);
 }
-As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.</p>
+</code></pre></pre>
+<p>As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.</p>
 <p>So in order to call functions inside routes/health_route.rs from main.rs, we need to do the following things:</p>
 <p>Create a file named routes/mod.rs and declare the routes submodule in main.rs
 Declare the health_route submodule in routes/mod.rs and make it public
-Make the functions inside health_route.rs public
-my_project
+Make the functions inside health_route.rs public</p>
+<pre><code>my_project
 ├── Cargo.toml
 └─┬ src
-├── main.rs
-├── config.rs
-├─┬ routes</p>
-<ul>
-<li>│ ├── mod.rs
-│ ├── health_route.rs
-│ └── user_route.rs
-└─┬ models
-└── user_model.rs
+  ├── main.rs
+  ├── config.rs
+  ├─┬ routes
++ │ ├── mod.rs
+  │ ├── health_route.rs
+  │ └── user_route.rs
+  └─┬ models
+    └── user_model.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust edition2021">
 // main.rs
-mod config;</li>
-<li>mod routes;</li>
-</ul>
-<p>fn main() {</p>
-<ul>
-<li>routes::health_route::print_health_route();
-config::print_config();
-println!(&quot;main&quot;);
+mod config;
++ mod routes;
+
+fn main() {
++ routes::health_route::print_health_route();
+  config::print_config();
+  println!(&quot;main&quot;);
 }
-// routes/mod.rs</li>
-<li>pub mod health_route;
-// routes/health_route.rs</li>
-</ul>
-<ul>
-<li>fn print_health_route() {</li>
-</ul>
-<ul>
-<li>pub fn print_health_route() {
-println!(&quot;health_route&quot;);
-}
-Here’s how the module tree looks like:</li>
-</ul>
+// routes/mod.rs
++ pub mod health_route;
+// routes/health_route.rs
+- fn print_health_route() {
++ pub fn print_health_route() {
+  println!(&quot;health_route&quot;);
+}</code></pre></pre>
+<p>Here’s how the module tree looks like:</p>
+<p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-4.png" alt="system-4" /></p>
 <p>We can now call a function defined in a file inside a folder.</p>
 <hr />
 <h3 id="example-3"><a class="header" href="#example-3">Example 3</a></h3>
-<p>Let’s try calling from main.rs =&gt; routes/user_route.rs =&gt; models/user_model.rs</p>
-<p>// main.rs
+<p>Let’s try calling from <code>main.rs =&gt; routes/user_route.rs =&gt; models/user_model.rs</code></p>
+<pre><pre class="playground"><code class="language-rust edition2021">
+// main.rs
 mod config;
-mod routes;</p>
-<p>fn main() {
-routes::health_route::print_health_route();
-config::print_config();
-println!(&quot;main&quot;);
+mod routes;
+
+fn main() {
+  routes::health_route::print_health_route();
+  config::print_config();
+  println!(&quot;main&quot;);
 }
 // routes/user_route.rs
 fn print_user_route() {
-println!(&quot;user_route&quot;);
+  println!(&quot;user_route&quot;);
 }
 // models/user_model.rs
 fn print_user_model() {
-println!(&quot;user_model&quot;);
-}
-We want to call the function print_user_model from print_user_route from main.</p>
+  println!(&quot;user_model&quot;);
+}</code></pre></pre>
+<p>We want to call the function print_user_model from print_user_route from main.</p>
 <p>Let’s make the same changes as before - declaring submodules, making functions public and adding the mod.rs file.</p>
-<p>my_project
+<pre><code>my_project
 ├── Cargo.toml
 └─┬ src
-├── main.rs
-├── config.rs
-├─┬ routes
-│ ├── mod.rs
-│ ├── health_route.rs
-│ └── user_route.rs
-└─┬ models</p>
-<ul>
-<li>├── mod.rs
-└── user_model.rs
-// main.rs
+  ├── main.rs
+  ├── config.rs
+  ├─┬ routes
+  │ ├── mod.rs
+  │ ├── health_route.rs
+  │ └── user_route.rs
+  └─┬ models
++   ├── mod.rs
+    └── user_model.rs
+</code></pre>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 mod config;
-mod routes;</li>
-<li>mod models;</li>
-</ul>
-<p>fn main() {
-routes::health_route::print_health_route();</p>
-<ul>
-<li>routes::user_route::print_user_route();
-config::print_config();
-println!(&quot;main&quot;);
+mod routes;
++ mod models;
+
+fn main() {
+  routes::health_route::print_health_route();
++ routes::user_route::print_user_route();
+  config::print_config();
+  println!(&quot;main&quot;);
 }
+
 // routes/mod.rs
-pub mod health_route;</li>
-<li>pub mod user_route;
-// routes/user_route.rs</li>
-</ul>
-<ul>
-<li>fn print_user_route() {</li>
-</ul>
-<ul>
-<li>pub fn print_user_route() {
-println!(&quot;user_route&quot;);
+pub mod health_route;
++ pub mod user_route;
+// routes/user_route.rs
+- fn print_user_route() {
++ pub fn print_user_route() {
+  println!(&quot;user_route&quot;);
 }
-// models/mod.rs</li>
-<li>pub mod user_model;
-// models/user_model.rs</li>
-</ul>
-<ul>
-<li>fn print_user_model() {</li>
-</ul>
-<ul>
-<li>pub fn print_user_model() {
-println!(&quot;user_model&quot;);
+
+// models/mod.rs
++ pub mod user_model;
+// models/user_model.rs
+- fn print_user_model() {
++ pub fn print_user_model() {
+  println!(&quot;user_model&quot;);
 }
-Here’s how the module tree looks like:</li>
-</ul>
+</code></pre></pre>
+<p>Here’s how the module tree looks like:</p>
+<p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-5.png" alt="module-system-5." /></p>
 <p>Wait, we haven’t actually called print_user_model from print_user_route! So far, we’ve only called the functions defined in other modules from main.rs, how do we do that from other files?</p>
 <p>If we look at our module tree, the print_user_model function sits in the crate::models::user_model path. So in order to use a module in files that are not main.rs, we should think in terms of the path necessary to reach that module in the module tree.</p>
-<p>// routes/user_route.rs
-pub fn print_user_route() {</p>
-<ul>
-<li>crate::models::user_model::print_user_model();
-println!(&quot;user_route&quot;);
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>// routes/user_route.rs
+pub fn print_user_route() {
++ crate::models::user_model::print_user_model();
+  println!(&quot;user_route&quot;);
 }
-We’ve successfully called a function defined in a file from a file that’s not main.rs.</li>
-</ul>
+
+<span class="boring">}</span></code></pre></pre>
+<p>We’ve successfully called a function defined in a file from a file that’s not main.rs.</p>
 <hr />
 <h3 id="super"><a class="header" href="#super">super</a></h3>
 <p>The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.</p>
 <p>We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.</p>
+<blockquote>
 <p>The super keyword in module path refers to the parent scope</p>
-<p>pub fn print_user_route() {
-crate::routes::health_route::print_health_route();
-// can also be called using
-super::health_route::print_health_route();</p>
-<p>println!(&quot;user_route&quot;);
-}</p>
+</blockquote>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn print_user_route() {
+  crate::routes::health_route::print_health_route();
+  // can also be called using
+  super::health_route::print_health_route();
+
+  println!(&quot;user_route&quot;);
+}
+
+<span class="boring">}</span></code></pre></pre>
 <hr />
 <h3 id="use"><a class="header" href="#use">use</a></h3>
 <p>It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.</p>
+<blockquote>
 <p>The use keyword is used to shorten the module path</p>
-<p>pub fn print_user_route() {
-crate::models::user_model::print_user_model();
-println!(&quot;user_route&quot;);
+</blockquote>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn print_user_route() {
+  crate::models::user_model::print_user_model();
+  println!(&quot;user_route&quot;);
 }
-The above code can be refactored as:</p>
-<p>use crate::models::user_model::print_user_model;</p>
-<p>pub fn print_user_route() {
-print_user_model();
-println!(&quot;user_route&quot;);
+
+<span class="boring">}</span></code></pre></pre>
+<p>The above code can be refactored as:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use crate::models::user_model::print_user_model;
+
+pub fn print_user_route() {
+  print_user_model();
+  println!(&quot;user_route&quot;);
 }
-Instead of using the name print_user_model, we can also alias it to something else:</p>
-<p>use crate::models::user_model::print_user_model as log_user_model;</p>
-<p>pub fn print_user_route() {
-log_user_model();
-println!(&quot;user_route&quot;);
-}</p>
+
+<span class="boring">}</span></code></pre></pre>
+<p>Instead of using the name print_user_model, we can also alias it to something else:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>use crate::models::user_model::print_user_model as log_user_model;
+
+pub fn print_user_route() {
+  log_user_model();
+  println!(&quot;user_route&quot;);
+}
+
+<span class="boring">}</span></code></pre></pre>
 <hr />
 <h3 id="external-modules"><a class="header" href="#external-modules">External modules</a></h3>
 <p>Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.</p>
+<blockquote>
 <p>External dependencies are globally available to all modules inside a project</p>
+</blockquote>
 <p>For example, let’s say we added the rand crate to our project. We can use it in our code directly as:</p>
-<p>pub fn print_health_route() {
-let random_number: u8 = rand::random();
-println!(&quot;{}&quot;, random_number);
-println!(&quot;health_route&quot;);
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn print_health_route() {
+  let random_number: u8 = rand::random();
+  println!(&quot;{}&quot;, random_number);
+  println!(&quot;health_route&quot;);
 }
-We can also use use to shorten the path:</p>
+
+<span class="boring">}</span></code></pre></pre>
+<p>We can also use use to shorten the path:</p>
+<pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
+</span><span class="boring">fn main() {
+</span>pub fn print_health_route() {
+  let random_number: u8 = random();
+  println!(&quot;{}&quot;, random_number);
+  println!(&quot;health_route&quot;);
+}
+
+<span class="boring">}</span></code></pre></pre>
 <p>use rand::random;</p>
-<p>pub fn print_health_route() {
-let random_number: u8 = random();
-println!(&quot;{}&quot;, random_number);
-println!(&quot;health_route&quot;);
-}</p>
 <hr />
 <h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
-<p>The module system is explicit - there’s no 1:1 mapping with file system
-We declare a file as module in its parent, not in itself
-The mod keyword is used to declare submodules
-We need to explicitly declare functions, structs etc as public so they can be consumed in other modules
-The pub keyword makes things public
-The use keyword is used to shorten the module path
-We don’t need to explicitly declare 3rd party modules
-Thanks for reading! Feel free to follow me in Twitter for more posts like this :)</p>
+<ul>
+<li>The module system is explicit - there’s no 1:1 mapping with file system</li>
+<li>We declare a file as module in its parent, not in itself</li>
+<li>The mod keyword is used to declare submodules</li>
+<li>We need to explicitly declare functions, structs etc as public so they can be consumed in other modules</li>
+<li>The pub keyword makes things public</li>
+<li>The use keyword is used to shorten the module path</li>
+<li>We don’t need to explicitly declare 3rd party modules</li>
+</ul>
+<p>Thanks for reading! Feel free to follow me in Twitter for more posts like this :)</p>
 <pre><code>         _~^*∽~_
      \/ /  # ◵  \ (/
        '_   ⩌   _'
