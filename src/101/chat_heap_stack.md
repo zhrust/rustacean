@@ -193,6 +193,7 @@ GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行
 - [字符串：str和String - Rust入门秘籍](https://rust-book.junmajinlong.com/ch3/04_str_string.html#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AD%97%E9%9D%A2%E9%87%8F)
 - [理解Rust内存管理 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
     - [堆空间和栈空间 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
+    - [箱子、栈和堆 - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/std/box.html)
     - ...
 - [使用Box<T> 指向堆上数据 - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch15-01-box.html#%E4%BD%BF%E7%94%A8-boxt-%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%82%A8%E5%AD%98%E6%95%B0%E6%8D%AE)
 
