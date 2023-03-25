@@ -208,27 +208,37 @@ fn main() {
 fn print_config() {
   println!(&quot;config&quot;);
 }</code></pre></pre>
-<p>The first mistake that everyone makes is just because we have files like config.rs, health_route.rs etc, we think that these files are modules and we can import them from other files.</p>
-<p>Here’s what we see (file system tree) and what the compiler sees (module tree):</p>
+<p>第一个最常犯的错误就是因为我们有了 config.rs, health_route.rs 
+等等文件,
+就以为文件就是模块,我们可以从其它文件导入;</p>
+<p>这是我们看到的(文件系统树)和编译器实际看到的(模块树):</p>
 <p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-2.png" alt="system-2" /></p>
-<p>Surprisingly, the compiler only sees the crate module which is our main.rs file. This is because we need to explicitly build the module tree in Rust - there’s no implicit mapping between file system tree to module tree.</p>
+<p>令人惊讶的是,
+编译器只看到 crate 模块,
+这就是我们的 main.rs 文件;
+这是因为,我们需要在 Rust 中显式构建模块树 --- 文件树到模块树之间没有隐式映射;</p>
+<p>(译按: 和 Ruby 们包含大量多模内隐式猜想相反, Rust 只相信代码, 不主动猜想开发者的任何可能;)</p>
 <blockquote>
-<p>We need to explicitly build the module tree in Rust, there’s no implicit mapping to file system</p>
+<p>我们需要在 Rust 中显式构建模块树, 这儿没有隐式映射到文件系统</p>
 </blockquote>
-<p>To add a file to the module tree, we need to declare that file as a submodule using the mod keyword. The next thing that confuses people is that you would assume we declare a file as module in the same file. But we need to declare this in a different file! Since we only have main.rs in the module tree, let’s declare config.rs as a submodule in main.rs.</p>
+<p>要将文件追加到模块树, 我们需要使用 mod 关键字将该文件声明为子模块;
+接下来让入门感到困惑的是, 你可能假设我们在同一文件中将一个文件声明为模块;
+但是,我们需要在不同的文件中声明!
+由于我们在模块树中只有 main.rs,
+所以,让我们将 config.rd 声明为 main.rs 中的子模块;</p>
 <blockquote>
-<p>The mod keyword declares a submodule</p>
+<p>mod 关键字用来声明一个子模块</p>
 </blockquote>
-<p>The mod keyword has this syntax:</p>
+<p>mod 关键字的语法如下:</p>
 <p><code>mod my_module;</code></p>
-<p>Here, the compiler looks for my_module.rs or my_module/mod.rs in the same directory.</p>
+<p>在此,编译器在同一目录中查找 my_module.rs 或是 my_module/mod.rs ;</p>
 <pre><code>my_project
 ├── Cargo.toml
 └─┬ src
   ├── main.rs
   └── my_module.rs
 </code></pre>
-<p>or</p>
+<p>或是:</p>
 <pre><code>my_project
 ├── Cargo.toml
 └─┬ src
@@ -236,7 +246,8 @@ fn print_config() {
   └─┬ my_module
     └── mod.rs
 </code></pre>
-<p>Since main.rs and config.rs are in the same directory, let’s declare the config module as follows:</p>
+<p>由于 main.rs 和 config.rs 在同一目录中,
+我们可以如下声明 config 模块:</p>
 <pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 + mod config;
 
@@ -244,16 +255,20 @@ fn main() {
 + config::print_config();
   println!(&quot;main&quot;);
 }
+
 // config.rs
 fn print_config() {
   println!(&quot;config&quot;);
 }</code></pre></pre>
-<p>We’re accessing the print_config function using the :: syntax.</p>
-<p>Here’s how the module tree looks like:</p>
+<p>我们使用 :: 语法访问对应 print_config 函数;</p>
+<p>这是当前模块树的样子:</p>
 <p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-3.png" alt="system-3" /></p>
-<p>We’ve successfully declared the config module! But this is not sufficient to be able to call the print_config function inside config.rs. Almost everything in Rust is private by default, we need to make the function public using the pub keyword:</p>
+<p>我们已经成功声明了 config 模块!
+但是,这不足以调用 config.rs 中的 print_config 函数;
+默认情况中, Rust 中的几乎所有内容都是私有的,
+我们需要使用 pub 关键字令其公开:</p>
 <blockquote>
-<p>The pub keyword makes things public</p>
+<p>pub 关键字令自己公开</p>
 </blockquote>
 <pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 mod config;
@@ -262,15 +277,17 @@ fn main() {
   config::print_config();
   println!(&quot;main&quot;);
 }
+
 // config.rs
 - fn print_config() {
 + pub fn print_config() {
   println!(&quot;config&quot;);
 }</code></pre></pre>
-<p>Now, this works. We’ve successfully called a function defined in a different file!</p>
+<p>现在已经生效;
+我们已经成功调用了一个在不同文件中定义的函数!</p>
 <hr />
-<h3 id="example-2"><a class="header" href="#example-2">Example 2</a></h3>
-<p>Let’s try calling the print_health_route function defined in routes/health_route.rs from main.rs.</p>
+<h3 id="示例-2"><a class="header" href="#示例-2">示例 2</a></h3>
+<p>让我们尝试从 main.rs 中调用 routes/health_route.rs 中定义的 print_health_route 函数;</p>
 <pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 mod config;
 
@@ -278,16 +295,22 @@ fn main() {
   config::print_config();
   println!(&quot;main&quot;);
 }
+
 // routes/health_route.rs
 fn print_health_route() {
   println!(&quot;health_route&quot;);
 }
 </code></pre></pre>
-<p>As we discussed earlier, we can use the mod keyword only for my_module.rs or my_module/mod.rs in the same directory.</p>
-<p>So in order to call functions inside routes/health_route.rs from main.rs, we need to do the following things:</p>
-<p>Create a file named routes/mod.rs and declare the routes submodule in main.rs
-Declare the health_route submodule in routes/mod.rs and make it public
-Make the functions inside health_route.rs public</p>
+<p>正如我们之前讨论的,
+我们只能同同一目录中的 my_module.rs 或是 my_module/mod.rs 使用 mod 关键字;</p>
+<p>因此, 为了从 main.rs 中调用 routes/health_route.rs 中的函数,
+我们需要作到以下:</p>
+<ul>
+<li>创建一个名为 routes/mod.rs 的文件,</li>
+<li>并在 main.rs 中声明 子模块路由,</li>
+<li>然后,在 routes/mod.rs 中声明 health_route 子模块并公开;</li>
+<li>最后, 在 health_route.rs 中公开对应函数;</li>
+</ul>
 <pre><code>my_project
 ├── Cargo.toml
 └─┬ src
@@ -300,8 +323,8 @@ Make the functions inside health_route.rs public</p>
   └─┬ models
     └── user_model.rs
 </code></pre>
-<pre><pre class="playground"><code class="language-rust edition2021">
-// main.rs
+<p>对应代码:</p>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 mod config;
 + mod routes;
 
@@ -310,21 +333,22 @@ fn main() {
   config::print_config();
   println!(&quot;main&quot;);
 }
+
 // routes/mod.rs
 + pub mod health_route;
+
 // routes/health_route.rs
 - fn print_health_route() {
 + pub fn print_health_route() {
   println!(&quot;health_route&quot;);
 }</code></pre></pre>
-<p>Here’s how the module tree looks like:</p>
+<p>现在模块树应该如下:</p>
 <p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-4.png" alt="system-4" /></p>
-<p>We can now call a function defined in a file inside a folder.</p>
+<p>我们现在可以调用一个目录中定义的函数了;</p>
 <hr />
-<h3 id="example-3"><a class="header" href="#example-3">Example 3</a></h3>
-<p>Let’s try calling from <code>main.rs =&gt; routes/user_route.rs =&gt; models/user_model.rs</code></p>
-<pre><pre class="playground"><code class="language-rust edition2021">
-// main.rs
+<h3 id="示例-3"><a class="header" href="#示例-3">示例 3</a></h3>
+<p>现在尝试这个调用路径 <code>main.rs =&gt; routes/user_route.rs =&gt; models/user_model.rs</code></p>
+<pre><pre class="playground"><code class="language-rust edition2021">// main.rs
 mod config;
 mod routes;
 
@@ -333,16 +357,19 @@ fn main() {
   config::print_config();
   println!(&quot;main&quot;);
 }
+
 // routes/user_route.rs
 fn print_user_route() {
   println!(&quot;user_route&quot;);
 }
+
 // models/user_model.rs
 fn print_user_model() {
   println!(&quot;user_model&quot;);
 }</code></pre></pre>
-<p>We want to call the function print_user_model from print_user_route from main.</p>
-<p>Let’s make the same changes as before - declaring submodules, making functions public and adding the mod.rs file.</p>
+<p>我们想从 main 中调用来者 print_user_route 的 print_user_model 函数;</p>
+<p>我们先进行和之前类似的增补:
+声明子模块, 公开了函数, 并追加 mod.rs ...</p>
 <pre><code>my_project
 ├── Cargo.toml
 └─┬ src
@@ -371,6 +398,7 @@ fn main() {
 // routes/mod.rs
 pub mod health_route;
 + pub mod user_route;
+
 // routes/user_route.rs
 - fn print_user_route() {
 + pub fn print_user_route() {
@@ -379,16 +407,22 @@ pub mod health_route;
 
 // models/mod.rs
 + pub mod user_model;
+
 // models/user_model.rs
 - fn print_user_model() {
 + pub fn print_user_model() {
   println!(&quot;user_model&quot;);
 }
 </code></pre></pre>
-<p>Here’s how the module tree looks like:</p>
+<p>现在模块树应该像变样:</p>
 <p><img src="https://www.sheshbabu.com/images/2020-rust-module-system/rust-module-system-5.png" alt="module-system-5." /></p>
-<p>Wait, we haven’t actually called print_user_model from print_user_route! So far, we’ve only called the functions defined in other modules from main.rs, how do we do that from other files?</p>
-<p>If we look at our module tree, the print_user_model function sits in the crate::models::user_model path. So in order to use a module in files that are not main.rs, we should think in terms of the path necessary to reach that module in the module tree.</p>
+<p>等等, 我们实际上并没有从 print_user_route 调用 print_user_model !
+到目前为止, 我们只调用了 main.rs 中其它模块中定义的函数,
+我们如何从其它文件中调用呢?</p>
+<p>如果检阅当前模块树,
+print_user_model 函数位于 crate::models::user_model 路径中;
+因此,为了在不是 main.rs 的文件中使用模块,
+我们应该考虑在模块树中触达该模块所需要的路径;</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>// routes/user_route.rs
@@ -398,13 +432,21 @@ pub fn print_user_route() {
 }
 
 <span class="boring">}</span></code></pre></pre>
-<p>We’ve successfully called a function defined in a file from a file that’s not main.rs.</p>
+<p>我们已经从一个不是 main.rs 的文件中成功的调用了一个文件中定义的函数;</p>
+<p>(<code>译按:</code> 这是使用绝对路径形式, 另外还有相对路径形式...)</p>
 <hr />
 <h3 id="super"><a class="header" href="#super">super</a></h3>
-<p>The fully qualified name gets too lengthy if our file organization is multiple directories deep. Let’s say for whatever reason, we want to call print_health_route from print_user_route. These are under the paths crate::routes::health_route and crate::routes::user_route respectively.</p>
-<p>We can call it by using the fully qualified name crate::routes::health_route::print_health_route() but we can also use a relative path super::health_route::print_health_route();. Notice that we’ve used super to refer to the parent scope.</p>
+<p>如果我们的文件组织有很多目录深度,
+则完全限定名将变得太长;
+假设出于某种原因,
+我们想从 print_user_route 调用 print_health_route;
+分别位于 crate::routes::health_route 和 crate::routes::user_route 路径中;</p>
+<p>我们可以使用完全限定名称
+crate::routes::health_route::print_health_route() 来调用,
+但是, 我们也可以使用查对路径 super::health_route::print_health_route();
+注意, 我们使用 super 来引用父挖掘范围;</p>
 <blockquote>
-<p>The super keyword in module path refers to the parent scope</p>
+<p>模块路径中的 super 关键字指的是父作用域</p>
 </blockquote>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -419,9 +461,11 @@ pub fn print_user_route() {
 <span class="boring">}</span></code></pre></pre>
 <hr />
 <h3 id="use"><a class="header" href="#use">use</a></h3>
-<p>It would be tedious to use the fully qualified name or even the relative name in the above examples. In order to shorten the names, we can use the use keyword to bind the path to a new name or alias.</p>
+<p>前述示例中智囊把完全限定名甚至相对名称都很乏味;
+为了缩短名称,
+我们可以使用 use 关键字将路径绑定到新名称或是别名;</p>
 <blockquote>
-<p>The use keyword is used to shorten the module path</p>
+<p>use 关键字用以缩短模块路径</p>
 </blockquote>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
@@ -431,7 +475,7 @@ pub fn print_user_route() {
 }
 
 <span class="boring">}</span></code></pre></pre>
-<p>The above code can be refactored as:</p>
+<p>上面的代码可以重构为:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use crate::models::user_model::print_user_model;
@@ -442,7 +486,8 @@ pub fn print_user_route() {
 }
 
 <span class="boring">}</span></code></pre></pre>
-<p>Instead of using the name print_user_model, we can also alias it to something else:</p>
+<p>除了使用原有名称 print_user_model,
+我们也可以将其绑定为其它名称:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>use crate::models::user_model::print_user_model as log_user_model;
@@ -454,12 +499,14 @@ pub fn print_user_route() {
 
 <span class="boring">}</span></code></pre></pre>
 <hr />
-<h3 id="external-modules"><a class="header" href="#external-modules">External modules</a></h3>
-<p>Dependencies added to Cargo.toml are available globally to all modules inside the project. We don’t need to explicitly import or declare anything to use a dependency.</p>
+<h3 id="外部模块"><a class="header" href="#外部模块">外部模块</a></h3>
+<p>更加时 Cargo.toml 的依赖项可以全局用于项目内所有模块;
+我们不需要显式导入或是声明任何东西来启用;</p>
 <blockquote>
-<p>External dependencies are globally available to all modules inside a project</p>
+<p>外部依赖项对项目内所有模块全局可用</p>
 </blockquote>
-<p>For example, let’s say we added the rand crate to our project. We can use it in our code directly as:</p>
+<p>例如, 假设我们将 rand crate 追加到我们的项目中;
+就可以直接在代码用使用:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
 </span>pub fn print_health_route() {
@@ -469,29 +516,45 @@ pub fn print_user_route() {
 }
 
 <span class="boring">}</span></code></pre></pre>
-<p>We can also use use to shorten the path:</p>
+<p>也可以使用 use 来缩短路径:</p>
 <pre><pre class="playground"><code class="language-rust edition2021"><span class="boring">#![allow(unused)]
 </span><span class="boring">fn main() {
-</span>pub fn print_health_route() {
+</span>use rand::random;
+
+pub fn print_health_route() {
   let random_number: u8 = random();
   println!(&quot;{}&quot;, random_number);
   println!(&quot;health_route&quot;);
 }
 
 <span class="boring">}</span></code></pre></pre>
-<p>use rand::random;</p>
 <hr />
-<h3 id="summary"><a class="header" href="#summary">Summary</a></h3>
+<h3 id="小结"><a class="header" href="#小结">小结</a></h3>
 <ul>
-<li>The module system is explicit - there’s no 1:1 mapping with file system</li>
-<li>We declare a file as module in its parent, not in itself</li>
-<li>The mod keyword is used to declare submodules</li>
-<li>We need to explicitly declare functions, structs etc as public so they can be consumed in other modules</li>
-<li>The pub keyword makes things public</li>
-<li>The use keyword is used to shorten the module path</li>
-<li>We don’t need to explicitly declare 3rd party modules</li>
+<li>模块系统是显示的
+<ul>
+<li>并没和文件系统 1:1 映射</li>
 </ul>
-<p>Thanks for reading! Feel free to follow me in Twitter for more posts like this :)</p>
+</li>
+<li>我们在其父文件中又不能一个文件模块, 而不是在其自身中</li>
+<li>mod 关键字用以声明子模块</li>
+<li>我们需要将函数/结构等等显式声明为公共的,以便可以在其它模块中引用</li>
+<li>pub 关键字令事务公开</li>
+<li>use 关键字用来缩短模块路径</li>
+<li>我们不需要显式声明第3方模块</li>
+</ul>
+<p>(译按: 没有提及新版本的子模块目录名同名文件约定, 这样不用形成太多 mod.rs 在不同目录中;
+另外, 如何利用子 crate 或是子库, 以及 workspace 等等更多, 更加灵活, 
+可以用来管理更大工程的模块约定, 也没有阐述...
+这都值得继续探索...)</p>
+<h2 id="refer"><a class="header" href="#refer">refer.</a></h2>
+<p><a href="https://prev.rust-lang.org/zh-CN/faq.html#modules-and-crates">常见问题解答 · Rust 程序设计语言</a></p>
+<ul>
+<li><a href="https://tourofrust.com/104_zh-cn.html">第九章 - 项目的结构和管理 - Rust 语言之旅 - Let's go on an adventure!</a></li>
+<li><a href="https://kaisery.github.io/trpl-zh-cn/ch07-01-packages-and-crates.html">使用包、Crate 和模块管理不断增长的项目 - Rust 程序设计语言 简体中文版</a></li>
+<li><a href="https://course.rs/basic/crate-module/intro.html">包和模块 - Rust语言圣经(Rust Course)</a></li>
+<li><a href="https://rustwiki.org/zh-CN/rust-by-example/mod/split.html">文件分层 - 通过例子学 Rust 中文版</a></li>
+</ul>
 <pre><code>         _~^*∽~_
      \/ /  # ◵  \ (/
        '_   ⩌   _'
