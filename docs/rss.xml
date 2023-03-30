@@ -1,4 +1,223 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>clear_explanation_rust_modele_system.md</title><link>https://rs.101.so//tip/clear_explanation_rust_modele_system</link><pubDate>Sat, 25 Mar 2023 21:27:05 +0800</pubDate><content:encoded><![CDATA[# 清晰解释Rust模块系统
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>rustlings_94.md</title><link>https://rs.101.so//101/rustlings_94</link><pubDate>Thu, 30 Mar 2023 11:59:15 +0800</pubDate><content:encoded><![CDATA[# rustlings:94
+
+## background
+> conversions/as_ref_mut.rs
+
+AsRef and AsMut allow for cheap reference-to-reference conversions.
+
+Read more about them at https://doc.rust-lang.org/std/convert/trait.AsRef.html
+
+and https://doc.rust-lang.org/std/convert/trait.AsMut.html, respectively.
+
+
+## goal
+> 必要目标
+
+快速通过
+
+## trace
+> 具体推进
+
+还是要在 GPT 的辅助下掠过:
+
+核心问题是完成函数:
+
+```rust
+fn num_sq<T>(arg: &mut T) {
+    // TODO: Implement the function body.
+    ???
+}
+
+// 对应的测试
+
+    #[test]
+    fn mult_box() {
+        let mut num: Box<u32> = Box::new(3);
+        num_sq(&mut num);
+        assert_eq!(*num, 9);
+    }
+
+```
+
+看起来就是对 arg 进行自乘而已
+
+但是照猫画虎才发现:
+
+```rust
+fn num_sq<T>(arg: &mut T)
+    where T: std::ops::Mul<Output = T> + std::ops::MulAssign + Copy
+{
+    let square = *arg * *arg;
+    *arg *= *arg;
+    *arg = square;
+}
+```
+
+这样触发一系列问题:
+```
+
+error[E0277]: cannot multiply `Box<u32>` by `Box<u32>`
+  --> exercises/conversions/as_ref_mut.rs:86:16
+   |
+86 |         num_sq(&mut num);
+   |         ------ ^^^^^^^^ no implementation for `Box<u32> * Box<u32>`
+   |         |
+   |         required by a bound introduced by this call
+   |
+   = help: the trait `Mul` is not implemented for `Box<u32>`
+note: required by a bound in `num_sq`
+  --> exercises/conversions/as_ref_mut.rs:47:14
+   |
+46 | fn num_sq<T>(arg: &mut T)
+   |    ------ required by a bound in this
+47 |     where T: std::ops::Mul<Output = T> + std::ops::MulAssign + Copy
+   |              ^^^^^^^^^^^^^^^^^^^^^^^^^ required by this bound in `num_sq`
+
+error[E0277]: cannot multiply-assign `Box<u32>` by `Box<u32>`
+  --> exercises/conversions/as_ref_mut.rs:86:16
+   |
+86 |         num_sq(&mut num);
+   |         ------ ^^^^^^^^ no implementation for `Box<u32> *= Box<u32>`
+   |         |
+   |         required by a bound introduced by this call
+   |
+   = help: the trait `MulAssign` is not implemented for `Box<u32>`
+note: required by a bound in `num_sq`
+  --> exercises/conversions/as_ref_mut.rs:47:42
+   |
+46 | fn num_sq<T>(arg: &mut T)
+   |    ------ required by a bound in this
+47 |     where T: std::ops::Mul<Output = T> + std::ops::MulAssign + Copy
+   |                                          ^^^^^^^^^^^^^^^^^^^ required by this bound in `num_sq`
+
+error[E0277]: the trait bound `Box<u32>: Copy` is not satisfied
+  --> exercises/conversions/as_ref_mut.rs:86:16
+   |
+86 |         num_sq(&mut num);
+   |         ------ ^^^^^^^^ the trait `Copy` is not implemented for `Box<u32>`
+   |         |
+   |         required by a bound introduced by this call
+   |
+note: required by a bound in `num_sq`
+  --> exercises/conversions/as_ref_mut.rs:47:64
+   |
+46 | fn num_sq<T>(arg: &mut T)
+   |    ------ required by a bound in this
+47 |     where T: std::ops::Mul<Output = T> + std::ops::MulAssign + Copy
+   |                                                                ^^^^ required by this bound in `num_sq`
+
+error: aborting due to 3 previous errors
+
+```
+
+因为 Box<T> 类型没有实现 std::ops::Mul 和 std::ops::MulAssign trait。你可以使用 Deref trait 来解引用 Box<T> 类型的值，然后再对值进行乘法运算和赋值操作。
+
+建议修改后的代码:
+
+```rust
+fn num_sq<T>(arg: &mut T)
+where
+    T: std::ops::Deref<Target = u32> + std::ops::DerefMut,
+{
+    let square = **arg * **arg;
+    **arg = square;
+}
+```
+
+在这个版本的代码中，T 类型必须实现 std::ops::Deref 和 std::ops::DerefMut trait，这样就可以使用解引用操作符 * 来获取 Box<T> 类型内部的值，并进行乘法运算和赋值操作了。
+
+值得注意的是，在这个版本的代码中，我们不需要显式地实现 Copy trait，因为 u32 类型已经实现了 Copy trait，而 T 类型需要实现 Deref<Target = u32> trait，所以也就具有了 Copy trait 的能力。
+
+而以上提示是换了3种姿势, 才诱使 GPT 给出的,
+之前绕的方向更加无解...
+
+
+所以, 这也只能是一个特殊场景,
+如果是自己实现的话, 一定要使用对应合理的内置类型, 不折腾.
+
+
+## refer.
+> 关键参考
+
+[学习 Rust - Rust 程序设计语言](https://github.com/rust-lang/rustlings/)
+
+
+## logging
+> 版本记要
+
+- ..
+- 230330 ZQ init.
+
+
+
+```
+          _~--^~_
+      \) /  ◴ ◵  \ ()
+        '_   ▽   _'
+        | '--#--' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+
+]]></content:encoded></item><item><title>rustlings.md</title><link>https://rs.101.so//101/rustlings</link><pubDate>Thu, 30 Mar 2023 11:52:07 +0800</pubDate><content:encoded><![CDATA[# rustlings
+
+## background
+必刷的官方原创
+
+[rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings)
+
+## goal
+> 必要目标
+
+当前 94 个练习至少过一遍;
+
+毕竟是官方大佬亲自设计的, 涵盖了所有关键概念和日常情景;
+和其它练习不同的是:
+
+- rustlings 基于调试, 而不是从头构建
+- 这对进入一个已经有 rust 工程的团队来说, 更加重要
+- 也就是说, 在已经有海量现存可参考代码的时代
+    - 从0..1 的构建原创工程
+    - 没有从 1..n 的快速组建应用, 来的普遍
+    - 那么, 如何根据 rustc 的提示抓住当前代码主要问题所在并高速完成决策和解决
+    - 才是更加重要的能力/素质...
+
+## trace
+> 具体推进
+
+- 230228 clone 开始
+- 230330 全部完成...
+
+完成时:
+
+![done](https://ipic.zoomquiet.top/2023-03-30-zshot%202023-03-30%2011.44.04.jpg)
+
+
+
+## refer.
+> 关键参考
+
+[学习 Rust - Rust 程序设计语言](https://github.com/rust-lang/rustlings/)
+
+
+## logging
+> 版本记要
+
+- ..
+- 230330 ZQ init.
+
+
+
+```
+          _~∽+^~_
+      \) /  ◷ ?  \ ()
+        '_   ⎵   _'
+        / '--∽--' \
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+
+]]></content:encoded></item><item><title>clear_explanation_rust_modele_system.md</title><link>https://rs.101.so//tip/clear_explanation_rust_modele_system</link><pubDate>Sat, 25 Mar 2023 21:27:05 +0800</pubDate><content:encoded><![CDATA[# 清晰解释Rust模块系统
 > tips...重要也不重要
 
 原文: [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
@@ -875,414 +1094,6 @@ GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行
  \/ /  - ◵  \ \/
    '_   V   _'
    / '--+--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>chat_arc_threads.md</title><link>https://rs.101.so//101/chat_arc_threads</link><pubDate>Fri, 24 Mar 2023 14:46:44 +0800</pubDate><content:encoded><![CDATA[# 使用Arc 在多线程中共享数据
-> 学伴ChatGPT, chatting for debugging ...
-
-## background
-> rustlings 第78题:
-
-smart_pointers/arc1.rs
-
-```rust
-#![forbid(unused_imports)] // Do not change this, (or the next) line.
-use std::sync::Arc;
-use std::thread;
-
-fn main() {
-    let numbers: Vec<_> = (0..100u32).collect();
-    let shared_numbers = // TODO
-    let mut joinhandles = Vec::new();
-
-    for offset in 0..8 {
-        let child_numbers = // TODO
-        joinhandles.push(thread::spawn(move || {
-            let sum: u32 = child_numbers.iter().filter(|n| *n % 8 == offset).sum();
-            println!("Sum of offset {} is {}", offset, sum);
-        }));
-    }
-    for handle in joinhandles.into_iter() {
-        handle.join().unwrap();
-    }
-}
-
-```
-
-## goal
-
-完成合理概念摸查...
-
-## trace
-
-> Q: 以上代码如何补全?
-
-> A: 这段 Rust 代码中需要补全的是 shared_numbers 和 child_numbers 变量的定义，使得代码可以正确地计算每个偏移量下的数字和。可以通过使用 Arc 类型来创建共享数据并在每个线程之间共享它。
-
-以下是一个可能的解决方案：
-
-```rust
-#![forbid(unused_imports)]
-use std::sync::Arc;
-use std::thread;
-
-fn main() {
-    let numbers: Vec<_> = (0..100u32).collect();
-    let shared_numbers = Arc::new(numbers); // create shared data
-    let mut joinhandles = Vec::new();
-
-    for offset in 0..8 {
-        let child_numbers = Arc::clone(&shared_numbers); // clone shared data for each thread
-        joinhandles.push(thread::spawn(move || {
-            let sum: u32 = child_numbers.iter().filter(|n| *n % 8 == offset).sum();
-            println!("Sum of offset {} is {}", offset, sum);
-        }));
-    }
-    for handle in joinhandles.into_iter() {
-        handle.join().unwrap();
-    }
-}
-```
-
-在这个解决方案中，我们使用 Arc::new 函数来创建共享数据，然后使用 Arc::clone 函数来为每个线程创建一个共享数据的克隆。在线程内部，我们使用了 child_numbers 变量来访问共享数据，然后通过过滤器和求和来计算每个偏移量下的数字和。最后，我们使用 handle.join() 函数来等待每个线程完成，并使用 unwrap() 函数来处理可能的错误。
-
-> Q: 不是说 clone 将消耗大量资源嘛? 这里有其它方案嘛? 不使用 clone 的话
-
-> A: 是的，每次克隆 Arc 都会增加引用计数，这可能会导致性能问题。为了避免这种情况，我们可以考虑将数据划分成固定大小的块，并将每个块分配给不同的线程。这样可以避免克隆 Arc，同时保持数据的共享。
-
-以下是一种可能的解决方案：
-
-```rust
-#![forbid(unused_imports)]
-use std::sync::{Arc, Mutex};
-use std::thread;
-
-fn main() {
-    let numbers: Vec<_> = (0..100u32).collect();
-    let chunk_size = numbers.len() / 8;
-    let shared_numbers = Arc::new(Mutex::new(numbers)); // create shared data
-    let mut joinhandles = Vec::new();
-
-    for offset in 0..8 {
-        let start = offset * chunk_size;
-        let end = start + chunk_size;
-        let child_numbers = Arc::clone(&shared_numbers); // share the same Arc between threads
-        joinhandles.push(thread::spawn(move || {
-            let chunk = &child_numbers.lock().unwrap()[start..end]; // acquire lock and get the chunk
-            let sum: u32 = chunk.iter().filter(|n| *n % 8 == offset).sum(); // compute the sum
-            println!("Sum of offset {} is {}", offset, sum);
-        }));
-    }
-
-    for handle in joinhandles.into_iter() {
-        handle.join().unwrap();
-    }
-}
-
-```
-
-在这个解决方案中，我们首先计算每个块的大小，并使用 Arc::new(Mutex::new(numbers)) 来创建一个包装了 Vec 的 Mutex，以实现共享和线程安全。然后，我们使用 Arc::clone 来为每个线程分配同一个 Arc。在每个线程中，我们使用 lock() 函数获取锁来访问共享数据，并使用切片 &[T] 获取每个线程的块。接下来，我们可以像之前那样计算每个偏移量下的数字和，然后在完成后释放锁。
-
-需要注意的是，Mutex 的使用可能会对性能产生一定的影响。如果共享数据不需要写入，那么可以使用 RwLock 来进行读取操作，因为它可以允许多个线程同时读取数据。
-
-> Q: 不错, 看起来可以运行, 还有其它方案嘛?
-
-
-> A: 是的，还有一种使用通道（Channel）的解决方案，它可以避免使用共享数据结构和锁，同时保持并发性。在这个方案中，我们将数据划分成固定大小的块，并将每个块发送到一个通道中，然后让每个线程从通道中接收自己的块，并计算每个偏移量下的数字和。
-
-以下是一种可能的解决方案：
-
-```rust
-#![forbid(unused_imports)]
-use std::sync::mpsc;
-use std::thread;
-
-fn main() {
-    let numbers: Vec<_> = (0..100u32).collect();
-    let chunk_size = numbers.len() / 8;
-    let (tx, rx) = mpsc::channel(); // create a channel
-    let mut joinhandles = Vec::new();
-
-    for offset in 0..8 {
-        let start = offset * chunk_size;
-        let end = start + chunk_size;
-        let child_tx = tx.clone(); // clone the channel sender
-        let chunk = &numbers[start..end].to_vec(); // create a new vector with a chunk of the data
-        joinhandles.push(thread::spawn(move || {
-            let sum: u32 = chunk.iter().filter(|n| *n % 8 == offset).sum(); // compute the sum
-            child_tx.send(sum).unwrap(); // send the sum back to the main thread
-        }));
-    }
-
-    drop(tx); // close the sender channel to signal the end of the transmission
-    let total_sum: u32 = rx.iter().sum(); // receive the sums and compute the total sum
-    println!("Total sum is {}", total_sum);
-
-    for handle in joinhandles.into_iter() {
-        handle.join().unwrap();
-    }
-}
-```
-在这个解决方案中，我们首先计算每个块的大小，并使用 mpsc::channel() 函数创建一个通道来传递数据。然后，我们使用 clone() 函数来克隆通道的发送器，以便每个线程都可以发送它们的结果。在每个线程中，我们使用 &numbers[start..end].to_vec() 来创建一个包含块的新向量，并计算每个偏移量下的数字和。接下来，我们使用 send() 函数将结果发送回主线程。在主线程中，我们通过使用 iter() 函数和 sum() 函数来接收所有结果，并计算它们的总和。最后，我们使用 drop() 函数关闭发送器通道，以通知所有接收器线程传输已经结束。
-
-需要注意的是，通道的使用可能会对性能产生一定的影响，因为它涉及到了数据传输和线程间通信的开销。如果要处理大量的数据或者要求非常高的性能，那么可能需要使用其它的并发编程技术来优化程序。
-
-> Q: 不错, 也是个办法, 还有其它方案嘛? 如果使用其它第三方 crate 的话, 有什么建议?
-
-
-> A: 是的，还有一些第三方 crate 可以帮助我们更方便地编写高效的并发 Rust 代码。
-
-一种常用的 crate 是 Rayon，它是一个基于数据并行性的库，可以轻松地将 Rust 代码转换为并行代码。在 Rayon 中，我们可以使用 par_iter() 函数来创建一个并行迭代器，并将迭代器上的操作并行化。以下是一种可能的解决方案：
-
-```rust
-#![forbid(unused_imports)]
-use rayon::prelude::*;
-
-fn main() {
-    let numbers: Vec<_> = (0..100u32).collect();
-    let joinhandles = (0..8).into_par_iter().map(|offset| {
-        let sum: u32 = numbers.par_iter().filter(|n| *n % 8 == offset).sum();
-        println!("Sum of offset {} is {}", offset, sum);
-    }).collect::<Vec<_>>();
-}
-```
-
-在这个解决方案中，我们首先使用 into_par_iter() 函数将 0..8 转换为一个并行迭代器，然后使用 map() 函数对每个偏移量进行操作。在每个操作中，我们使用 par_iter() 函数将 numbers 转换为一个并行迭代器，并使用 filter() 函数过滤出每个偏移量下的数字，然后使用 sum() 函数计算它们的总和。在计算完所有偏移量的和后，程序就可以退出了。
-
-除了 Rayon，还有一些其它的并发库和框架，例如 Crossbeam 和 tokio 等，它们都提供了一些方便的工具和 API 来帮助我们编写高效的并发 Rust 代码。具体使用哪个库，可以根据具体的需求和场景进行选择。
-
-> Q: 看起来都不错, 谢谢,我学习一下
-
-> A: 不用谢，祝你学习愉快！如果你有任何其他问题或者需要进一步的帮助，随时可以问我哦！
-
-
-
-## refer.
-> 其实官方的文档吃透, 基本可以平趟 80% 的日常开发了...
-
-以及将自己伪装成一个认真又很笨的学员,
-GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行检验以及官方文档证实:
-
-- [rayon - crates.io: Rust Package Registry](https://crates.io/crates/rayon)
-- [crossbeam - crates.io: Rust Package Registry](https://crates.io/crates/crossbeam)
-- [tokio - crates.io: Rust Package Registry](https://crates.io/crates/tokio)
-- ...
-
-所以, rust 是故意不折腾复杂的内建模块, 专注提高编译器能力,
-其它的各种创新实用 crate 都给社区折腾了...?
-
-```
-     _~∽~-~_
- \/ /  - ◵  \ \/
-   '_   V   _'
-   / '--+--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>chat_heap_stack.md</title><link>https://rs.101.so//101/chat_heap_stack</link><pubDate>Fri, 24 Mar 2023 11:29:16 +0800</pubDate><content:encoded><![CDATA[# 可变/不可变引用态度
-> 学伴ChatGPT, chatting for debugging ...
-
-## background
-> 李明 coding到灯火阑珊 2023-03-24 06:00
-
-[Rust开发人员经常犯的5个常见错误](https://mp.weixin.qq.com/s/KXfCHeFuLvK8PHAkA5QJmA)
-
-## goal
-
-完成合理概念摸查...
-
-## trace
-
-> Q: rust 代码:
-
-```rust
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-
-fn main() {
-    let string1 = String::from("long string is long");
-    let result;
-    {
-        let string2 = String::from("xyz");
-        // 这一行将导致编译错误
-        result = longest(string1.as_str(), string2.as_str());
-    }
-    println!("The longest string is {}", result);
-}
-
-```
-
-为什么出错?如何修改? 以及如何理解?
-
-> A:该程序出错是因为 string2 的生命周期比 result 的生命周期短，而 result 是一个指向 string2 中的引用，因此在 string2 离开作用域后，result 指向的内存已经被释放，这会导致未定义的行为。
-
-为了解决这个问题，我们需要让 result 的生命周期比 string2 的生命周期更长。有多种方法可以实现这一点，以下是其中的一种：
-
-```rust
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-
-fn main() {
-    let string1 = String::from("long string is long");
-    let result;
-    let string2 = String::from("xyz");
-    result = longest(string1.as_str(), string2.as_str());
-    println!("The longest string is {}", result);
-}
-```
-在这个修改后的程序中，我们将 string2 的声明移到了 result 的声明之前，并且不再使用一个代码块来限制 string2 的作用域。这意味着 string2 和 result 的生命周期相同，因此 result 仍然有效。
-
-该程序的代码使用了 Rust 的生命周期注释 'a 来告诉编译器 longest 函数的返回值的生命周期应该与 x 和 y 的生命周期相同。
-
-简单地说，程序中的修改让 string2 和 result 具有相同的生命周期，从而解决了问题。
-
-> Q: let string2 = "xyz"; 是否也可以解决相同的问题? 为什么?
-
-> A:是的，如果将 string2 的类型从 String 改为字符串字面量 &str，则程序就可以正确编译和运行。修改后的程序如下：
-
-```rust
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-
-fn main() {
-    let string1 = String::from("long string is long");
-    let string2 = "xyz";
-    let result = longest(string1.as_str(), string2);
-    println!("The longest string is {}", result);
-}
-```
-
-字符串字面量在编译时就已经存在于程序的二进制文件中，因此它们的生命周期与程序的生命周期相同，而不需要在堆上分配内存。这意味着它们的生命周期与其他在程序中定义的变量的生命周期相同，因此在使用字符串字面量时不需要担心生命周期的问题。
-
-所以使用字符串字面量作为参数传递给 longest 函数是安全的，因为它们的生命周期已经在编译时确定了，并且与函数中的其他变量的生命周期相同。
-
-> Q: 那么, 为什么 longest() 一定要指定参数的生命周期? 没有其它更加简洁的形式了嘛?
-
-> A: 在 Rust 中，str 是一个字符串 slice 类型，它是一个不可变的、固定长度的引用类型。由于 str 引用的是存储在堆上的字符串数据，因此它的生命周期必须是由该字符串的所有权来决定的。
-
-在 longest() 函数中，x 和 y 的类型是 &'a str，这表示它们是指向某个字符串数据的引用，它们的生命周期被限制为 'a，即函数的生命周期。这是必要的，因为函数的返回值也是一个对字符串数据的引用，它的生命周期必须是在函数返回后才能开始的，而且必须与参数的生命周期相关联，以避免悬垂引用的问题。
-
-如果我们将参数类型改为 str，那么就无法控制它们引用的字符串的生命周期，因为它们不是引用类型。如果我们试图通过将 string1 和 string2 的值进行 clone 来传递它们的副本，这样可能会导致堆分配的额外开销和性能问题，因为这需要为每个字符串分配一个新的内存块，并在函数调用结束后释放这些内存块。
-
-因此，在 longest() 函数中，最好使用字符串 slice 类型 &str，并在调用函数时传递指向原始字符串的引用，以确保在不需要分配额外内存的情况下正确处理字符串。
-
-> Q: 明白了, 如果不考虑性能, 使用 clone 也是可以的
-
-> A: 是的，如果不考虑性能问题，你可以通过使用 clone() 方法来创建传递给 longest() 函数的字符串的拷贝。这将使每个字符串都在堆上分配新的内存，并使 longest() 函数能够接受 String 类型的参数。
-
-例如，可以使用下面的代码来调用 longest() 函数，使用 clone() 方法创建了 string1 和 string2 的副本：
-
-```rust
-
-fn longest(x: &str, y: &str) -> &str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-
-fn main() {
-    let string1 = String::from("long string is long");
-    let string2 = String::from("xyz");
-    let result = longest(string1.as_str(), string2.as_str());
-    println!("The longest string is {}", result);
-
-    // Create clones of the strings and pass them to longest()
-    let string3 = string1.clone();
-    let string4 = string2.clone();
-    let result2 = longest(string3.as_str(), string4.as_str());
-    println!("The longest string is {}", result2);
-}
-
-```
-注意，这种方法可能会产生性能问题，因为每次调用 clone() 方法都会分配新的内存并复制字符串的内容。因此，如果性能是一个问题，最好避免使用 clone() 方法来创建字符串的副本。
-
-
-> Q: 明白了, 那么 堆与栈的本质区别是什么? 为什么 rust 对栈这么信任, 对堆却很警惕?
-
-> A: 在计算机科学中，堆和栈都是内存中用于存储程序数据的数据结构。它们之间的本质区别在于它们的内存分配方式和数据存储的生命周期。
-
-栈是一种先进后出的数据结构，它使用固定大小的内存块来存储程序数据。当一个函数被调用时，该函数的参数、局部变量和返回地址等数据将被存储在栈帧中。当函数返回时，该栈帧将被弹出，其中存储的数据也将被销毁。由于栈内存的分配和释放是由程序自动进行的，因此它们的效率非常高。
-
-堆是一种动态的数据结构，它使用不连续的内存块来存储程序数据。堆内存的分配和释放是由程序员手动管理的，它们的效率相对较低。由于堆内存的生命周期不像栈那样易于确定，因此在使用堆内存时需要注意内存泄漏和悬垂指针等问题。
-
-在 Rust 中，栈上的数据是可以直接在栈帧中进行分配和释放的，因此 Rust 对栈的管理非常信任。但是，由于堆上的数据需要手动管理，因此在 Rust 中对堆的管理要更加警惕，以避免内存泄漏和悬垂指针等问题。因此，在 Rust 中使用堆内存时，必须遵循所有权规则，以确保每个值都有且只有一个所有者，并在所有者超出作用域时自动释放其内存。这也是 Rust 中所有权系统的核心概念。
-
-
-> Q: 那么, rust 内建数据类型中, 哪些是栈, 哪些是堆?
-
-> A: 在 Rust 中，内建数据类型可以分为两类：栈上分配的值和堆上分配的值。
-
-以下是一些常见的栈上分配的值：
-
-- 所有基本数据类型（例如整数、布尔值和浮点数）
-- 数组和元组（当它们包含栈上分配的值时）
-- 函数和闭包
-
-以下是一些常见的堆上分配的值：
-
-- 所有标准库集合类型，例如 Vec、String 和 HashMap 等
-- Box 智能指针和 Rc 引用计数指针
-- 闭包（如果它们捕获了堆上分配的值）
-
-
-需要注意的是，Rust 中的**所有类型都可以在堆上分配，只要使用堆分配器**（如 Box、Vec 或者 String）即可。但是，所有权系统确保这些堆上分配的值仍然遵循所有权规则，以确保内存安全。
-
-
-> Q: 明白了, 也就是说 String::from("xyz") 是堆上内存, 但是, "xyz" 是栈上内存,
-那么, 为什么都是生成不可变字符串, 为什么 Rust 要构建出堆上字符串 String::from("xyz") ?
-问题是 String::from("xyz")  有什么比 "xyz" 的好处?
-
-
-> A: 是的，您的理解是正确的。"xyz" 是一个编译时常量，分配在程序的栈上，它是一个静态分配的不可变字符串。而 String::from("xyz") 是在运行时动态分配的堆上的一个不可变字符串。
-
-Rust 之所以提供 String 类型，是因为它具有以下一些优点：
-
-- 动态长度：在堆上分配一个字符串，它的长度可以在运行时根据需要动态增加或减少，这是栈上分配的静态字符串所不能做到的。
-- 丰富的字符串处理功能：String 类型提供了各种字符串处理功能，例如拼接、切割、查找、替换等。
-- UTF-8 编码：Rust 中的字符串类型都是基于 UTF-8 编码的，这意味着它们可以表示世界上几乎所有语言中的字符，包括非拉丁字符集，而不会出现编码问题。
-
-
-但是，由于动态分配内存涉及到堆的使用，这会带来一些额外的开销和复杂性。因此，在编写 Rust 代码时，应该尽可能地使用栈上分配的数据类型来避免堆分配的开销。仅当需要动态长度或其他特殊功能时，才应该使用堆上分配的类型。
-
-
-## refer.
-> 其实官方的文档吃透, 基本可以平趟 80% 的日常开发了...
-
-以及将自己伪装成一个认真又很笨的学员,
-GPT 们就可以无限耐心的反复回答所有问题, 当然, 得配套自行检验以及官方文档证实:
-
-
-- [什么是所有权？ - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch04-01-what-is-ownership.html#%E6%A0%88stack%E4%B8%8E%E5%A0%86heap)
-- [生命周期基础 - Rust By Practice( Rust 练习实践 )](https://zh.practice.rs/lifetime/basic.html)
-- [字符串：str和String - Rust入门秘籍](https://rust-book.junmajinlong.com/ch3/04_str_string.html#%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%AD%97%E9%9D%A2%E9%87%8F)
-- [理解Rust内存管理 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
-    - [堆空间和栈空间 - Rust入门秘籍](https://rust-book.junmajinlong.com/ch5/01_heap_stack.html)
-    - [箱子、栈和堆 - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/std/box.html)
-    - ...
-- [使用Box<T> 指向堆上数据 - Rust 程序设计语言 简体中文版](https://kaisery.github.io/trpl-zh-cn/ch15-01-box.html#%E4%BD%BF%E7%94%A8-boxt-%E5%9C%A8%E5%A0%86%E4%B8%8A%E5%82%A8%E5%AD%98%E6%95%B0%E6%8D%AE)
-
-
-```
-     _~`|~~_
- \/ /  = →  \ ()
-   '_   ∧   _'
-   / '--~--' /
 
 ...act by ferris-actor v0.2.4 (built on 23.0303.201916)
 ```]]></content:encoded></item></channel></rss>

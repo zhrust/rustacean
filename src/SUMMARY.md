@@ -15,6 +15,8 @@
         + [🌝 idiom#325:构造队列](./101/idiom325_create_a_queue.md)
     + [🌘 Quiz.rs](./101/quiz.md)
         + [🌝 Quiz#1](./101/quiz_1.md)
+    + [🌝 rustlings](./101/rustlings.md)
+        + [🌗 94:as_ref_mut](./101/rustlings_94.md)
     + [🌘 Exercism](./101/exercism.md)
         + [🌖 42:all-your-base](./101/ex42all-your-base.md)
         + [🌖 43:Allergies](./101/ex43Allergies.md)
@@ -23,7 +25,6 @@
         + [🌝 可变不可变混合](./101/chat_heap_stack.md)
         + [🌝 多线程数据共享](./101/chat_arc_threads.md)
         + [🌗 用迭代简化嵌套循环](./101/chat_for_or_itertools.md)
-
 
 
 # 实践🌚🌘🌗🌖🌝
