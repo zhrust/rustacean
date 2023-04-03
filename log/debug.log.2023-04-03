@@ -1,0 +1,16 @@
+  [2m2023-04-03 21:41:43.689[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/tip/two_kinds_assert_make_better_code.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-04-03 21:41:43.691[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/101/README.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-04-03 21:41:43.691[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/101/chat_dyn101.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+
+  [2m2023-04-03 21:41:43.691[0m [34mDEBUG[0m [1;34mrss4mdbook::inv::gen[0m[34m: [34m
+ /Users/zoomq/Exercism/_sites/rustacean/src/101/rustlings_94.md ~ /Users/zoomq/Exercism/_sites/rustacean/src[0m
+    [2;3mat[0m src/inv/gen.rs:234 [2;3mon[0m main ThreadId(1)
+

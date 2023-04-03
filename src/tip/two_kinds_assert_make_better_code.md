@@ -6,72 +6,231 @@
 
 ## 快译
 
+Daniel Lemire 最新近文章:
+"[runtime asserts are not free](https://lemire.me/blog/2023/03/15/runtime-asserts-are-not-free/)" 研究了 C 语言中 assert 语句的运行时成本,
+并上萌频繁执行的循环中再简单的 assert 也能导致大量的开销;
+
+多年来, 自己也对断言的看法发生了变化,
+从 "我不明白这点" 到 "谨慎使用丫们" 再到 "尽可能多的使用";
+最后一个转变主要是因为 Rust 有两种 "断言" 语句
+--- assert 和 debug_assert --- 这让我可以准确的表达两种不同类型的断言,
+这在很大程度上令我摆脱了对性能的担忧;
 
 
-Daniel Lemire's recent post "runtime asserts are not free" looks at the run-time cost of assert statements in C and shows that a simple assert in a frequently executed loop can cause significant overhead.
-My own opinion on assertions has shifted over the years, from "I don't see the point" to "use them sparingly" to "use them as much as possible". That last shift is largely due to Rust having two kinds of "assert" statement – assert and debug_assert – which has allowed me to accurately express two different kinds of assertions, largely freeing me from performance worries. If you come from a language that only has one kind of assert statement, this distinction can seem pointless, so in this post I want to briefly explain why it helped shift my thinking.
+### 背景
+> Background
 
-Background
-Let me quickly define what I mean by an "assert": it's a programming language statement that checks a property and causes a crash if that property does not hold (conventionally called a "failing assert"). For example, if I have a Python program with a list of people's ages and calculate the minimum age, I might want to check that the youngest person doesn't have a negative age:
+先来快速定义一下 "断言" 的含义:
+这是一个编程语言的语句,
+用以检查属性并在该属性不成立时引发崩溃(通常称为"失败断言");
 
+例如, 如果我有一个 Python 程序,其中包含人们的年龄列表,
+并计算最小年龄,我可能需要检查最年轻的人年龄是否为负:
+
+```python
 ages = [...]
 youngest = min(ages)
 assert(youngest >= 0)
-If ages contains a negative value – or if min doesn't work correctly! – the assert will fail and cause a run-time exception:
+```
+
+如果 ages 包含负值---又或是 min 无法正常工作 --- assert 将失败,
+并导致运行时异常:
+
+```shell
 Traceback (most recent call last):
   File "/tmp/t.py", line 3, in 
     assert(youngest >= 0)
 AssertionError
-In other words, writing assert is roughly equivalent to:
+```
+
+换而言之, assert 大约相当于:
+```python
 ages = [...]
 youngest = min(ages)
 if not (youngest >= 0):
-  raise AssertionError
-In practise, asserts are mostly used to check assumptions about a program's state — in this case, that at no point has a negative age entered into the system.
-There are two major reasons why I might want to check this particular assumption. First, I might have written subsequent code which will only execute correctly with non-negative youngest values: I want to prevent that subsequent code from executing if that property is violated. Second, the assert both documents and checks the property. In other words, I could just have written a comment:
+    raise AssertionError
+```
 
+在实践中, 断言主要用来检查有关程序状态的假设 --- 在这种情况中,
+不应该将负数输入系统;
+
+我想要检查这个特定假设有两个主要原因;
+首先,可能已经编写了后续代码, 而这些代码只能在 youngest 值非负的情况中工作;
+我想防止在违反该属性时执行后续代码(译按:因为, 此时, 必定失败);
+其次, assert 记录并检验属性;
+换句话说, 我可以写一条注解:
+
+```python
 ages = [...]
 youngest = min(ages)
 # youngest must be non-negative or bad things will happen below
 ...
-That comment accurately describes the program's assumption, but if the assumption is incorrect – perhaps because another part of the program uses -1 to mean "we don't know how old this person is" – the threatened "bad things" will occur. If I'm lucky, the effects will be relatively benign, and perhaps even invisible. But, if I'm unlucky, genuinely bad things will occur, ranging from odd output to security vulnerabilities.
-Debugging incorrect assumptions of this sort is hard, because the effect of the assumption's violation is generally only noticed long after the violation occurred. It's not unusual for some poor programmer to spend a day or more hunting down a problem only to find that it was caused by the violation of a simple assumption. In contrast, the assert causes my program to crash predictably, with a clear report, and at the earliest possible opportunity. In general, fixing the causes of failing asserts tends to be relatively simple.
+```
 
-Why asserts are used less often than one might think
-As I've described them above, asserts sound like a clear win — but most programs use many fewer asserts than one might hope.
-The most obvious reason for this is that programmers often don't realise the assumptions they're embedding in their programs, or don't consider the consequences of their assumptions. This tends to be particularly true for junior programmers, who have not yet built up scar tissue from multi-day debugging sessions that were necessary only because they didn't think to use asserts. It took me many years of programming before I realised how much time I was wasting by not thinking about, and checking with asserts, my assumptions about a program's properties.
+该注释准确的描述了程序的假设,
+但是,如果假设不正确 --- 也许是因为程序的另一部分使用 -1 来表示"未知大小"
+--- 那么"坏事"就会发生;
 
-Sometimes it's also very difficult to work out how to assert the property one cares about. This is particularly true in languages like C where there is no built-in help to express properties such as "no element in the list can be negative". The lengthier, and more difficult, an assert needs to be – particularly if it needs a helper function – the less likely it is to be written down.
+如果幸运的话, 效果会相对良性, 甚至可能是不可见的;
+但是, 如果运气不好, 就会触发真正糟糕的事儿,
+从奇怪的输出到安全漏洞;
 
-Inevitably, some asserts are plain wrong, either expressing an incorrect property, or expressing correct property incorrectly. I think most of us expect such mistakes. However, what many people don't realise is that asserts can change a program's behaviour if they have side effects. I have shot myself in the foot more than once by copying and pasting code such as l[i++] into an assert, causing the program to execute differently depending on whether the assert is compiled in or not. I view this as inevitable stupidity on my part, rather than a flaw in the concept of asserts, but I have heard of at least one organisation that bans (or, at least, banned) asserts because of this issue.
+调试此类不正确的假设很困难,因为,假设违规的影响通常只有在违规发生很久之后,
+才会被注意到;
+对于一些可怜的程序员来说, 花一天或更长时间寻找一个问题,
+却发现只是由违反简单假设引发的,这种事儿并不罕见;
 
-Performance issues
-Daniel pointed out a very different reason for avoiding asserts: they can cause serious performance issues when used in the "wrong" places. An assert introduces a branch (i.e. an "if") which must be executed at run-time [1]. The existence of an assert can also cause a compiler to miss compile-time optimisation opportunities [2]. There is a general fear in the programming community about the performance costs of asserts, even though none of us can know how they impact a given program without actually measuring it.
-To avoid performance issues, most software is compiled in either "debug" (sometimes called "testing") or "release" modes: in debug mode, asserts are compiled in and checked at run-time; but in release mode, the asserts are not compiled in, and thus not checked at run-time. In languages like C, there isn't a standard concept of "debug" and "release" modes, but many people consider "release" mode to imply adding a flag -DNDEBUG, which causes assert to become a no-op. Rust's standard Cargo build system defaults to debug mode, with --release performing a release build.
+相比之下, assert 会导致我的程序以可预测的方式崩溃,
+并有清晰的报告,并尽早崩溃;
+通常,修复断言失败的原因往往相对简单;
 
-Two kinds of asserts
-While not compiling (and thus not checking) asserts in release mode removes performance problems, it also weakens the guarantees we have about a program's correctness — just because a test suite doesn't violate an assumption doesn't mean that real users won't use the program in a way which does.
-These days I thus view asserts as falling into two categories:
+(译按: 毕竟断言已经标定出了问题范畴)
 
-Checking problem domain assumptions.
-Checking internal assumptions.
-That distinction might seem artificial, perhaps even non-existent, so let me give examples of what I mean.
-The first category contains assumptions about the "real world" problem my program is trying to help solve. For example, if I'm writing a warehouse stock system, parts of my program might assume properties such as "an item's barcode is never empty".
+### 为什么断言的使用频率比人们想象的要少
+> Why asserts are used less often than one might think
 
-The second category contains assumptions about the way I've structured my program. For example, I might have written a function which runs much faster if I assume the input integer is greater than 1. It's probable that, at the time I write that function, I won't call it in a way that violates that property: but later programmers (including me!) will quite possibly forget, or not notice, that property. An assertion is thus particularly helpful for future programmers, especially when they're refactoring code, to give them greater confidence that they haven't broken the program in subtle ways.
+正如前述, 断言看起来像是个明显的胜利 --- 但是, 大多数程序使用的断言比人们希望的要少得多;
 
-What it took me years to realise is that I have very different confidence levels about my assumptions in each category. I have high confidence that violations of my assumptions in the second category will be caught during normal testing. However, I have much lower confidence that violations of my assumptions in the first category will be caught during testing.
+最明显的原因是, 程序员通常没有意识到他们嵌入到程序中的假设,
+或者没有考虑他们假设的后果;
 
-My differing confidence levels shouldn't be surprising — after all, I've been hired because I can program, not because I know much about warehouse stock systems or barcodes! However, since "normal testing" implies "debug mode" and "user is running the program" implies "release mode", it means that the assumptions I am least confident are not exercised when they're most needed.
+对于初级程序员来说尤其如此,他们还没能从连续的调试中建立创伤反应,
+也就是并没想到使用断言;
 
-Two kinds of assert statement
-The problem that I've just expressed ultimately occurs because languages like C force us to encode both kinds of assumption with a single assert statement: either all asserts are compiled in or none are.
-I long considered this inevitable, but when I moved to Rust several years back, I slowly realised that I now had access to two kinds of assert statement. debug_assert is rather like assert in C, in the sense that the assumptions it expresses are only checked in debug mode. In contrast, assert is "always checked in both debug and release builds, and cannot be disabled."
+我在多年编程之后, 才意识到我没有考虑并检查对程序属性的假设,
+浪费了太多时间;
 
-This might seem like a small difference, but for me it completely unlocked the power of assertions. If you look at a lot of the code I now write, you'll see liberal use of debug_assert, often checking quite minor assumptions, including those I never think likely to be violated. I never even think, let alone worry, about the performance impact of debug_assert. But occasionally you'll spot an assert, sometimes even in fairly frequently executed code — those are where I'm checking particularly important assumptions, or assumptions in which I have particularly low confidence. Each time I write assert I think about the possible performance impact, and also about whether there's a way I can increase my confidence in the assumption to the point that I can downgrade it to a debug_assert. Similarly, when it comes to debugging, I often check assert statements quite carefully as they indicate my low confidence in a particular assumption: it's more likely that I have to reconsider an assert than a debug_assert.
+有时, 王清楚如何维护自己关心的属性也非常困难;
+在像 C 这样的语言中尤其如此,
+因为, 没有内置的帮助来表达诸如"列表中的任何元素都不能为负"之类的属性;
+assert 需要越长越困难---尤其是当需要一个辅助函数时---本身被写下来的可能性就越小;
 
-Of course, there's no reason why you can't write your own equivalents of assert and debug_assert in C, or any other language, but having them built into a language (or standard library), where their differing motivations are clearly documented and widely understood, makes it much easier to use them freely. I hope languages other than Rust will continue to make this difference in assertions — though I would prefer a shorter name than "debug_assert"!
+不可避免的, 一些断言也是完全错误的,
+要么表达不正确的属性, 要么错误的表达正确的属性;
+我想大多数人都在经历这样的错误;
 
+然而, 很多人没有意识到的是, 如果断言有副作用,
+就会改变程序的行为;
+我不止一次通过将 `l[i++]` 等代码复制并粘贴到断言中来搬起石头砸自己的脚,
+导致程序根据断言是否编译而以不同的方式执行;
+
+我认为这是我不可避免的愚蠢,
+而不是断言概念的缺陷, 
+不过, 我听说至少有一个组织因为这个问题而禁止(或是倡导禁止)断言;
+
+### 性能问题
+> Performance issues
+
+Daniel 指出了一个避免断言的非常不同的原因:
+如果在"错误"的地方使用断言时, 可能会导致严重的性能问题;
+断言引入了一个必须在运行时执行的分支(即"if")
+
+> 分支预测因子是惊人的，但有时人们谈论它们，就好像它们使分支免费一样。唉，他们没那么神奇！
+
+断言的存在也可能导致编译器错过编译时优化的机会;
+
+> 反之亦然：断言有时可以帮助编译器更好地优化代码。虽然我没有确凿的数据来表明哪种结果更频繁地发生，但我倾向于认为负面结果更常见。
+
+编程社区普遍担心断言的性能成本,
+即便我们没有人知道如何影响给定的程序而不实际测量;
+
+为了避免性能问题, 大多数软件都是在"调试"(有时称为"测试")
+或是"发布"模式下编译的: 在调试模式中, 断言在运行时编译和检查;
+但是,在发布模式中, 断言不会编译,因此,不会在运行时进行检查;
+
+然而,在 C 这种语言中,
+并没有区分"调试"和"发布"模式的概念,
+但是, 很多人认为"发布"东西方只意味着追加一个标志 -DNDEBUG,
+这将导致 assert 成为无操作;
+Rust 的标准构建系统 Cargo 默认是调试模式,
+--release 则执行发布构建;
+
+
+### 两种断言
+> Two kinds of asserts
+
+
+虽然,在发布东西方中不编译(因此不检查)学术交流可以消除性能问题,
+但是,也削弱了我们对程序正确性的保证---仅仅因为测试套件不违反假设,
+并不意味着真实用户不会快这种方式使用程序;
+
+
+因此, 这些天我认为断言分为两类:
+
+- 检查问题域假设
+- 检查内部假设
+
+这种区别可能看起来是人为的, 甚至可能根本不存在,
+所以, 让我举例说明我的意思;
+
+第一类包含关于我的程序试图帮助解决"现实世界"问题假设;
+例如, 如果我正在编写仓库库存系统,则, 程序的某些部分可能会假定诸如
+"物料的条形码从不为空"之类的属性;
+
+第二类包含关于我构建程序方式的假设;
+例如,我可能编写了一个函数,如果我假设输入整体大于 1,
+该函数的运行速度会快很多;
+很可能,在我编写该函数时,
+我不会以违反该属性的方式调用:
+但是, 后来的程序(包含我自己!)很可能会忘记或是不注意到该属性;
+
+因此, 学术交流对未来的程序员特别有用,
+尤其是当他们重构代码时,
+让他们更加有信心不会以微妙的方式破坏程序;
+
+但是,我对在测试期间发现违反我在第一类假设的行为信心要低得多;
+
+我有不同的信心水平应该不足为奇 --- 毕竟,
+我被录用的是因为我能编程, 而不是因为我对仓库库存系统或是条形码了解很多!
+
+但是,由于"正常测试"意味着"调试模式",
+而"用户正在运行程序"意味着"发布模式",
+这意味着我最不自信的假设在最需要的时候没有被执行;
+
+### 两种断言语句
+> Two kinds of assert statement
+
+我刚刚表达的问题最终发生是因为像 C 这样的语言迫使我们使用
+单个 assert 语句对这两种假设进行编码:
+[always checked in both debug and release builds, and cannot be disabled.](https://doc.rust-lang.org/stable/std/macro.assert.html)
+
+
+我一直认为这是不可避免的, 但是, 
+当我几年前迁移到 Rust 时,我慢慢意识到现在可以使用两种断言语句;
+
+debug_assert 很像 C 中的 assert,
+从某种意义上说, 表达一假设仅在调试模式下进行检查;
+相比 assert 在调试和发布版本中始终处于选择状态, 并且无法禁用;
+
+
+这似乎是一个很小的差异,
+但是,对于我来说, 这完全释放了断言的力量;
+如果你看一下我现在写的很多代码,
+就会看到 debug_assert 的奔放使用,
+经常检查相当小的假设, 包括那些我认为可能违反的假设;
+我甚至从未想过, 更加不用说担心  debug_assert 性能影响了;
+但是, 偶尔你会发现一个 assert, 有时甚至在相当频繁执行的代码中
+--- 这些是我检验特别重要的假设的地方,
+或是特别低置信度的假设;
+每次我写 assert 时, 都会考虑可能的性能影响,
+以及是否有办法增加我对假设的信心,
+以至于我可以将其降级为 debug_assert ;
+同样, 在调试时, 我经常非常仔细的检查 assert 语句,
+因为, 它们表明我对特定假设的信心比较低:
+我更可能必须重新考虑 assert 而不是  debug_assert;
+
+
+当然, 没有理由不能用 C 或是任何其它语言编写自己的 assert 和  debug_assert 等效项,
+但是,将其内置到语言(或是标准库)中,
+其中它们的不同动机被清楚的记录并被广泛理解,
+这使得自由使用断言变得更加容易;
+
+
+我希望 Rust 以外的语言将继续的断言上做出这种上车
+--- 尽管我更喜欢比 "debug_assert" 更短的名字!
+
+
+(译按: dassert 就可以;-)
 
 
 

@@ -18,8 +18,8 @@
 
 - [ ] 基本概念
     - [x] 所有权/借用/作用域
-    - [ ] Option
-    - [ ] Box
+    - [x] Option
+    - [x] Box
     - [ ] ...
 - [ ] 核心数据结构,及其常用操作
 - [ ] 推荐工程结构 ~> [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
@@ -28,7 +28,7 @@
         - tracing = "0.1"
         - clia-tracing-config = "0.2"
 - [ ] 实用开发/调试流程
-    - [ ] MVP/ CLI 工程
+    - [x] MVP/ CLI 工程
     - [ ] MVP/ web 工程
     - [ ] MVP/ 微服务
     - [ ] MVP/ 系统服务
@@ -58,6 +58,7 @@
     - [Learn Rust Programming Course – Interactive Rust Language Tutorial on Replit](https://www.freecodecamp.org/news/author/shaun/)
     - [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches)
     - ...
+- [How not to learn Rust](https://dystroy.org/blog/how-not-to-learn-rust/ "How not to learn Rust") .. 初学者常犯错误...
 - [Michael Yuan - 袁钧涛](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/) ~ 天体物理学博士, 早期 JBoss 成员, WEB3 专家...
     - [The Top 8 Things I Learned From 4000 Rust Developers](https://www.freecodecamp.org/news/author/michael/)
     - [How to Learn Rust Without Installing Any Software](https://www.freecodecamp.org/news/learn-rust-with-github-actions/) ~ 白嫖专家...
@@ -111,6 +112,7 @@
 - [Rust - YouTube](https://www.youtube.com/watch?v=_jMSrMex6R0&list=PLFjq8z-aGyQ6t_LGp7wqHsHTYO-pDDx84)
     - 各种前景分析
     - [WebAssembly - YouTube](https://www.youtube.com/watch?v=qjwWF6K-7uE&list=PLFjq8z-aGyQ78CQu1G3C5CT9ieiNpsnbJ) ~ 各种实现应用
+- [Idiomatic Rust \- YouTube](https://www.youtube.com/playlist?list=PLai5B987bZ9A5MO1oY8uihDWFC5DsdJZq)
 - ...
 
 
