@@ -92,6 +92,16 @@ MVP ~ 最小可行工程能力?
     - ...
 - ...
 
+### crate 得赞:
+
+
+- [humblepenguinn/envio: Envio is a command\-line tool that simplifies the management of environment variables across multiple profiles\. It allows users to easily switch between different configurations and apply them to their current environment](https://github.com/humblepenguinn/envio)
+- [xfbs/imstr: Immutable strings, in Rust\.](https://github.com/xfbs/imstr)
+- [aminalaee/uuid-utils: Python bindings to Rust UUID](https://github.com/aminalaee/uuid-utils/security)
+- [brooks\-builds/full\-stack\-todo\-rust\-course: wip \- we are building this out now in prep for the real course](https://github.com/brooks-builds/full-stack-todo-rust-course)
+- ...
+
+
 ### 关键工具:
 
 - [diff.rs](https://diff.rs/ "diff.rs")

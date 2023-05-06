@@ -12,6 +12,7 @@
 - [🌖 Rust 学习](./101/README.md)
     + [🌝 克服"& 驱动开发"](./101/past_ampersand-driven_development.md)
     + [🌘 idioms](./101/idioms.md)
+        + [🌝 idiom#1+2:Hello Word](./101/idiom1_2.md)
         + [🌝 idiom#325:构造队列](./101/idiom325_create_a_queue.md)
     + [🌘 Quiz.rs](./101/quiz.md)
         + [🌝 Quiz#1](./101/quiz_1.md)
