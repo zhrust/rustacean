@@ -1,4 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom1_2.md</title><link>https://rs.101.so//101/idiom1_2</link><pubDate>Sat, 06 May 2023 11:11:38 +0800</pubDate><content:encoded><![CDATA[# idiom#1,2 打印 Hello world
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom5.md</title><link>https://rs.101.so//101/idiom5</link><pubDate>Sun, 07 May 2023 09:17:07 +0800</pubDate><content:encoded><![CDATA[# idiom#5 平面一点
+
+[Create a 2D Point data structure](https://programming-idioms.org/idiom/5/create-a-2d-point-data-structure#)
+
+## Python
+
+```python
+
+@dataclass
+class Point:
+    x: float
+    y: float
+
+Point = namedtuple("Point", "x y")
+```
+
+
+## Rust
+```rust
+
+struct Point {
+    x: f64,
+    y: f64,
+}
+
+struct Point(f64, f64);
+```
+
+
+## Elixir
+
+```elixir
+p = [ x: 1.122, y: 7.45 ]
+
+```
+
+## Humm?
+
+和 Python 基本相似;
+
+
+
+- [Functions - The Rust Programming Language](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
+- ...
+
+
+
+
+
+```
+      _~∽-∽~_
+  () /  ☉ #  \ \/
+    '_   V   _'
+    | '--.--' \
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+
+
+]]></content:encoded></item><item><title>idiom4.md</title><link>https://rs.101.so//101/idiom4</link><pubDate>Sun, 07 May 2023 09:14:50 +0800</pubDate><content:encoded><![CDATA[# idiom#4 构造函数
+
+[Create a function](https://programming-idioms.org/idiom/4/create-a-function#)
+
+
+## Python
+
+```python
+
+def square(x):
+    return x*x
+
+```
+
+
+## Rust
+```rust
+
+fn square(x : u32) -> u32 { x * x }
+```
+
+## Humm?
+
+和 Python 基本相似复杂度;
+就是多出类型相关的声明,
+不过, Python 要上了类型注解就更加像了...
+
+
+- [Functions - The Rust Programming Language](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
+- ...
+
+
+
+
+
+```
+       _~^+-~_
+   () /  ← #  \ ()
+     '_   ⩌   _'
+     ( '-----' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>idiom3.md</title><link>https://rs.101.so//101/idiom3</link><pubDate>Sun, 07 May 2023 09:13:20 +0800</pubDate><content:encoded><![CDATA[# idiom#3 构造程序
+
+[Create a procedure](https://programming-idioms.org/idiom/3/create-a-procedure)
+
+
+## Python
+
+```python
+
+def finish(name):
+    print(f'My job here is done. Goodbye {name}')
+
+```
+
+
+## Rust
+```rust
+
+fn finish(name: &str) {
+    println!("My job here is done. Goodbye {}", name);
+}
+
+```
+
+## Humm?
+
+和 Python 基本相似复杂度;
+就是多出类型相关的声明,
+不过, Python 要上了类型注解就更加像了...
+
+
+- [Functions - The Rust Programming Language](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
+- ...
+
+
+
+
+
+```
+       _~^+-~_
+   () /  ← #  \ ()
+     '_   ⩌   _'
+     ( '-----' /
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```]]></content:encoded></item><item><title>idiom1_2.md</title><link>https://rs.101.so//101/idiom1_2</link><pubDate>Sat, 06 May 2023 11:11:38 +0800</pubDate><content:encoded><![CDATA[# idiom#1,2 打印 Hello world
 
 - [Print Hello World](https://programming-idioms.org/idiom/1/print-hello-world)
 - [Print Hello 10 times](https://programming-idioms.org/idiom/2/print-hello-10-times)
@@ -41,535 +187,4 @@ for _ in 0..10 { println!("Hello"); }
 
 ...act by ferris-actor v0.2.4 (built on 23.0303.201916)
 ```
-]]></content:encoded></item><item><title>README.md</title><link>https://rs.101.so//dev/README</link><pubDate>Mon, 17 Apr 2023 09:04:31 +0800</pubDate><content:encoded><![CDATA[# 开发
-> projects ...
-
-
-## background
-> 无奈背景
-
-开发语言学习, 不用来开发真实项目, 基本是表演学习行为了...
-
-## goal
-> 必要目标
-
-一组日常要用工具, 原创/再制/...
-
-关键是积累一组可用作品, 打底儿.
-
-## trace
-> 具体推进
-
-MVP ~ 最小可行工程能力?
-
-- [ ] 工程结构
-    - [ ] crate/library/pakage/workspace/project 划分和使用
-        - [x] package ~ cargo new 出来的东西
-        - [x] crate ~ src/*.rs 
-            - 二进制包
-                - `src/main.rs` 
-                - `src/bin/*.rs` 
-        - [x] library ~ src/lib.rs
-        - [x] module ~ mod 圈定的代码块
-                - 绝对/相对引用路径
-                - self/super/crate/... ~> [super 和 self - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/mod/split.html)
-                - rustc 1.30+ 要求:
-                    - 同级目录创建 mod 名同名目录
-                    - 在其中创建子模块.rs 文件
-                    - 此时才能在 mod 名同名 .rs 中使用 mod 来引用
-                - lib.rs ~ 检索更方便
-                - crates.rs ~ 下载最稳定
-        - [x] use 和可见性...
-            - 结构体和枚举的可见性...[结构体的可见性 - 通过例子学 Rust 中文版](https://rustwiki.org/zh-CN/rust-by-example/mod/struct_visibility.html#%E5%8F%82%E8%A7%81)
-            - 优先使用最细粒度(引入函数、结构体等)的引用方式，如果引起了某种麻烦(例如前面两种情况)，再使用引入模块的方式
-            - 不同模块同名 as 别名引用
-            - use xxx::{self, yyy}; ~ 集成引用
-            - use std::collections::*; ~ 只用来引入 tests
-            - pub use ~ 引入后再导出(所有权无处不在...)
-            - pub(in crate::a) ... 限制可见性语法
-                - pub 意味着可见性无任何限制
-                - pub(crate) 表示在当前包可见
-                - pub(self) 在当前模块可见
-                - pub(super) 在父模块可见
-                - pub(in <path>) 表示在某个路径代表的模块中可见，其中 `path` 必须是父模块或者祖先模块
-              - ~> [使用 use 引入模块及受限可见性 - Rust语言圣经(Rust Course)](https://course.rs/basic/crate-module/use.html#%E9%99%90%E5%88%B6%E5%8F%AF%E8%A7%81%E6%80%A7%E8%AF%AD%E6%B3%95)
-        - [ ] workspace
-        - [ ] project
-    - [ ] 模块切分/命名..艺术?
-    - [x] [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
-- [ ] 基本应用
-    - [x] 基本调试循环 ~ 配合 tracing 和 log 目录...
-    - [ ] 基本单元测试
-    - [x] 基本编译发行 ~ cargo build
-- [ ] 分布式
-    - [ ] 调试/追踪
-    - [ ] CI/CD
-    - [ ] ...
-- [ ] 核心概念/技能
-    - [ ] 内建数据类型
-    - [ ] 智能指针
-    - [ ] 所有权和借用
-    - [ ] 泛型
-    - [ ] trait
-    - [ ] 生命周期
-- [ ] 高级工程技巧
-    - [ ] 宏
-    - [ ] GDB
-    - [ ] ...
-- [ ] 嵌入式
-    - [ ] 基本工具箱
-    - [ ] Pico
-    - [ ] ...
-
-## refer.
-> 关键参考
-
-[贡献者公约/Contributor Covenant:](https://www.contributor-covenant.org/zh-cn/version/2/1/code_of_conduct/)
-
-- [介绍 - Rust 的绅士介绍](https://llever.com/gentle-intro/readme.zh.html)
-- [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
-- [将 crate 发布到 Crates.io - Cargo 手册 中文版](https://wangchujiang.com/rust-cn-document-for-docker/cargo/reference/publishing.html#%E6%89%93%E5%8C%85%E4%B8%80%E4%B8%AA-crate)
-- 各种值得尝试的作品类型:
-    - SSG: [Tutorial: Building a Blog in Rust \- Static File Server \- YouTube](https://www.youtube.com/watch?v=9uAy8skUVsc)
-    - [Rust编程小项目：编写简单的区块链_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV145411t7qp?p=7)
-    - ...
-- ...
-
-### crate 得赞:
-
-
-- [humblepenguinn/envio: Envio is a command\-line tool that simplifies the management of environment variables across multiple profiles\. It allows users to easily switch between different configurations and apply them to their current environment](https://github.com/humblepenguinn/envio)
-- [xfbs/imstr: Immutable strings, in Rust\.](https://github.com/xfbs/imstr)
-- [aminalaee/uuid-utils: Python bindings to Rust UUID](https://github.com/aminalaee/uuid-utils/security)
-- [brooks\-builds/full\-stack\-todo\-rust\-course: wip \- we are building this out now in prep for the real course](https://github.com/brooks-builds/full-stack-todo-rust-course)
-- ...
-
-
-### 关键工具:
-
-- [diff.rs](https://diff.rs/ "diff.rs")
-    - [xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.](https://github.com/xfbs/diff.rs "xfbs/diff.rs: Web application (WASM) to render a diff between Rust crate versions.")
-    - 可以在线对应所有 crate 各种版本间所有文件的差异, 快速观察到改进思路...
-- ...
-
-
-## logging
-> 版本记要
-
-- ..
-- 230228 ZQ ++🦀🦀🦀
-- 221023 ZQ init.
-
-
-```
-           _~`+~~_
-       () /  ♡ ◷  \ \/
-         '_   V   _'
-         \ '--~--' |
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```
-]]></content:encoded></item><item><title>two_kinds_assert_make_better_code.md</title><link>https://rs.101.so//tip/two_kinds_assert_make_better_code</link><pubDate>Mon, 03 Apr 2023 21:41:29 +0800</pubDate><content:encoded><![CDATA[# 两种'Assert'构建清晰代码
-> tips...重要也不重要
-
-原文: [Laurence Tratt: Rust's Two Kinds of 'Assert' Make for Better Code](https://tratt.net/laurie/blog/2023/rusts_two_kinds_of_assert_make_for_better_code.html)
-
-
-## 快译
-
-Daniel Lemire 最新近文章:
-"[runtime asserts are not free](https://lemire.me/blog/2023/03/15/runtime-asserts-are-not-free/)" 研究了 C 语言中 assert 语句的运行时成本,
-并上萌频繁执行的循环中再简单的 assert 也能导致大量的开销;
-
-多年来, 自己也对断言的看法发生了变化,
-从 "我不明白这点" 到 "谨慎使用丫们" 再到 "尽可能多的使用";
-最后一个转变主要是因为 Rust 有两种 "断言" 语句
---- assert 和 debug_assert --- 这让我可以准确的表达两种不同类型的断言,
-这在很大程度上令我摆脱了对性能的担忧;
-
-
-### 背景
-> Background
-
-先来快速定义一下 "断言" 的含义:
-这是一个编程语言的语句,
-用以检查属性并在该属性不成立时引发崩溃(通常称为"失败断言");
-
-例如, 如果我有一个 Python 程序,其中包含人们的年龄列表,
-并计算最小年龄,我可能需要检查最年轻的人年龄是否为负:
-
-```python
-ages = [...]
-youngest = min(ages)
-assert(youngest >= 0)
-```
-
-如果 ages 包含负值---又或是 min 无法正常工作 --- assert 将失败,
-并导致运行时异常:
-
-```shell
-Traceback (most recent call last):
-  File "/tmp/t.py", line 3, in 
-    assert(youngest >= 0)
-AssertionError
-```
-
-换而言之, assert 大约相当于:
-```python
-ages = [...]
-youngest = min(ages)
-if not (youngest >= 0):
-    raise AssertionError
-```
-
-在实践中, 断言主要用来检查有关程序状态的假设 --- 在这种情况中,
-不应该将负数输入系统;
-
-我想要检查这个特定假设有两个主要原因;
-首先,可能已经编写了后续代码, 而这些代码只能在 youngest 值非负的情况中工作;
-我想防止在违反该属性时执行后续代码(译按:因为, 此时, 必定失败);
-其次, assert 记录并检验属性;
-换句话说, 我可以写一条注解:
-
-```python
-ages = [...]
-youngest = min(ages)
-# youngest must be non-negative or bad things will happen below
-...
-```
-
-该注释准确的描述了程序的假设,
-但是,如果假设不正确 --- 也许是因为程序的另一部分使用 -1 来表示"未知大小"
---- 那么"坏事"就会发生;
-
-如果幸运的话, 效果会相对良性, 甚至可能是不可见的;
-但是, 如果运气不好, 就会触发真正糟糕的事儿,
-从奇怪的输出到安全漏洞;
-
-调试此类不正确的假设很困难,因为,假设违规的影响通常只有在违规发生很久之后,
-才会被注意到;
-对于一些可怜的程序员来说, 花一天或更长时间寻找一个问题,
-却发现只是由违反简单假设引发的,这种事儿并不罕见;
-
-相比之下, assert 会导致我的程序以可预测的方式崩溃,
-并有清晰的报告,并尽早崩溃;
-通常,修复断言失败的原因往往相对简单;
-
-(译按: 毕竟断言已经标定出了问题范畴)
-
-### 为什么断言的使用频率比人们想象的要少
-> Why asserts are used less often than one might think
-
-正如前述, 断言看起来像是个明显的胜利 --- 但是, 大多数程序使用的断言比人们希望的要少得多;
-
-最明显的原因是, 程序员通常没有意识到他们嵌入到程序中的假设,
-或者没有考虑他们假设的后果;
-
-对于初级程序员来说尤其如此,他们还没能从连续的调试中建立创伤反应,
-也就是并没想到使用断言;
-
-我在多年编程之后, 才意识到我没有考虑并检查对程序属性的假设,
-浪费了太多时间;
-
-有时, 王清楚如何维护自己关心的属性也非常困难;
-在像 C 这样的语言中尤其如此,
-因为, 没有内置的帮助来表达诸如"列表中的任何元素都不能为负"之类的属性;
-assert 需要越长越困难---尤其是当需要一个辅助函数时---本身被写下来的可能性就越小;
-
-不可避免的, 一些断言也是完全错误的,
-要么表达不正确的属性, 要么错误的表达正确的属性;
-我想大多数人都在经历这样的错误;
-
-然而, 很多人没有意识到的是, 如果断言有副作用,
-就会改变程序的行为;
-我不止一次通过将 `l[i++]` 等代码复制并粘贴到断言中来搬起石头砸自己的脚,
-导致程序根据断言是否编译而以不同的方式执行;
-
-我认为这是我不可避免的愚蠢,
-而不是断言概念的缺陷, 
-不过, 我听说至少有一个组织因为这个问题而禁止(或是倡导禁止)断言;
-
-### 性能问题
-> Performance issues
-
-Daniel 指出了一个避免断言的非常不同的原因:
-如果在"错误"的地方使用断言时, 可能会导致严重的性能问题;
-断言引入了一个必须在运行时执行的分支(即"if")
-
-> 分支预测因子是惊人的，但有时人们谈论它们，就好像它们使分支免费一样。唉，他们没那么神奇！
-
-断言的存在也可能导致编译器错过编译时优化的机会;
-
-> 反之亦然：断言有时可以帮助编译器更好地优化代码。虽然我没有确凿的数据来表明哪种结果更频繁地发生，但我倾向于认为负面结果更常见。
-
-编程社区普遍担心断言的性能成本,
-即便我们没有人知道如何影响给定的程序而不实际测量;
-
-为了避免性能问题, 大多数软件都是在"调试"(有时称为"测试")
-或是"发布"模式下编译的: 在调试模式中, 断言在运行时编译和检查;
-但是,在发布模式中, 断言不会编译,因此,不会在运行时进行检查;
-
-然而,在 C 这种语言中,
-并没有区分"调试"和"发布"模式的概念,
-但是, 很多人认为"发布"东西方只意味着追加一个标志 -DNDEBUG,
-这将导致 assert 成为无操作;
-Rust 的标准构建系统 Cargo 默认是调试模式,
---release 则执行发布构建;
-
-
-### 两种断言
-> Two kinds of asserts
-
-
-虽然,在发布东西方中不编译(因此不检查)学术交流可以消除性能问题,
-但是,也削弱了我们对程序正确性的保证---仅仅因为测试套件不违反假设,
-并不意味着真实用户不会快这种方式使用程序;
-
-
-因此, 这些天我认为断言分为两类:
-
-- 检查问题域假设
-- 检查内部假设
-
-这种区别可能看起来是人为的, 甚至可能根本不存在,
-所以, 让我举例说明我的意思;
-
-第一类包含关于我的程序试图帮助解决"现实世界"问题假设;
-例如, 如果我正在编写仓库库存系统,则, 程序的某些部分可能会假定诸如
-"物料的条形码从不为空"之类的属性;
-
-第二类包含关于我构建程序方式的假设;
-例如,我可能编写了一个函数,如果我假设输入整体大于 1,
-该函数的运行速度会快很多;
-很可能,在我编写该函数时,
-我不会以违反该属性的方式调用:
-但是, 后来的程序(包含我自己!)很可能会忘记或是不注意到该属性;
-
-因此, 学术交流对未来的程序员特别有用,
-尤其是当他们重构代码时,
-让他们更加有信心不会以微妙的方式破坏程序;
-
-但是,我对在测试期间发现违反我在第一类假设的行为信心要低得多;
-
-我有不同的信心水平应该不足为奇 --- 毕竟,
-我被录用的是因为我能编程, 而不是因为我对仓库库存系统或是条形码了解很多!
-
-但是,由于"正常测试"意味着"调试模式",
-而"用户正在运行程序"意味着"发布模式",
-这意味着我最不自信的假设在最需要的时候没有被执行;
-
-### 两种断言语句
-> Two kinds of assert statement
-
-我刚刚表达的问题最终发生是因为像 C 这样的语言迫使我们使用
-单个 assert 语句对这两种假设进行编码:
-[always checked in both debug and release builds, and cannot be disabled.](https://doc.rust-lang.org/stable/std/macro.assert.html)
-
-
-我一直认为这是不可避免的, 但是, 
-当我几年前迁移到 Rust 时,我慢慢意识到现在可以使用两种断言语句;
-
-debug_assert 很像 C 中的 assert,
-从某种意义上说, 表达一假设仅在调试模式下进行检查;
-相比 assert 在调试和发布版本中始终处于选择状态, 并且无法禁用;
-
-
-这似乎是一个很小的差异,
-但是,对于我来说, 这完全释放了断言的力量;
-如果你看一下我现在写的很多代码,
-就会看到 debug_assert 的奔放使用,
-经常检查相当小的假设, 包括那些我认为可能违反的假设;
-我甚至从未想过, 更加不用说担心  debug_assert 性能影响了;
-但是, 偶尔你会发现一个 assert, 有时甚至在相当频繁执行的代码中
---- 这些是我检验特别重要的假设的地方,
-或是特别低置信度的假设;
-每次我写 assert 时, 都会考虑可能的性能影响,
-以及是否有办法增加我对假设的信心,
-以至于我可以将其降级为 debug_assert ;
-同样, 在调试时, 我经常非常仔细的检查 assert 语句,
-因为, 它们表明我对特定假设的信心比较低:
-我更可能必须重新考虑 assert 而不是  debug_assert;
-
-
-当然, 没有理由不能用 C 或是任何其它语言编写自己的 assert 和  debug_assert 等效项,
-但是,将其内置到语言(或是标准库)中,
-其中它们的不同动机被清楚的记录并被广泛理解,
-这使得自由使用断言变得更加容易;
-
-
-我希望 Rust 以外的语言将继续的断言上做出这种上车
---- 尽管我更喜欢比 "debug_assert" 更短的名字!
-
-
-(译按: dassert 就可以;-)
-
-
-
-
-
-```
-          _~`|`~_
-      \) /  ← ◷  \ \/
-        '_   V   _'
-        \ '--∽--' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>README.md</title><link>https://rs.101.so//101/README</link><pubDate>Mon, 03 Apr 2023 12:00:38 +0800</pubDate><content:encoded><![CDATA[# 学习
-> learnning ...
-
-
-## background
-> 可能背景
-
-和其它语言不同, Rust 有太多公开的秘密,如果不能快速先习惯一批,
-很难写出可以运行的软件来...
-
-## goal
-> 必要目标
-
-最常用的那 20% Rust 常识...以便解决 80% 应用场景
-
-## trace
-> 具体推进
-
-- [ ] 基本概念
-    - [x] 所有权/借用/作用域
-    - [x] Option
-    - [x] Box
-    - [ ] ...
-- [ ] 核心数据结构,及其常用操作
-- [ ] 推荐工程结构 ~> [Clear explanation of Rust’s module system](https://www.sheshbabu.com/posts/rust-module-system/)
-    - [ ] crate 以及内部模块管理
-    - [x] logging
-        - tracing = "0.1"
-        - clia-tracing-config = "0.2"
-- [ ] 实用开发/调试流程
-    - [x] MVP/ CLI 工程
-    - [ ] MVP/ web 工程
-    - [ ] MVP/ 微服务
-    - [ ] MVP/ 系统服务
-    - [ ] ...
-- [ ] 实效 TDD 流程
-- [ ] 底层调试技巧: gdb ...
-
-
-
-## refer.
-> 各种参考
-
-
-必刷练习:
-
-- [GitHub - rust-lang/rustlings: Small exercises to get you used to reading and writing Rust code!](https://github.com/rust-lang/rustlings) ~ 官方大佬亲自编撰的...形式上也充分利用了 Cargo 工具链, 非常的锈...
-- [Rust Quiz #1](https://dtolnay.github.io/rust-quiz/1)
-- [Rust on Exercism](https://exercism.org/tracks/rust)
-- ...
-
-
-### 自锈路径
-
-- [Resources - Rust Edu](https://rust-edu.org/resources/)
-    - [I wanna be a crab. : rust](https://www.reddit.com/r/rust/comments/11dofu8/i_wanna_be_a_crab/)
-    - [Learn Rust\!](https://gist.github.com/noxasaxon/7bf5ebf930e281529161e51cd221cf8a)
-    - [Learn Rust Programming Course – Interactive Rust Language Tutorial on Replit](https://www.freecodecamp.org/news/author/shaun/)
-    - [Learn Rust in a Month of Lunches](https://www.manning.com/books/learn-rust-in-a-month-of-lunches)
-    - ...
-- [How not to learn Rust](https://dystroy.org/blog/how-not-to-learn-rust/ "How not to learn Rust") .. 初学者常犯错误...
-- [Michael Yuan - 袁钧涛](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/) ~ 天体物理学博士, 早期 JBoss 成员, WEB3 专家...
-    - [The Top 8 Things I Learned From 4000 Rust Developers](https://www.freecodecamp.org/news/author/michael/)
-    - [How to Learn Rust Without Installing Any Software](https://www.freecodecamp.org/news/learn-rust-with-github-actions/) ~ 白嫖专家...
-        - [GitHub Codespaces – How to Code Right in Your Browser with Your Own Cloud Dev Environment](https://www.freecodecamp.org/news/learn-programming-in-your-browser-the-right-way/)
-    - [How to Create a Serverless Meme-as-a-Service](https://www.freecodecamp.org/news/create-a-serverless-meme-as-a-service/)
-    - [Edge Cloud Microservices – How to Build High Performance & Secure Apps with WasmEdge and Rust](https://www.freecodecamp.org/news/edge-cloud-microservices-with-wasmedge-and-rust/)
-    - WASM/
-        - [How to use Rust + WebAssembly to Perform Serverless Machine Learning and Data Visualization in the Cloud](https://www.freecodecamp.org/news/rust-webassembly-serverless-tencent-cloud/)
-        - [How to Build a Personal Dev Server on a $5 Raspberry Pi](https://www.freecodecamp.org/news/build-a-personal-dev-server-on-a-5-dollar-raspberry-pi/)
-- ...
-
-### rustCC
-> 中文社区:
-
-- [程序设计训练（Rust）](https://lab.cs.tsinghua.edu.cn/rust/) ~2021-2022 年夏季学期起清华大学计算机系开设的《程序设计训练（Rust）》
-- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
-    - [Rust 中文文档 | Rust 文档网](https://rustwiki.org/docs/)
-    - [Rust 文档翻译指引 | Rust 文档网](https://rustwiki.org/wiki/translate/rust-translation-guide/#tong-yi-fan-yi-zhu-yu-he-gu-ding-yong-yu)
-    - [常见问题解答 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/faq.html#lifetimes)
-    - ...
-- [张汉东|半小时弄懂-Rust基本语法及语言特性_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV15U4y177oh/)
-    - [左耳朵耗子|以 Rust 为例，带你搞懂编程语言本质_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1cA411877u/)
-    - ...
-- ...
-
-
-### Youtube
-> 真的是什么都有
-
-- 各种劝解:
-    - [Rust Linz, June 2021 - Tim McNamara - How to learn Rust - YouTube](https://www.youtube.com/watch?v=sDtQaO5_SOw)
-- 110+[Rust 编程语言入门教程 \[2021\] \- YouTube](https://www.youtube.com/playlist?list=PL3azK8C0kje1DUJbaOqce19j3R_-tIc4_)
-    - 94+ [Rust - YouTube](https://www.youtube.com/playlist?list=PLVhhUNGAUIQScqB26DdUq4n1Y2n3auM7X)
-        - 专题:[rusqlite - YouTube](https://www.youtube.com/watch?v=xhU8KDzL0vA&list=PLVhhUNGAUIQRR7JheZsDaxF_Cd5Pf5slw)
-        - [SQL Cheat Sheet | Crazcalm](http://ogcrazcalm.blogspot.com/2015/11/sql-cheat-sheet.html)
-        - [SQLite - Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook/database/sqlite.html#insert-and-select-data)
-        - [rusqlite - crates.io: Rust Package Registry](https://crates.io/crates/rusqlite)
-        - [File in std::fs - Rust](https://doc.rust-lang.org/std/fs/struct.File.html#examples)
-    - 42+[RUST PROGRAMMING TUTORIALS \- YouTube](https://www.youtube.com/playlist?list=PLVvjrrRCBy2JSHf9tGxGKJ-bYAN_uDCUL)
-    - 44+[Intro to Rust \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDF6BX6_RdPisRVHgzV02NW)
-    - 14+[Rust For Starters \- YouTube](https://www.youtube.com/playlist?list=PLKkEWK6xRmes17LQUEA5bNjYISuCEOTXx)
-- 44+[The Rust Lang Book \- YouTube](https://www.youtube.com/playlist?list=PLai5B987bZ9CoVR-QEIN9foz4QCJ0H2Y8)
-- 25+[Rust Projects \- YouTube](https://www.youtube.com/playlist?list=PLJbE2Yu2zumDD5vy2BuSHvFZU0a6RDmgb)
-    - 24+[50 RUST Projects \- YouTube](https://www.youtube.com/playlist?list=PL5dTjWUk_cPYuhHm9_QImW7_u4lr5d6zO)
-- [Jon Gjengset - YouTube](https://www.youtube.com/@jonhoo)
-    - 14+ [Crust of Rust - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFiWDOAVrPt7aYmnuuOLYvOa)
-    - 14+ [Rust live-coding - YouTube](https://www.youtube.com/playlist?list=PLqbS7AVVErFgY2faCIYjJZv_RluGkTlKt)
-- [Rust Talks \- YouTube](https://www.youtube.com/playlist?list=PLZaoyhMXgBzoM9bfb5pyUOT3zjnaDdSEP)
-    - 各种畅想...
-    - [Contributing to Rustc \- YouTube](https://www.youtube.com/playlist?list=PLnhCUtqrIE-zgfmf6hn6fLwhfR_hDSG9T) ~ 牛人直播如何为 Rust 编译器贡献特性...
-- [Rust - YouTube](https://www.youtube.com/watch?v=_jMSrMex6R0&list=PLFjq8z-aGyQ6t_LGp7wqHsHTYO-pDDx84)
-    - 各种前景分析
-    - [WebAssembly - YouTube](https://www.youtube.com/watch?v=qjwWF6K-7uE&list=PLFjq8z-aGyQ78CQu1G3C5CT9ieiNpsnbJ) ~ 各种实现应用
-- [Idiomatic Rust \- YouTube](https://www.youtube.com/playlist?list=PLai5B987bZ9A5MO1oY8uihDWFC5DsdJZq)
-- ...
-
-
-### free Books
-> 这个世界上免费好资源太多了...
-
-[free-programming-books/free-programming-books-langs.md at main · EbookFoundation/free-programming-books](https://github.com/EbookFoundation/free-programming-books/blob/main/books/free-programming-books-langs.md#rust)
-
-- [Rust 语言文档 · Rust 程序设计语言](https://prev.rust-lang.org/zh-CN/documentation.html)
-- [Rust 中文文档 | Rust 文档网](https://github.com/rust-lang-cn/rustdoc-cn/fork)
-- [Rust 语言之旅 - Let's go on an adventure!](https://tourofrust.com/11_zh-cn.html)
-- [Y分钟速成X ~ 其中 X=Rust](https://learnxinyminutes.com/docs/zh-cn/rust-cn/)
-    - [Rust 备忘清单 & rust cheatsheet & Quick Reference](https://wangchujiang.com/rust-cn-document-for-docker/quick-reference/docs/rust.html)
-- [sger/RustBooks: List of Rust books](https://github.com/sger/RustBooks#advanced-books)
-    - [ctjhoa/rust-learning: A bunch of links to blog posts, articles, videos, etc for learning Rust](http://llogiq.github.io/2015/07/15/profiling.html)
-    - [Introduction - Learning Rust With Entirely Too Many Linked Lists](https://rust-unofficial.github.io/too-many-lists/first.html)
-    - ...
-- ...
-
-### 面试向...
-> 也就是 Leetcode 之类的东西, 要死记的...
-
-
-- 44+ [Leetcode - YouTube](https://www.youtube.com/watch?v=L93kxEn2sEA&list=PLib6-zlkjfXnl7Qyy9QzOt5BAphdAwmHm&pp=iAQB)
-- 8+ [Rust Leetcode Solutions - YouTube](https://www.youtube.com/watch?v=dK5jUHRbyCA&list=PLvePk7bSSZhe5C8NNaxDhABkjg5F70wdE&pp=iAQB)
-- ...
-
-
-
-## logging
-> 版本记要
-
-- ..
-- 221214 ZQ init.
-
-
-```
-            _~`|-~_
-        \) /  O =  \ ()
-          '_   ⏡   _'
-          | '-----' )
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item></channel></rss>
+]]></content:encoded></item></channel></rss>
