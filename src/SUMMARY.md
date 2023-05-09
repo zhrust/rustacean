@@ -16,6 +16,7 @@
         + [idiom#3:构造程序](./101/idiom3.md)
         + [idiom#4:构造函数](./101/idiom4.md)
         + [idiom#5:平面一点](./101/idiom5.md)
+        + [idiom#6+7:迭代列表](./101/idiom6_7.md)
         + [idiom#325:构造队列](./101/idiom325_create_a_queue.md)
     + [🌘 Quiz.rs](./101/quiz.md)
         + [🌝 Quiz#1](./101/quiz_1.md)
@@ -87,12 +88,12 @@
 
 ---
 
-- [🌖 笔记](./log/README.md)
-    + [🌗 Rust 课程笔记](./log/rust101logging.md)
-    + [🌝 Rust 丑句法](./log/rust-s-ugly-syntax.md)
-    + [🌝 图形描述 Rust 中所有权和借用](./log/graph-rust-move-copy-borrow.md)
+- [🌖 笔记](./logs/README.md)
+    + [🌗 Rust 课程笔记](./logs/rust101logging.md)
+    + [🌝 Rust 丑句法](./logs/rust-s-ugly-syntax.md)
+    + [🌝 图形描述 Rust 中所有权和借用](./logs/graph-rust-move-copy-borrow.md)
     + [🌚 Choas嗯哼]()
-        + [🌖 0基础入门C?](./log/c101.md)
+        + [🌖 0基础入门C?](./logs/c101.md)
 
 ----
 
