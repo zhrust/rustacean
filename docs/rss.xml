@@ -1,4 +1,66 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom5.md</title><link>https://rs.101.so//101/idiom5</link><pubDate>Sun, 07 May 2023 09:17:07 +0800</pubDate><content:encoded><![CDATA[# idiom#5 平面一点
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom6_7.md</title><link>https://rs.101.so//101/idiom6_7</link><pubDate>Tue, 09 May 2023 12:09:10 +0800</pubDate><content:encoded><![CDATA[# idiom#6+7 迭代列表
+
+- [Iterate over list values](https://programming-idioms.org/idiom/6/iterate-over-list-values)
+- [Iterate over list indexes and values](https://programming-idioms.org/idiom/7/iterate-over-list-indexes-and-values)
+
+## Python
+
+```python
+[do_something(x) for x in items]
+
+for x in items:
+        doSomething( x )
+
+for i, x in enumerate(items):
+    print i, x
+
+```
+
+
+## Rust
+```rust
+
+items.into_iter().for_each(|x| do_something(x));
+
+for x in items {
+	do_something(x);
+}
+
+for (i, x) in items.iter().enumerate() {
+    println!("Item {} = {}", i, x);
+}
+
+items.iter().enumerate().for_each(|(i, x)| {
+    println!("Item {} = {}", i, x);
+})
+
+```
+
+
+
+## Humm?
+
+和 Python 基本相似;
+不过, Rust 明显有更多内建函数支持各种姿势的嗯哼...
+
+
+- [Iterator in std::iter - Rust](https://doc.rust-lang.org/std/iter/trait.Iterator.html#method.enumerate)
+- ...
+
+
+
+
+
+
+```
+          _~∽~∽~_
+      \/ /  = ◴  \ \/
+        '_   ⎵   _'
+        ( '-----' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+]]></content:encoded></item><item><title>idiom5.md</title><link>https://rs.101.so//101/idiom5</link><pubDate>Sun, 07 May 2023 09:17:07 +0800</pubDate><content:encoded><![CDATA[# idiom#5 平面一点
 
 [Create a 2D Point data structure](https://programming-idioms.org/idiom/5/create-a-2d-point-data-structure#)
 
@@ -144,47 +206,4 @@ fn finish(name: &str) {
      ( '-----' /
 
 ...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>idiom1_2.md</title><link>https://rs.101.so//101/idiom1_2</link><pubDate>Sat, 06 May 2023 11:11:38 +0800</pubDate><content:encoded><![CDATA[# idiom#1,2 打印 Hello world
-
-- [Print Hello World](https://programming-idioms.org/idiom/1/print-hello-world)
-- [Print Hello 10 times](https://programming-idioms.org/idiom/2/print-hello-10-times)
-
-## Python
-
-```python
-print("Hello World")
-print("Hello\n"*10)
-```
-
-
-## Rust
-```rust
-println!("Hello World");
-
-print!("{}", "Hello\n".repeat(10));
-
-for _ in 0..10 { println!("Hello"); }
-```
-
-## Humm?
-
-和 Python 基本相似复杂度;
-
-
-- [str - Rust](https://doc.rust-lang.org/std/primitive.str.html#method.repeat)
-- [for and range - Rust By Example](https://doc.rust-lang.org/rust-by-example/flow_control/for.html)
-- ...
-
-
-
-
-
-```
-            _~∽|∽~_
-        \) /  ← ^  \ (/
-          '_   𝟂   _'
-          | '--⌄--' \
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```
-]]></content:encoded></item></channel></rss>
+```]]></content:encoded></item></channel></rss>
