@@ -1,4 +1,69 @@
-<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom6_7.md</title><link>https://rs.101.so//101/idiom6_7</link><pubDate>Tue, 09 May 2023 12:09:10 +0800</pubDate><content:encoded><![CDATA[# idiom#6+7 迭代列表
+<?xml version="1.0" encoding="utf-8"?><rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/"><channel><title>be Rustaceans ~ 成锈纪</title><link>https://rs.101.so</link><description>~ 汇集 大妈/Zoom.Quiet 学习/实践/探索/... Rust 世界锈迹, 一起成为 Rustacean 吧...</description><generator>my_rss_generator</generator><item><title>idiom8.md</title><link>https://rs.101.so//101/idiom8</link><pubDate>Thu, 11 May 2023 10:04:22 +0800</pubDate><content:encoded><![CDATA[# idiom#6+7 迭代列表
+
+[Initialize a new map (associative array)](https://en.wikipedia.org/wiki/Associative_array)
+
+
+## Python
+
+```python
+x = {"one" : 1, "two" : 2}
+
+```
+
+
+## Rust
+```rust
+use std::collections::HashMap;
+
+let x: HashMap<&str, i32> = [
+    ("one", 1),
+    ("two", 2),
+].into_iter().collect();
+
+
+use std::collections::BTreeMap;
+
+let mut x = BTreeMap::new();
+x.insert("one", 1);
+x.insert("two", 2);
+
+
+```
+
+## Elixir
+
+```elixir
+x = %{"one" => 1, "two" => 2}
+
+x = %{one: 1, two: 2}
+
+```
+
+
+## Humm?
+
+和 Python 基本相似;
+不过, Rust 明显有更多内建模块支持各种姿势的嗯哼...
+
+
+- [HashMap in std::collections - Rust](https://doc.rust-lang.org/std/collections/struct.HashMap.html)
+- [BTreeMap in std::collections - Rust](https://doc.rust-lang.org/std/collections/struct.BTreeMap.html#examples-2)
+- ...
+
+
+
+
+
+
+```
+          _~∽~∽~_
+      \/ /  = ◴  \ \/
+        '_   ⎵   _'
+        ( '-----' )
+
+...act by ferris-actor v0.2.4 (built on 23.0303.201916)
+```
+]]></content:encoded></item><item><title>idiom6_7.md</title><link>https://rs.101.so//101/idiom6_7</link><pubDate>Tue, 09 May 2023 12:09:10 +0800</pubDate><content:encoded><![CDATA[# idiom#6+7 迭代列表
 
 - [Iterate over list values](https://programming-idioms.org/idiom/6/iterate-over-list-values)
 - [Iterate over list indexes and values](https://programming-idioms.org/idiom/7/iterate-over-list-indexes-and-values)
@@ -138,51 +203,6 @@ def square(x):
 ```rust
 
 fn square(x : u32) -> u32 { x * x }
-```
-
-## Humm?
-
-和 Python 基本相似复杂度;
-就是多出类型相关的声明,
-不过, Python 要上了类型注解就更加像了...
-
-
-- [Functions - The Rust Programming Language](https://doc.rust-lang.org/book/ch03-03-how-functions-work.html)
-- ...
-
-
-
-
-
-```
-       _~^+-~_
-   () /  ← #  \ ()
-     '_   ⩌   _'
-     ( '-----' /
-
-...act by ferris-actor v0.2.4 (built on 23.0303.201916)
-```]]></content:encoded></item><item><title>idiom3.md</title><link>https://rs.101.so//101/idiom3</link><pubDate>Sun, 07 May 2023 09:13:20 +0800</pubDate><content:encoded><![CDATA[# idiom#3 构造程序
-
-[Create a procedure](https://programming-idioms.org/idiom/3/create-a-procedure)
-
-
-## Python
-
-```python
-
-def finish(name):
-    print(f'My job here is done. Goodbye {name}')
-
-```
-
-
-## Rust
-```rust
-
-fn finish(name: &str) {
-    println!("My job here is done. Goodbye {}", name);
-}
-
 ```
 
 ## Humm?
