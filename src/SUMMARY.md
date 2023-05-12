@@ -18,6 +18,7 @@
         + [idiom#5:平面一点](./101/idiom5.md)
         + [idiom#6+7:迭代列表](./101/idiom6_7.md)
         + [idiom#8:构造map](./101/idiom8.md)
+        + [idiom#9:构造Btree](./101/idiom9.md)
         + [idiom#325:构造队列](./101/idiom325_create_a_queue.md)
     + [🌘 Quiz.rs](./101/quiz.md)
         + [🌝 Quiz#1](./101/quiz_1.md)

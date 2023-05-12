@@ -1,4 +1,4 @@
-# idiom#6+7 迭代列表
+# idiom#8 构造map
 
 [Initialize a new map (associative array)](https://en.wikipedia.org/wiki/Associative_array)
 
